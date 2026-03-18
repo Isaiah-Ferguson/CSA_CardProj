@@ -2,6 +2,10 @@
 
 import Link from 'next/link';
 import { Deck } from '@/types/flashcard';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
+import { BookOpen, ArrowRight } from 'lucide-react';
 
 interface DeckCardProps {
   deck: Deck;
@@ -9,60 +13,71 @@ interface DeckCardProps {
 
 export default function DeckCard({ deck }: DeckCardProps) {
   const categoryColors: Record<string, string> = {
-    JavaScript: 'from-yellow-400 to-orange-500',
-    React: 'from-blue-400 to-cyan-500',
-    TypeScript: 'from-blue-500 to-indigo-600',
-    Algorithms: 'from-purple-500 to-pink-600',
-    default: 'from-gray-400 to-gray-600'
+    JavaScript: 'bg-yellow-500 text-white border-yellow-600',
+    React: 'bg-cyan-500 text-white border-cyan-600',
+    TypeScript: 'bg-blue-500 text-white border-blue-600',
+    'CSS/HTML': 'bg-pink-500 text-white border-pink-600',
+    'C#': 'bg-purple-500 text-white border-purple-600',
+    'EF Core': 'bg-indigo-500 text-white border-indigo-600',
+    'SQL': 'bg-orange-500 text-white border-orange-600',
+    default: 'bg-gray-500 text-white border-gray-600'
   };
 
-  const gradient = categoryColors[deck.category] || categoryColors.default;
+  const categoryColor = categoryColors[deck.category] || categoryColors.default;
 
   return (
-    <Link href={`/study/${deck.id}`}>
-      <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200 dark:border-gray-700">
-        <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-        
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${gradient} text-white`}>
-              {deck.category}
-            </span>
-            <span className="text-2xl">📚</span>
-          </div>
-          
-          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-            {deck.name}
-          </h3>
-          
-          <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
-            {deck.description}
-          </p>
-          
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              {deck.cards.length} {deck.cards.length === 1 ? 'card' : 'cards'}
-            </span>
-            
-            <div className="flex gap-1">
-              {deck.cards.slice(0, 3).map((card) => (
-                <div
-                  key={card.id}
-                  className={`w-2 h-2 rounded-full ${
-                    card.difficulty === 'easy'
-                      ? 'bg-green-500'
-                      : card.difficulty === 'medium'
-                      ? 'bg-yellow-500'
-                      : 'bg-red-500'
-                  }`}
-                />
-              ))}
+    <Link href={`/study/${deck.id}`} className="block group">
+      <motion.div
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.2 }}
+      >
+        <Card className="h-full border-2 hover:border-primary transition-all duration-300 hover:shadow-lg overflow-hidden">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between mb-2">
+              <Badge variant="secondary" className={`${categoryColor} border`}>
+                {deck.category}
+              </Badge>
+              <div className="p-2 rounded-lg bg-primary/10">
+                <BookOpen className="h-4 w-4 text-primary" />
+              </div>
             </div>
-          </div>
-        </div>
-        
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </div>
+            
+            <CardTitle className="text-xl group-hover:text-primary transition-colors flex items-center justify-between">
+              {deck.name}
+              <ArrowRight className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </CardTitle>
+            
+            <CardDescription className="line-clamp-2">
+              {deck.description}
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-muted-foreground">
+                {deck.cards.length} {deck.cards.length === 1 ? 'card' : 'cards'}
+              </span>
+              
+              <div className="flex gap-1">
+                {deck.cards.slice(0, 5).map((card) => (
+                  <div
+                    key={card.id}
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      card.difficulty === 'easy'
+                        ? 'bg-green-500'
+                        : card.difficulty === 'medium'
+                        ? 'bg-yellow-500'
+                        : 'bg-red-500'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </CardContent>
+          
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </Card>
+      </motion.div>
     </Link>
   );
 }

@@ -3799,5 +3799,567 @@ context.Products.AddRange(product1, product2, product3);`,
         tags: ['add', 'addrange', 'crud']
       }
     ]
+  },
+  {
+    id: '7',
+    name: 'SQL Fundamentals',
+    description: 'Essential SQL concepts for database queries and operations',
+    category: 'SQL',
+    cards: [
+      {
+        id: '7-1',
+        question: 'What is SQL?',
+        answer: 'SQL (Structured Query Language) is a standard language for managing and manipulating relational databases.',
+        code: `SELECT * FROM users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['basics', 'introduction', 'database']
+      },
+      {
+        id: '7-2',
+        question: 'What is the SELECT statement used for?',
+        answer: 'SELECT retrieves data from one or more tables in a database.',
+        code: `SELECT name, email FROM users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['select', 'queries', 'basics']
+      },
+      {
+        id: '7-3',
+        question: 'What does the WHERE clause do?',
+        answer: 'WHERE filters records based on specified conditions.',
+        code: `SELECT * FROM users WHERE age > 18;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['where', 'filtering', 'conditions']
+      },
+      {
+        id: '7-4',
+        question: 'What is the INSERT statement?',
+        answer: 'INSERT adds new records to a table.',
+        code: `INSERT INTO users (name, email) 
+VALUES ('John', 'john@example.com');`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['insert', 'crud', 'basics']
+      },
+      {
+        id: '7-5',
+        question: 'What is the UPDATE statement?',
+        answer: 'UPDATE modifies existing records in a table.',
+        code: `UPDATE users 
+SET email = 'newemail@example.com' 
+WHERE id = 1;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['update', 'crud', 'basics']
+      },
+      {
+        id: '7-6',
+        question: 'What is the DELETE statement?',
+        answer: 'DELETE removes records from a table.',
+        code: `DELETE FROM users WHERE id = 1;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['delete', 'crud', 'basics']
+      },
+      {
+        id: '7-7',
+        question: 'What is a primary key?',
+        answer: 'A primary key uniquely identifies each record in a table. It must contain unique values and cannot be NULL.',
+        code: `CREATE TABLE users (
+    id INT PRIMARY KEY,
+    name VARCHAR(100)
+);`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['primary-key', 'constraints', 'tables']
+      },
+      {
+        id: '7-8',
+        question: 'What is a foreign key?',
+        answer: 'A foreign key is a field that references the primary key in another table, establishing a relationship between tables.',
+        code: `CREATE TABLE orders (
+    id INT PRIMARY KEY,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['foreign-key', 'relationships', 'constraints']
+      },
+      {
+        id: '7-9',
+        question: 'What does ORDER BY do?',
+        answer: 'ORDER BY sorts the result set in ascending (ASC) or descending (DESC) order.',
+        code: `SELECT * FROM users ORDER BY name ASC;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['order-by', 'sorting', 'queries']
+      },
+      {
+        id: '7-10',
+        question: 'What is the LIMIT clause?',
+        answer: 'LIMIT restricts the number of rows returned by a query.',
+        code: `SELECT * FROM users LIMIT 10;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['limit', 'pagination', 'queries']
+      },
+      {
+        id: '7-11',
+        question: 'What is the COUNT function?',
+        answer: 'COUNT returns the number of rows that match a specified condition.',
+        code: `SELECT COUNT(*) FROM users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['count', 'aggregate', 'functions']
+      },
+      {
+        id: '7-12',
+        question: 'What is the SUM function?',
+        answer: 'SUM returns the total sum of a numeric column.',
+        code: `SELECT SUM(price) FROM orders;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['sum', 'aggregate', 'functions']
+      },
+      {
+        id: '7-13',
+        question: 'What is the AVG function?',
+        answer: 'AVG returns the average value of a numeric column.',
+        code: `SELECT AVG(age) FROM users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['avg', 'aggregate', 'functions']
+      },
+      {
+        id: '7-14',
+        question: 'What is the MAX function?',
+        answer: 'MAX returns the largest value in a column.',
+        code: `SELECT MAX(price) FROM products;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['max', 'aggregate', 'functions']
+      },
+      {
+        id: '7-15',
+        question: 'What is the MIN function?',
+        answer: 'MIN returns the smallest value in a column.',
+        code: `SELECT MIN(price) FROM products;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['min', 'aggregate', 'functions']
+      },
+      {
+        id: '7-16',
+        question: 'What is GROUP BY?',
+        answer: 'GROUP BY groups rows with the same values into summary rows, often used with aggregate functions.',
+        code: `SELECT country, COUNT(*) 
+FROM users 
+GROUP BY country;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['group-by', 'aggregate', 'grouping']
+      },
+      {
+        id: '7-17',
+        question: 'What is HAVING clause?',
+        answer: 'HAVING filters groups created by GROUP BY, similar to WHERE but for aggregated data.',
+        code: `SELECT country, COUNT(*) 
+FROM users 
+GROUP BY country 
+HAVING COUNT(*) > 5;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['having', 'group-by', 'filtering']
+      },
+      {
+        id: '7-18',
+        question: 'What is an INNER JOIN?',
+        answer: 'INNER JOIN returns records that have matching values in both tables.',
+        code: `SELECT users.name, orders.total 
+FROM users 
+INNER JOIN orders ON users.id = orders.user_id;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['inner-join', 'joins', 'relationships']
+      },
+      {
+        id: '7-19',
+        question: 'What is a LEFT JOIN?',
+        answer: 'LEFT JOIN returns all records from the left table and matching records from the right table. NULL for non-matches.',
+        code: `SELECT users.name, orders.total 
+FROM users 
+LEFT JOIN orders ON users.id = orders.user_id;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['left-join', 'joins', 'relationships']
+      },
+      {
+        id: '7-20',
+        question: 'What is a RIGHT JOIN?',
+        answer: 'RIGHT JOIN returns all records from the right table and matching records from the left table.',
+        code: `SELECT users.name, orders.total 
+FROM users 
+RIGHT JOIN orders ON users.id = orders.user_id;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['right-join', 'joins', 'relationships']
+      },
+      {
+        id: '7-21',
+        question: 'What is DISTINCT?',
+        answer: 'DISTINCT removes duplicate values from the result set.',
+        code: `SELECT DISTINCT country FROM users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['distinct', 'duplicates', 'queries']
+      },
+      {
+        id: '7-22',
+        question: 'What is the LIKE operator?',
+        answer: 'LIKE searches for a specified pattern in a column. Use % for wildcard.',
+        code: `SELECT * FROM users WHERE name LIKE 'John%';`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['like', 'pattern-matching', 'operators']
+      },
+      {
+        id: '7-23',
+        question: 'What is the IN operator?',
+        answer: 'IN allows you to specify multiple values in a WHERE clause.',
+        code: `SELECT * FROM users WHERE country IN ('USA', 'Canada', 'UK');`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['in', 'operators', 'filtering']
+      },
+      {
+        id: '7-24',
+        question: 'What is the BETWEEN operator?',
+        answer: 'BETWEEN selects values within a given range (inclusive).',
+        code: `SELECT * FROM products WHERE price BETWEEN 10 AND 50;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['between', 'operators', 'range']
+      },
+      {
+        id: '7-25',
+        question: 'What is NULL in SQL?',
+        answer: 'NULL represents missing or unknown data. Use IS NULL or IS NOT NULL to check for NULL values.',
+        code: `SELECT * FROM users WHERE email IS NULL;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['null', 'data-types', 'basics']
+      },
+      {
+        id: '7-26',
+        question: 'What is an alias in SQL?',
+        answer: 'An alias gives a table or column a temporary name using AS keyword.',
+        code: `SELECT name AS customer_name, email AS contact 
+FROM users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['alias', 'as', 'queries']
+      },
+      {
+        id: '7-27',
+        question: 'What is CREATE TABLE?',
+        answer: 'CREATE TABLE creates a new table in the database.',
+        code: `CREATE TABLE products (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    price DECIMAL(10, 2)
+);`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['create-table', 'ddl', 'tables']
+      },
+      {
+        id: '7-28',
+        question: 'What is ALTER TABLE?',
+        answer: 'ALTER TABLE modifies an existing table structure (add, modify, or drop columns).',
+        code: `ALTER TABLE users ADD COLUMN phone VARCHAR(20);`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['alter-table', 'ddl', 'tables']
+      },
+      {
+        id: '7-29',
+        question: 'What is DROP TABLE?',
+        answer: 'DROP TABLE deletes a table and all its data permanently.',
+        code: `DROP TABLE old_users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['drop-table', 'ddl', 'tables']
+      },
+      {
+        id: '7-30',
+        question: 'What is a subquery?',
+        answer: 'A subquery is a query nested inside another query.',
+        code: `SELECT name FROM users 
+WHERE id IN (SELECT user_id FROM orders WHERE total > 100);`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['subquery', 'nested-queries', 'advanced']
+      },
+      {
+        id: '7-31',
+        question: 'What is UNION?',
+        answer: 'UNION combines the result sets of two or more SELECT statements, removing duplicates.',
+        code: `SELECT name FROM customers 
+UNION 
+SELECT name FROM suppliers;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['union', 'set-operations', 'queries']
+      },
+      {
+        id: '7-32',
+        question: 'What is UNION ALL?',
+        answer: 'UNION ALL combines result sets like UNION but keeps all duplicates.',
+        code: `SELECT name FROM customers 
+UNION ALL 
+SELECT name FROM suppliers;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['union-all', 'set-operations', 'queries']
+      },
+      {
+        id: '7-33',
+        question: 'What is an index?',
+        answer: 'An index improves query performance by creating a data structure for faster lookups.',
+        code: `CREATE INDEX idx_email ON users(email);`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['index', 'performance', 'optimization']
+      },
+      {
+        id: '7-34',
+        question: 'What is a UNIQUE constraint?',
+        answer: 'UNIQUE ensures all values in a column are different.',
+        code: `CREATE TABLE users (
+    id INT PRIMARY KEY,
+    email VARCHAR(100) UNIQUE
+);`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['unique', 'constraints', 'tables']
+      },
+      {
+        id: '7-35',
+        question: 'What is a NOT NULL constraint?',
+        answer: 'NOT NULL ensures a column cannot have NULL values.',
+        code: `CREATE TABLE users (
+    id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['not-null', 'constraints', 'tables']
+      },
+      {
+        id: '7-36',
+        question: 'What is a DEFAULT constraint?',
+        answer: 'DEFAULT provides a default value for a column when no value is specified.',
+        code: `CREATE TABLE users (
+    id INT PRIMARY KEY,
+    status VARCHAR(20) DEFAULT 'active'
+);`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['default', 'constraints', 'tables']
+      },
+      {
+        id: '7-37',
+        question: 'What is the AND operator?',
+        answer: 'AND combines multiple conditions, all must be true.',
+        code: `SELECT * FROM users WHERE age > 18 AND country = 'USA';`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['and', 'operators', 'logic']
+      },
+      {
+        id: '7-38',
+        question: 'What is the OR operator?',
+        answer: 'OR combines conditions where at least one must be true.',
+        code: `SELECT * FROM users WHERE country = 'USA' OR country = 'Canada';`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['or', 'operators', 'logic']
+      },
+      {
+        id: '7-39',
+        question: 'What is the NOT operator?',
+        answer: 'NOT negates a condition.',
+        code: `SELECT * FROM users WHERE NOT country = 'USA';`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['not', 'operators', 'logic']
+      },
+      {
+        id: '7-40',
+        question: 'What is CASE statement?',
+        answer: 'CASE provides conditional logic in SQL queries, similar to if-else.',
+        code: `SELECT name,
+    CASE 
+        WHEN age < 18 THEN 'Minor'
+        WHEN age >= 18 THEN 'Adult'
+    END AS age_group
+FROM users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['case', 'conditional', 'logic']
+      },
+      {
+        id: '7-41',
+        question: 'What is CONCAT function?',
+        answer: 'CONCAT combines two or more strings into one.',
+        code: `SELECT CONCAT(first_name, ' ', last_name) AS full_name 
+FROM users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['concat', 'string-functions', 'functions']
+      },
+      {
+        id: '7-42',
+        question: 'What is UPPER function?',
+        answer: 'UPPER converts a string to uppercase.',
+        code: `SELECT UPPER(name) FROM users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['upper', 'string-functions', 'functions']
+      },
+      {
+        id: '7-43',
+        question: 'What is LOWER function?',
+        answer: 'LOWER converts a string to lowercase.',
+        code: `SELECT LOWER(email) FROM users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['lower', 'string-functions', 'functions']
+      },
+      {
+        id: '7-44',
+        question: 'What is LENGTH function?',
+        answer: 'LENGTH returns the number of characters in a string.',
+        code: `SELECT name, LENGTH(name) AS name_length FROM users;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['length', 'string-functions', 'functions']
+      },
+      {
+        id: '7-45',
+        question: 'What is ROUND function?',
+        answer: 'ROUND rounds a number to a specified number of decimal places.',
+        code: `SELECT ROUND(price, 2) FROM products;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['round', 'numeric-functions', 'functions']
+      },
+      {
+        id: '7-46',
+        question: 'What is NOW function?',
+        answer: 'NOW returns the current date and time.',
+        code: `SELECT NOW() AS current_timestamp;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'easy',
+        tags: ['now', 'date-functions', 'functions']
+      },
+      {
+        id: '7-47',
+        question: 'What is a transaction?',
+        answer: 'A transaction is a sequence of SQL operations treated as a single unit. Use COMMIT to save or ROLLBACK to undo.',
+        code: `BEGIN TRANSACTION;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['transaction', 'acid', 'advanced']
+      },
+      {
+        id: '7-48',
+        question: 'What is a view?',
+        answer: 'A view is a virtual table based on a SQL query. It does not store data but displays data from other tables.',
+        code: `CREATE VIEW active_users AS 
+SELECT * FROM users WHERE status = 'active';`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['view', 'virtual-table', 'advanced']
+      },
+      {
+        id: '7-49',
+        question: 'What is the difference between DELETE and TRUNCATE?',
+        answer: 'DELETE removes specific rows and can be rolled back. TRUNCATE removes all rows, is faster, and cannot be rolled back.',
+        code: `DELETE FROM users WHERE id = 1;
+TRUNCATE TABLE logs;`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['delete', 'truncate', 'differences']
+      },
+      {
+        id: '7-50',
+        question: 'What is normalization?',
+        answer: 'Normalization organizes database tables to reduce redundancy and improve data integrity by dividing large tables into smaller ones.',
+        code: `-- Instead of storing customer info in every order
+-- Create separate customers and orders tables
+CREATE TABLE customers (id INT, name VARCHAR(100));
+CREATE TABLE orders (id INT, customer_id INT, total DECIMAL);`,
+        language: 'sql',
+        category: 'SQL',
+        difficulty: 'medium',
+        tags: ['normalization', 'database-design', 'theory']
+      }
+    ]
   }
 ];

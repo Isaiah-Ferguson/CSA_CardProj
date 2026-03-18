@@ -1,42 +1,106 @@
+'use client';
+
+import { useState } from 'react';
 import DeckCard from '@/components/DeckCard';
 import { decks } from '@/data/flashcards';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
+import { Library, Filter } from 'lucide-react';
 
 export default function DecksPage() {
   const categories = [...new Set(decks.map(deck => deck.category))];
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  const filteredDecks = selectedCategory === 'All' 
+    ? decks 
+    : decks.filter(deck => deck.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-background via-blue-50/30 to-purple-50/30 dark:from-background dark:via-blue-950/20 dark:to-purple-950/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-            All Decks
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
-            Browse and study from our collection of coding flashcard decks
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <div className="flex flex-wrap gap-3">
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-colors">
-              All
-            </button>
-            {categories.map((category) => (
-              <button
-                key={category}
-                className="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full font-medium border border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-500 transition-colors"
-              >
-                {category}
-              </button>
-            ))}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
+              <Library className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                All Decks
+              </h1>
+              <p className="text-muted-foreground">
+                Browse and study from our collection of {decks.length} coding flashcard decks
+              </p>
+            </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {decks.map((deck) => (
-            <DeckCard key={deck.id} deck={deck} />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-8"
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium text-muted-foreground">Filter by category</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setSelectedCategory('All')}
+              className={selectedCategory === 'All' ? 'bg-gradient-to-r from-blue-600 to-purple-600 !text-white hover:from-blue-700 hover:to-purple-700 border-transparent' : 'text-foreground hover:bg-accent'}
+            >
+              All ({decks.length})
+            </Button>
+            {categories.map((category) => {
+              const count = decks.filter(d => d.category === category).length;
+              return (
+                <Button
+                  key={category}
+                  variant="outline"
+                  onClick={() => setSelectedCategory(category)}
+                  className={selectedCategory === category ? 'bg-gradient-to-r from-blue-600 to-purple-600 !text-white hover:from-blue-700 hover:to-purple-700 border-transparent' : 'text-foreground hover:bg-accent'}
+                >
+                  {category} ({count})
+                </Button>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="mb-6"
+        >
+          <p className="text-sm text-muted-foreground">
+            Showing {filteredDecks.length} {filteredDecks.length === 1 ? 'deck' : 'decks'}
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {filteredDecks.map((deck, index) => (
+            <motion.div
+              key={deck.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + index * 0.05 }}
+            >
+              <DeckCard deck={deck} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
