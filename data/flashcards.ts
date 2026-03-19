@@ -4361,5 +4361,1719 @@ CREATE TABLE orders (id INT, customer_id INT, total DECIMAL);`,
         tags: ['normalization', 'database-design', 'theory']
       }
     ]
+  },
+  {
+    id: '8',
+    name: 'C# Web API & JavaScript Fetch',
+    description: 'Building REST APIs with C# and consuming them with JavaScript',
+    category: 'Web API',
+    cards: [
+      {
+        id: '8-1',
+        question: 'What is a REST API?',
+        answer: 'REST (Representational State Transfer) is an architectural style for building web services that use HTTP methods to perform CRUD operations on resources.',
+        code: `[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    [HttpGet]
+    public IActionResult GetAll() => Ok(products);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['rest', 'api', 'basics']
+      },
+      {
+        id: '8-2',
+        question: 'What are the main HTTP methods used in REST APIs?',
+        answer: 'GET (retrieve), POST (create), PUT (update/replace), PATCH (partial update), DELETE (remove).',
+        code: `[HttpGet] // Retrieve
+[HttpPost] // Create
+[HttpPut] // Update
+[HttpPatch] // Partial update
+[HttpDelete] // Delete`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['http-methods', 'rest', 'crud']
+      },
+      {
+        id: '8-3',
+        question: 'How do you create a basic Web API controller in C#?',
+        answer: 'Inherit from ControllerBase, add [ApiController] and [Route] attributes.',
+        code: `[ApiController]
+[Route("api/[controller]")]
+public class UsersController : ControllerBase
+{
+    [HttpGet]
+    public IActionResult GetUsers()
+    {
+        return Ok(new[] { "User1", "User2" });
+    }
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['controller', 'api', 'basics']
+      },
+      {
+        id: '8-4',
+        question: 'What is the fetch API in JavaScript?',
+        answer: 'fetch() is a modern JavaScript API for making HTTP requests that returns a Promise.',
+        code: `fetch('https://api.example.com/data')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error(error));`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['fetch', 'javascript', 'http']
+      },
+      {
+        id: '8-5',
+        question: 'How do you make a GET request with fetch?',
+        answer: 'Call fetch with the URL. By default, fetch uses the GET method.',
+        code: `const response = await fetch('https://api.example.com/users');
+const data = await response.json();
+console.log(data);`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['fetch', 'get', 'javascript']
+      },
+      {
+        id: '8-6',
+        question: 'How do you make a POST request with fetch?',
+        answer: 'Pass a configuration object with method: "POST" and body containing the data.',
+        code: `fetch('https://api.example.com/users', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'John', email: 'john@example.com' })
+})
+.then(response => response.json())
+.then(data => console.log(data));`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['fetch', 'post', 'javascript']
+      },
+      {
+        id: '8-7',
+        question: 'What does [ApiController] attribute do?',
+        answer: 'Enables automatic model validation, binding source inference, and standardized error responses.',
+        code: `[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    // Automatic 400 response for invalid models
+    [HttpPost]
+    public IActionResult Create(Product product) => Ok(product);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['attributes', 'controller', 'validation']
+      },
+      {
+        id: '8-8',
+        question: 'How do you return different HTTP status codes in C# Web API?',
+        answer: 'Use methods like Ok() (200), Created() (201), BadRequest() (400), NotFound() (404).',
+        code: `[HttpGet("{id}")]
+public IActionResult GetById(int id)
+{
+    var item = items.Find(x => x.Id == id);
+    if (item == null)
+        return NotFound();
+    return Ok(item);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['status-codes', 'responses', 'http']
+      },
+      {
+        id: '8-9',
+        question: 'What is model binding in Web API?',
+        answer: 'Model binding automatically maps HTTP request data to action method parameters.',
+        code: `[HttpPost]
+public IActionResult Create([FromBody] Product product)
+{
+    // product is automatically populated from request body
+    return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['model-binding', 'parameters', 'data']
+      },
+      {
+        id: '8-10',
+        question: 'What are the binding source attributes?',
+        answer: '[FromBody], [FromRoute], [FromQuery], [FromHeader], [FromForm] specify where to get parameter values.',
+        code: `[HttpGet("{id}")]
+public IActionResult Get(
+    [FromRoute] int id,
+    [FromQuery] string filter,
+    [FromHeader] string authorization)
+{
+    return Ok(new { id, filter, authorization });
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['binding', 'attributes', 'parameters']
+      },
+      {
+        id: '8-11',
+        question: 'How do you handle errors in fetch requests?',
+        answer: 'Use .catch() for network errors and check response.ok for HTTP errors.',
+        code: `fetch('https://api.example.com/data')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(\`HTTP error! status: \${response.status}\`);
+    }
+    return response.json();
+  })
+  .catch(error => console.error('Error:', error));`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['fetch', 'error-handling', 'javascript']
+      },
+      {
+        id: '8-12',
+        question: 'What is CORS and why is it important?',
+        answer: 'CORS (Cross-Origin Resource Sharing) is a security feature that controls which domains can access your API.',
+        code: `// In Program.cs
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+app.UseCors("AllowAll");`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['cors', 'security', 'configuration']
+      },
+      {
+        id: '8-13',
+        question: 'How do you add query parameters to a fetch request?',
+        answer: 'Append them to the URL or use URLSearchParams.',
+        code: `const params = new URLSearchParams({
+  search: 'laptop',
+  category: 'electronics',
+  limit: 10
+});
+
+fetch(\`https://api.example.com/products?\${params}\`)
+  .then(response => response.json())
+  .then(data => console.log(data));`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['fetch', 'query-params', 'url']
+      },
+      {
+        id: '8-14',
+        question: 'What is content negotiation in Web API?',
+        answer: 'Content negotiation allows the API to return different formats (JSON, XML) based on Accept header.',
+        code: `[HttpGet]
+public IActionResult Get()
+{
+    var data = new { Name = "Product", Price = 99.99 };
+    // Returns JSON or XML based on Accept header
+    return Ok(data);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['content-negotiation', 'formats', 'headers']
+      },
+      {
+        id: '8-15',
+        question: 'How do you add custom headers to a fetch request?',
+        answer: 'Pass a headers object in the fetch configuration.',
+        code: `fetch('https://api.example.com/data', {
+  method: 'GET',
+  headers: {
+    'Authorization': 'Bearer token123',
+    'Content-Type': 'application/json',
+    'X-Custom-Header': 'value'
+  }
+})
+.then(response => response.json());`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['fetch', 'headers', 'authentication']
+      },
+      {
+        id: '8-16',
+        question: 'What is dependency injection in Web API?',
+        answer: 'DI is a design pattern where dependencies are provided to a class rather than created by it.',
+        code: `public class ProductsController : ControllerBase
+{
+    private readonly IProductService _service;
+    
+    public ProductsController(IProductService service)
+    {
+        _service = service;
+    }
+    
+    [HttpGet]
+    public IActionResult Get() => Ok(_service.GetAll());
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['dependency-injection', 'design-patterns', 'services']
+      },
+      {
+        id: '8-17',
+        question: 'How do you register services for dependency injection?',
+        answer: 'Use AddScoped, AddTransient, or AddSingleton in Program.cs.',
+        code: `// In Program.cs
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddSingleton<IConfigService, ConfigService>();`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['dependency-injection', 'services', 'lifetime']
+      },
+      {
+        id: '8-18',
+        question: 'How do you make a DELETE request with fetch?',
+        answer: 'Set method to DELETE in the fetch configuration.',
+        code: `fetch('https://api.example.com/users/123', {
+  method: 'DELETE',
+  headers: {
+    'Authorization': 'Bearer token123'
+  }
+})
+.then(response => {
+  if (response.ok) {
+    console.log('Deleted successfully');
+  }
+});`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['fetch', 'delete', 'http']
+      },
+      {
+        id: '8-19',
+        question: 'What is async/await with fetch?',
+        answer: 'async/await provides a cleaner syntax for working with Promises.',
+        code: `async function fetchData() {
+  try {
+    const response = await fetch('https://api.example.com/data');
+    if (!response.ok) throw new Error('Failed');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['async-await', 'fetch', 'promises']
+      },
+      {
+        id: '8-20',
+        question: 'How do you validate models in Web API?',
+        answer: 'Use data annotations on model properties. [ApiController] automatically validates.',
+        code: `public class Product
+{
+    [Required]
+    [StringLength(100)]
+    public string Name { get; set; }
+    
+    [Range(0.01, 10000)]
+    public decimal Price { get; set; }
+}
+
+[HttpPost]
+public IActionResult Create(Product product)
+{
+    // Automatically returns 400 if invalid
+    return Ok(product);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['validation', 'data-annotations', 'models']
+      },
+      {
+        id: '8-21',
+        question: 'What is IActionResult?',
+        answer: 'IActionResult is an interface representing the result of an action method.',
+        code: `[HttpGet("{id}")]
+public IActionResult GetById(int id)
+{
+    var item = FindItem(id);
+    if (item == null)
+        return NotFound(); // Returns 404
+    return Ok(item); // Returns 200 with data
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['action-result', 'responses', 'return-types']
+      },
+      {
+        id: '8-22',
+        question: 'How do you handle PUT requests with fetch?',
+        answer: 'Set method to PUT and include the updated data in the body.',
+        code: `fetch('https://api.example.com/users/123', {
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    name: 'John Updated',
+    email: 'john.new@example.com'
+  })
+})
+.then(response => response.json());`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['fetch', 'put', 'update']
+      },
+      {
+        id: '8-23',
+        question: 'What is routing in Web API?',
+        answer: 'Routing maps HTTP requests to controller actions based on URL patterns.',
+        code: `[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    [HttpGet] // GET api/products
+    [HttpGet("{id}")] // GET api/products/5
+    [HttpGet("search/{term}")] // GET api/products/search/laptop
+    public IActionResult Search(string term) => Ok();
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['routing', 'urls', 'attributes']
+      },
+      {
+        id: '8-24',
+        question: 'How do you return created resources properly?',
+        answer: 'Use CreatedAtAction or CreatedAtRoute with the location of the new resource.',
+        code: `[HttpPost]
+public IActionResult Create(Product product)
+{
+    product.Id = GenerateId();
+    products.Add(product);
+    
+    return CreatedAtAction(
+        nameof(GetById),
+        new { id = product.Id },
+        product
+    );
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['post', 'created', 'status-codes']
+      },
+      {
+        id: '8-25',
+        question: 'What is the difference between response.json() and response.text()?',
+        answer: 'response.json() parses JSON, response.text() returns plain text. Both return Promises.',
+        code: `// For JSON data
+const data = await response.json();
+
+// For plain text
+const text = await response.text();
+
+// For binary data
+const blob = await response.blob();`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['fetch', 'response', 'parsing']
+      },
+      {
+        id: '8-26',
+        question: 'How do you implement pagination in Web API?',
+        answer: 'Accept page and pageSize parameters, return subset of data with metadata.',
+        code: `[HttpGet]
+public IActionResult GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+{
+    var items = allItems
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize);
+    
+    return Ok(new {
+        data = items,
+        page,
+        pageSize,
+        total = allItems.Count
+    });
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['pagination', 'query-params', 'data']
+      },
+      {
+        id: '8-27',
+        question: 'How do you abort a fetch request?',
+        answer: 'Use AbortController to cancel fetch requests.',
+        code: `const controller = new AbortController();
+const signal = controller.signal;
+
+fetch('https://api.example.com/data', { signal })
+  .then(response => response.json())
+  .catch(error => {
+    if (error.name === 'AbortError') {
+      console.log('Fetch aborted');
+    }
+  });
+
+// Abort the request
+controller.abort();`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['fetch', 'abort', 'cancel']
+      },
+      {
+        id: '8-28',
+        question: 'What is middleware in ASP.NET Core?',
+        answer: 'Middleware are components that handle requests and responses in the pipeline.',
+        code: `// In Program.cs
+app.UseHttpsRedirection();
+app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['middleware', 'pipeline', 'configuration']
+      },
+      {
+        id: '8-29',
+        question: 'How do you handle file uploads in Web API?',
+        answer: 'Use IFormFile parameter with [FromForm] attribute.',
+        code: `[HttpPost("upload")]
+public async Task<IActionResult> Upload([FromForm] IFormFile file)
+{
+    if (file == null || file.Length == 0)
+        return BadRequest("No file uploaded");
+    
+    var path = Path.Combine("uploads", file.FileName);
+    using var stream = new FileStream(path, FileMode.Create);
+    await file.CopyToAsync(stream);
+    
+    return Ok(new { fileName = file.FileName });
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['file-upload', 'forms', 'files']
+      },
+      {
+        id: '8-30',
+        question: 'How do you send files with fetch?',
+        answer: 'Use FormData to send files in a POST request.',
+        code: `const formData = new FormData();
+formData.append('file', fileInput.files[0]);
+formData.append('description', 'My file');
+
+fetch('https://api.example.com/upload', {
+  method: 'POST',
+  body: formData
+  // Don't set Content-Type, browser sets it automatically
+})
+.then(response => response.json());`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['fetch', 'formdata', 'file-upload']
+      },
+      {
+        id: '8-31',
+        question: 'What is ActionResult<T>?',
+        answer: 'ActionResult<T> allows returning either T or IActionResult, providing better type safety.',
+        code: `[HttpGet("{id}")]
+public ActionResult<Product> GetById(int id)
+{
+    var product = products.Find(p => p.Id == id);
+    if (product == null)
+        return NotFound();
+    return product; // Implicitly converts to Ok(product)
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['action-result', 'generics', 'return-types']
+      },
+      {
+        id: '8-32',
+        question: 'How do you implement filtering in Web API?',
+        answer: 'Accept filter parameters in query string and apply them to the data.',
+        code: `[HttpGet]
+public IActionResult GetAll(
+    [FromQuery] string category,
+    [FromQuery] decimal? minPrice,
+    [FromQuery] decimal? maxPrice)
+{
+    var query = products.AsQueryable();
+    
+    if (!string.IsNullOrEmpty(category))
+        query = query.Where(p => p.Category == category);
+    if (minPrice.HasValue)
+        query = query.Where(p => p.Price >= minPrice);
+    if (maxPrice.HasValue)
+        query = query.Where(p => p.Price <= maxPrice);
+    
+    return Ok(query.ToList());
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['filtering', 'query-params', 'linq']
+      },
+      {
+        id: '8-33',
+        question: 'How do you set a timeout for fetch requests?',
+        answer: 'Use AbortController with setTimeout.',
+        code: `async function fetchWithTimeout(url, timeout = 5000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(id);
+    return await response.json();
+  } catch (error) {
+    clearTimeout(id);
+    throw error;
+  }
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['fetch', 'timeout', 'abort']
+      },
+      {
+        id: '8-34',
+        question: 'What is API versioning?',
+        answer: 'API versioning allows multiple versions of an API to coexist for backward compatibility.',
+        code: `[ApiController]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
+public class ProductsController : ControllerBase
+{
+    [HttpGet]
+    [MapToApiVersion("1.0")]
+    public IActionResult GetV1() => Ok("Version 1");
+    
+    [HttpGet]
+    [MapToApiVersion("2.0")]
+    public IActionResult GetV2() => Ok("Version 2");
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['versioning', 'api-design', 'routing']
+      },
+      {
+        id: '8-35',
+        question: 'How do you handle authentication tokens in fetch?',
+        answer: 'Include the token in the Authorization header.',
+        code: `const token = localStorage.getItem('authToken');
+
+fetch('https://api.example.com/protected', {
+  method: 'GET',
+  headers: {
+    'Authorization': \`Bearer \${token}\`,
+    'Content-Type': 'application/json'
+  }
+})
+.then(response => response.json());`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['fetch', 'authentication', 'jwt']
+      },
+      {
+        id: '8-36',
+        question: 'What is the difference between AddScoped, AddTransient, and AddSingleton?',
+        answer: 'Scoped: per request, Transient: per injection, Singleton: one instance for app lifetime.',
+        code: `// Singleton - one instance for entire app
+builder.Services.AddSingleton<IConfigService, ConfigService>();
+
+// Scoped - one instance per HTTP request
+builder.Services.AddScoped<IUserService, UserService>();
+
+// Transient - new instance every time
+builder.Services.AddTransient<IEmailService, EmailService>();`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['dependency-injection', 'lifetime', 'services']
+      },
+      {
+        id: '8-37',
+        question: 'How do you implement sorting in Web API?',
+        answer: 'Accept sort parameters and apply ordering to the query.',
+        code: `[HttpGet]
+public IActionResult GetAll(
+    [FromQuery] string sortBy = "name",
+    [FromQuery] string order = "asc")
+{
+    var query = products.AsQueryable();
+    
+    query = sortBy.ToLower() switch
+    {
+        "price" => order == "desc" 
+            ? query.OrderByDescending(p => p.Price)
+            : query.OrderBy(p => p.Price),
+        _ => order == "desc"
+            ? query.OrderByDescending(p => p.Name)
+            : query.OrderBy(p => p.Name)
+    };
+    
+    return Ok(query.ToList());
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['sorting', 'query-params', 'linq']
+      },
+      {
+        id: '8-38',
+        question: 'How do you retry failed fetch requests?',
+        answer: 'Implement a retry function with exponential backoff.',
+        code: `async function fetchWithRetry(url, options = {}, retries = 3) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url, options);
+      if (response.ok) return await response.json();
+      throw new Error(\`HTTP \${response.status}\`);
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      await new Promise(resolve => 
+        setTimeout(resolve, Math.pow(2, i) * 1000)
+      );
+    }
+  }
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['fetch', 'retry', 'error-handling']
+      },
+      {
+        id: '8-39',
+        question: 'What is content type negotiation?',
+        answer: 'The API returns different content types (JSON, XML) based on Accept header.',
+        code: `// Configure in Program.cs
+builder.Services.AddControllers()
+    .AddXmlSerializerFormatters();
+
+// Client specifies format
+fetch('https://api.example.com/data', {
+  headers: {
+    'Accept': 'application/json' // or 'application/xml'
+  }
+});`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['content-negotiation', 'formats', 'headers']
+      },
+      {
+        id: '8-40',
+        question: 'How do you implement PATCH in Web API?',
+        answer: 'Use JsonPatchDocument for partial updates.',
+        code: `[HttpPatch("{id}")]
+public IActionResult Patch(int id, [FromBody] JsonPatchDocument<Product> patch)
+{
+    var product = products.Find(p => p.Id == id);
+    if (product == null) return NotFound();
+    
+    patch.ApplyTo(product);
+    return Ok(product);
+}
+
+// Client usage
+fetch('/api/products/1', {
+  method: 'PATCH',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify([
+    { op: 'replace', path: '/price', value: 29.99 }
+  ])
+});`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['patch', 'partial-update', 'json-patch']
+      },
+      {
+        id: '8-41',
+        question: 'How do you handle multiple concurrent fetch requests?',
+        answer: 'Use Promise.all() to execute multiple requests in parallel.',
+        code: `async function fetchMultiple() {
+  try {
+    const [users, products, orders] = await Promise.all([
+      fetch('https://api.example.com/users').then(r => r.json()),
+      fetch('https://api.example.com/products').then(r => r.json()),
+      fetch('https://api.example.com/orders').then(r => r.json())
+    ]);
+    
+    return { users, products, orders };
+  } catch (error) {
+    console.error('One or more requests failed:', error);
+  }
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['fetch', 'promises', 'parallel']
+      },
+      {
+        id: '8-42',
+        question: 'What is rate limiting in APIs?',
+        answer: 'Rate limiting restricts the number of requests a client can make in a time period.',
+        code: `// Using AspNetCoreRateLimit package
+builder.Services.AddMemoryCache();
+builder.Services.Configure<IpRateLimitOptions>(options =>
+{
+    options.GeneralRules = new List<RateLimitRule>
+    {
+        new RateLimitRule
+        {
+            Endpoint = "*",
+            Limit = 100,
+            Period = "1m"
+        }
+    };
+});`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['rate-limiting', 'security', 'throttling']
+      },
+      {
+        id: '8-43',
+        question: 'How do you implement search functionality in Web API?',
+        answer: 'Accept a search term and filter data using LINQ.',
+        code: `[HttpGet("search")]
+public IActionResult Search([FromQuery] string q)
+{
+    if (string.IsNullOrWhiteSpace(q))
+        return BadRequest("Search term required");
+    
+    var results = products
+        .Where(p => p.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                    p.Description.Contains(q, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+    
+    return Ok(results);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['search', 'filtering', 'linq']
+      },
+      {
+        id: '8-44',
+        question: 'How do you handle request/response logging?',
+        answer: 'Use middleware to log HTTP requests and responses.',
+        code: `public class RequestLoggingMiddleware
+{
+    private readonly RequestDelegate _next;
+    
+    public RequestLoggingMiddleware(RequestDelegate next)
+    {
+        _next = next;
+    }
+    
+    public async Task InvokeAsync(HttpContext context)
+    {
+        Console.WriteLine(\$"Request: {context.Request.Method} {context.Request.Path}\");
+        await _next(context);
+        Console.WriteLine(\$"Response: {context.Response.StatusCode}\");
+    }
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['middleware', 'logging', 'debugging']
+      },
+      {
+        id: '8-45',
+        question: 'How do you implement caching with fetch?',
+        answer: 'Use the cache option in fetch or implement manual caching.',
+        code: `// Browser cache control
+fetch('https://api.example.com/data', {
+  cache: 'force-cache' // Use cached version if available
+});
+
+// Manual caching
+const cache = new Map();
+
+async function fetchWithCache(url) {
+  if (cache.has(url)) {
+    return cache.get(url);
+  }
+  const data = await fetch(url).then(r => r.json());
+  cache.set(url, data);
+  return data;
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['fetch', 'caching', 'performance']
+      },
+      {
+        id: '8-46',
+        question: 'What is response compression in Web API?',
+        answer: 'Response compression reduces payload size using gzip or brotli.',
+        code: `// In Program.cs
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.Providers.Add<GzipCompressionProvider>();
+});
+
+app.UseResponseCompression();`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['compression', 'performance', 'optimization']
+      },
+      {
+        id: '8-47',
+        question: 'How do you implement health checks in Web API?',
+        answer: 'Use built-in health check middleware to monitor API status.',
+        code: `// In Program.cs
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>();
+
+app.MapHealthChecks("/health");
+
+// Check endpoint
+fetch('https://api.example.com/health')
+  .then(response => response.json())
+  .then(data => console.log('Health:', data));`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['health-checks', 'monitoring', 'diagnostics']
+      },
+      {
+        id: '8-48',
+        question: 'How do you handle OPTIONS requests (preflight)?',
+        answer: 'CORS middleware automatically handles OPTIONS preflight requests.',
+        code: `// Server handles OPTIONS automatically with CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowClient", policy =>
+    {
+        policy.WithOrigins("https://example.com")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+// Browser sends OPTIONS before actual request
+// No action needed in JavaScript`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['cors', 'preflight', 'options']
+      },
+      {
+        id: '8-49',
+        question: 'What is the difference between 200 OK and 204 No Content?',
+        answer: '200 returns data in response body, 204 indicates success with no content to return.',
+        code: `[HttpDelete("{id}")]
+public IActionResult Delete(int id)
+{
+    var product = products.Find(p => p.Id == id);
+    if (product == null) return NotFound();
+    
+    products.Remove(product);
+    return NoContent(); // 204 - successful deletion, no body
+}
+
+[HttpGet("{id}")]
+public IActionResult Get(int id)
+{
+    var product = products.Find(p => p.Id == id);
+    return Ok(product); // 200 - returns product data
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['status-codes', 'http', 'responses']
+      },
+      {
+        id: '8-50',
+        question: 'How do you implement request validation middleware?',
+        answer: 'Create custom middleware to validate requests before they reach controllers.',
+        code: `public class ValidationMiddleware
+{
+    private readonly RequestDelegate _next;
+    
+    public ValidationMiddleware(RequestDelegate next)
+    {
+        _next = next;
+    }
+    
+    public async Task InvokeAsync(HttpContext context)
+    {
+        if (context.Request.Method == "POST" && 
+            !context.Request.HasJsonContentType())
+        {
+            context.Response.StatusCode = 415;
+            await context.Response.WriteAsync("Content-Type must be application/json");
+            return;
+        }
+        
+        await _next(context);
+    }
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['middleware', 'validation', 'requests']
+      }
+    ]
+  },
+  {
+    id: '9',
+    name: 'Programming Fundamentals',
+    description: 'Essential programming concepts and terminology for beginners',
+    category: 'Fundamentals',
+    cards: [
+      {
+        id: '9-1',
+        question: 'What is pseudocode?',
+        answer: 'Pseudocode is a plain language description of programming logic that uses simple, informal language to outline an algorithm without strict syntax rules.',
+        code: `// Pseudocode example:
+IF user is logged in THEN
+    show dashboard
+ELSE
+    show login page
+END IF`,
+        language: 'plaintext',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['pseudocode', 'basics', 'algorithms']
+      },
+      {
+        id: '9-2',
+        question: 'What is JavaScript?',
+        answer: 'JavaScript is a high-level, interpreted programming language primarily used for creating interactive web pages and web applications.',
+        code: `// JavaScript example
+console.log("Hello, World!");
+let name = "JavaScript";`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['javascript', 'languages', 'basics']
+      },
+      {
+        id: '9-3',
+        question: 'What is a variable?',
+        answer: 'A variable is a named storage location in memory that holds a value which can be changed during program execution.',
+        code: `let age = 25;
+let name = "John";
+let isStudent = true;`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['variables', 'basics', 'data']
+      },
+      {
+        id: '9-4',
+        question: 'What is a function?',
+        answer: 'A function is a reusable block of code that performs a specific task and can be called multiple times throughout a program.',
+        code: `function greet(name) {
+    return "Hello, " + name;
+}
+
+let message = greet("Alice");`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['functions', 'basics', 'code-organization']
+      },
+      {
+        id: '9-5',
+        question: 'What is a loop?',
+        answer: 'A loop is a programming construct that repeats a block of code multiple times until a specified condition is met.',
+        code: `for (let i = 0; i < 5; i++) {
+    console.log(i);
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['loops', 'control-flow', 'basics']
+      },
+      {
+        id: '9-6',
+        question: 'What is an if statement?',
+        answer: 'An if statement is a conditional statement that executes code only when a specified condition is true.',
+        code: `if (age >= 18) {
+    console.log("Adult");
+} else {
+    console.log("Minor");
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['conditionals', 'control-flow', 'basics']
+      },
+      {
+        id: '9-7',
+        question: 'What is an array?',
+        answer: 'An array is a data structure that stores multiple values in a single variable, accessed by index numbers.',
+        code: `let fruits = ["apple", "banana", "orange"];
+console.log(fruits[0]); // "apple"`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['arrays', 'data-structures', 'basics']
+      },
+      {
+        id: '9-8',
+        question: 'What is a string?',
+        answer: 'A string is a data type that represents text, consisting of a sequence of characters enclosed in quotes.',
+        code: `let message = "Hello, World!";
+let name = 'Alice';`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['strings', 'data-types', 'basics']
+      },
+      {
+        id: '9-9',
+        question: 'What is a boolean?',
+        answer: 'A boolean is a data type that can only have two values: true or false.',
+        code: `let isActive = true;
+let isComplete = false;
+
+if (isActive) {
+    console.log("Active");
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['boolean', 'data-types', 'basics']
+      },
+      {
+        id: '9-10',
+        question: 'What is a comment?',
+        answer: 'A comment is text in code that is ignored by the compiler/interpreter, used to explain code or temporarily disable it.',
+        code: `// This is a single-line comment
+
+/* This is a
+   multi-line comment */
+
+let x = 5; // Comments can be at end of line`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['comments', 'documentation', 'basics']
+      },
+      {
+        id: '9-11',
+        question: 'What is debugging?',
+        answer: 'Debugging is the process of finding and fixing errors (bugs) in code.',
+        code: `console.log("Debug: value is", x);
+// Use console.log to check values
+// Use breakpoints in debugger`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['debugging', 'troubleshooting', 'basics']
+      },
+      {
+        id: '9-12',
+        question: 'What is an algorithm?',
+        answer: 'An algorithm is a step-by-step set of instructions to solve a problem or complete a task.',
+        code: `// Algorithm to find largest number
+function findMax(numbers) {
+    let max = numbers[0];
+    for (let num of numbers) {
+        if (num > max) max = num;
+    }
+    return max;
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['algorithms', 'problem-solving', 'basics']
+      },
+      {
+        id: '9-13',
+        question: 'What is syntax?',
+        answer: 'Syntax is the set of rules that defines the correct structure and format of code in a programming language.',
+        code: `// Correct syntax
+let x = 5;
+
+// Syntax error
+let y = ; // Missing value`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['syntax', 'language-rules', 'basics']
+      },
+      {
+        id: '9-14',
+        question: 'What is a parameter?',
+        answer: 'A parameter is a variable in a function definition that receives a value when the function is called.',
+        code: `function add(a, b) { // a and b are parameters
+    return a + b;
+}
+
+add(5, 3); // 5 and 3 are arguments`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['parameters', 'functions', 'basics']
+      },
+      {
+        id: '9-15',
+        question: 'What is a return statement?',
+        answer: 'A return statement ends function execution and specifies the value to be returned to the caller.',
+        code: `function multiply(a, b) {
+    return a * b;
+}
+
+let result = multiply(4, 5); // result = 20`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['return', 'functions', 'basics']
+      },
+      {
+        id: '9-16',
+        question: 'What is an object?',
+        answer: 'An object is a collection of related data and/or functionality stored as key-value pairs.',
+        code: `let person = {
+    name: "John",
+    age: 30,
+    city: "New York"
+};
+
+console.log(person.name); // "John"`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['objects', 'data-structures', 'basics']
+      },
+      {
+        id: '9-17',
+        question: 'What is a constant?',
+        answer: 'A constant is a variable whose value cannot be changed after it is assigned.',
+        code: `const PI = 3.14159;
+const MAX_SIZE = 100;
+
+// PI = 3.14; // Error: cannot reassign`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['constants', 'variables', 'basics']
+      },
+      {
+        id: '9-18',
+        question: 'What is concatenation?',
+        answer: 'Concatenation is the operation of joining two or more strings together.',
+        code: `let firstName = "John";
+let lastName = "Doe";
+let fullName = firstName + " " + lastName;
+// fullName = "John Doe"`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['strings', 'concatenation', 'basics']
+      },
+      {
+        id: '9-19',
+        question: 'What is an operator?',
+        answer: 'An operator is a symbol that performs an operation on one or more values (operands).',
+        code: `let sum = 5 + 3;      // + is addition operator
+let product = 4 * 2;  // * is multiplication
+let isEqual = x == y; // == is comparison`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['operators', 'basics', 'expressions']
+      },
+      {
+        id: '9-20',
+        question: 'What is a data type?',
+        answer: 'A data type defines the kind of value a variable can hold, such as numbers, strings, or booleans.',
+        code: `let number = 42;        // Number
+let text = "Hello";     // String
+let isTrue = true;      // Boolean
+let items = [1, 2, 3];  // Array`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['data-types', 'variables', 'basics']
+      },
+      {
+        id: '9-21',
+        question: 'What is a compiler?',
+        answer: 'A compiler is a program that translates source code written in a high-level language into machine code.',
+        code: `// C# code (compiled language)
+public class Program {
+    public static void Main() {
+        Console.WriteLine("Hello");
+    }
+}
+// Compiler converts this to machine code`,
+        language: 'csharp',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['compiler', 'languages', 'basics']
+      },
+      {
+        id: '9-22',
+        question: 'What is an interpreter?',
+        answer: 'An interpreter is a program that executes code line-by-line without compiling it first.',
+        code: `// JavaScript is interpreted
+console.log("This runs immediately");
+// No compilation step needed`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['interpreter', 'languages', 'basics']
+      },
+      {
+        id: '9-23',
+        question: 'What is a while loop?',
+        answer: 'A while loop repeats code as long as a specified condition is true.',
+        code: `let count = 0;
+while (count < 5) {
+    console.log(count);
+    count++;
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['loops', 'while', 'control-flow']
+      },
+      {
+        id: '9-24',
+        question: 'What is an index?',
+        answer: 'An index is a number that represents the position of an element in an array or string, starting from 0.',
+        code: `let colors = ["red", "green", "blue"];
+console.log(colors[0]); // "red" (index 0)
+console.log(colors[2]); // "blue" (index 2)`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['arrays', 'index', 'basics']
+      },
+      {
+        id: '9-25',
+        question: 'What is null?',
+        answer: 'Null is a special value that represents the intentional absence of any value.',
+        code: `let user = null; // No user currently
+if (user === null) {
+    console.log("No user found");
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['null', 'data-types', 'basics']
+      },
+      {
+        id: '9-26',
+        question: 'What is undefined?',
+        answer: 'Undefined means a variable has been declared but has not been assigned a value.',
+        code: `let x;
+console.log(x); // undefined
+
+let obj = {};
+console.log(obj.name); // undefined`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['undefined', 'data-types', 'basics']
+      },
+      {
+        id: '9-27',
+        question: 'What is a method?',
+        answer: 'A method is a function that belongs to an object or class.',
+        code: `let person = {
+    name: "Alice",
+    greet: function() {
+        return "Hello, " + this.name;
+    }
+};
+
+person.greet(); // "Hello, Alice"`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['methods', 'objects', 'functions']
+      },
+      {
+        id: '9-28',
+        question: 'What is scope?',
+        answer: 'Scope determines where variables can be accessed in your code (global, local, or block scope).',
+        code: `let global = "I'm global";
+
+function test() {
+    let local = "I'm local";
+    console.log(global); // Works
+    console.log(local);  // Works
+}
+
+console.log(local); // Error: not accessible`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['scope', 'variables', 'basics']
+      },
+      {
+        id: '9-29',
+        question: 'What is an error?',
+        answer: 'An error is a problem in code that prevents it from running correctly or produces unexpected results.',
+        code: `// Syntax error
+let x = ;
+
+// Runtime error
+console.log(undefinedVariable);
+
+// Logic error
+let sum = a - b; // Should be a + b`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['errors', 'debugging', 'basics']
+      },
+      {
+        id: '9-30',
+        question: 'What is a class?',
+        answer: 'A class is a blueprint for creating objects with predefined properties and methods.',
+        code: `class Car {
+    constructor(brand) {
+        this.brand = brand;
+    }
+    
+    drive() {
+        console.log(this.brand + " is driving");
+    }
+}
+
+let myCar = new Car("Toyota");`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['classes', 'oop', 'basics']
+      },
+      {
+        id: '9-31',
+        question: 'What is HTML?',
+        answer: 'HTML (HyperText Markup Language) is the standard language for creating web pages and web applications.',
+        code: `<!DOCTYPE html>
+<html>
+<head>
+    <title>My Page</title>
+</head>
+<body>
+    <h1>Hello World</h1>
+</body>
+</html>`,
+        language: 'html',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['html', 'web', 'basics']
+      },
+      {
+        id: '9-32',
+        question: 'What is CSS?',
+        answer: 'CSS (Cascading Style Sheets) is a language used to style and layout web pages.',
+        code: `h1 {
+    color: blue;
+    font-size: 24px;
+}
+
+.container {
+    width: 100%;
+    padding: 20px;
+}`,
+        language: 'css',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['css', 'web', 'styling']
+      },
+      {
+        id: '9-33',
+        question: 'What is a database?',
+        answer: 'A database is an organized collection of structured data stored electronically for easy access and management.',
+        code: `// Example database query
+SELECT * FROM users
+WHERE age > 18;`,
+        language: 'sql',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['database', 'data', 'basics']
+      },
+      {
+        id: '9-34',
+        question: 'What is an API?',
+        answer: 'API (Application Programming Interface) is a set of rules that allows different software applications to communicate with each other.',
+        code: `// Using an API
+fetch('https://api.example.com/users')
+    .then(response => response.json())
+    .then(data => console.log(data));`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['api', 'web', 'basics']
+      },
+      {
+        id: '9-35',
+        question: 'What is a library?',
+        answer: 'A library is a collection of pre-written code that provides useful functions and features you can use in your programs.',
+        code: `// Using a library (jQuery example)
+import $ from 'jquery';
+
+$('#button').click(function() {
+    alert('Clicked!');
+});`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['libraries', 'code-reuse', 'basics']
+      },
+      {
+        id: '9-36',
+        question: 'What is a framework?',
+        answer: 'A framework is a platform that provides a foundation and structure for building applications.',
+        code: `// React framework example
+function App() {
+    return (
+        <div>
+            <h1>Hello React</h1>
+        </div>
+    );
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['frameworks', 'development', 'basics']
+      },
+      {
+        id: '9-37',
+        question: 'What is version control?',
+        answer: 'Version control is a system that tracks changes to files over time, allowing you to recall specific versions later.',
+        code: `// Git commands (version control)
+git add .
+git commit -m "Added new feature"
+git push origin main`,
+        language: 'bash',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['git', 'version-control', 'basics']
+      },
+      {
+        id: '9-38',
+        question: 'What is a bug?',
+        answer: 'A bug is an error or flaw in code that causes it to produce incorrect or unexpected results.',
+        code: `// Bug example
+function add(a, b) {
+    return a - b; // Bug: should be a + b
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['bugs', 'errors', 'debugging']
+      },
+      {
+        id: '9-39',
+        question: 'What is recursion?',
+        answer: 'Recursion is when a function calls itself to solve a problem by breaking it into smaller instances.',
+        code: `function countdown(n) {
+    if (n <= 0) return;
+    console.log(n);
+    countdown(n - 1); // Function calls itself
+}
+
+countdown(5); // 5, 4, 3, 2, 1`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['recursion', 'functions', 'basics']
+      },
+      {
+        id: '9-40',
+        question: 'What is a package?',
+        answer: 'A package is a collection of code modules bundled together that can be installed and used in projects.',
+        code: `// Installing a package
+npm install express
+
+// Using the package
+const express = require('express');`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['packages', 'npm', 'dependencies']
+      },
+      {
+        id: '9-41',
+        question: 'What is JSON?',
+        answer: 'JSON (JavaScript Object Notation) is a lightweight data format for storing and exchanging data.',
+        code: `{
+    "name": "John",
+    "age": 30,
+    "city": "New York",
+    "hobbies": ["reading", "gaming"]
+}`,
+        language: 'json',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['json', 'data-format', 'basics']
+      },
+      {
+        id: '9-42',
+        question: 'What is a callback?',
+        answer: 'A callback is a function passed as an argument to another function, to be executed later.',
+        code: `function greet(name, callback) {
+    console.log("Hello " + name);
+    callback();
+}
+
+greet("Alice", function() {
+    console.log("Callback executed!");
+});`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['callbacks', 'functions', 'async']
+      },
+      {
+        id: '9-43',
+        question: 'What is an IDE?',
+        answer: 'IDE (Integrated Development Environment) is software that provides tools for writing, testing, and debugging code.',
+        code: `// Popular IDEs:
+// - Visual Studio Code
+// - IntelliJ IDEA
+// - PyCharm
+// - Eclipse`,
+        language: 'plaintext',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['ide', 'tools', 'development']
+      },
+      {
+        id: '9-44',
+        question: 'What is a repository?',
+        answer: 'A repository (repo) is a storage location for code, typically managed by version control systems like Git.',
+        code: `// Creating a repository
+git init
+git remote add origin https://github.com/user/repo.git`,
+        language: 'bash',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['repository', 'git', 'version-control']
+      },
+      {
+        id: '9-45',
+        question: 'What is a variable declaration?',
+        answer: 'Variable declaration is the process of creating a variable and optionally assigning it an initial value.',
+        code: `let x;           // Declaration
+let y = 10;      // Declaration with initialization
+const z = 20;    // Constant declaration`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['variables', 'declaration', 'basics']
+      },
+      {
+        id: '9-46',
+        question: 'What is a conditional statement?',
+        answer: 'A conditional statement executes different code based on whether a condition is true or false.',
+        code: `if (temperature > 30) {
+    console.log("Hot");
+} else if (temperature > 20) {
+    console.log("Warm");
+} else {
+    console.log("Cold");
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['conditionals', 'control-flow', 'basics']
+      },
+      {
+        id: '9-47',
+        question: 'What is a for loop?',
+        answer: 'A for loop repeats code a specific number of times using a counter variable.',
+        code: `for (let i = 0; i < 5; i++) {
+    console.log("Count: " + i);
+}
+// Prints: 0, 1, 2, 3, 4`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['loops', 'for-loop', 'iteration']
+      },
+      {
+        id: '9-48',
+        question: 'What is a property?',
+        answer: 'A property is a value associated with an object, accessed using dot notation or brackets.',
+        code: `let car = {
+    brand: "Toyota",
+    year: 2020
+};
+
+console.log(car.brand);  // "Toyota"
+console.log(car['year']); // 2020`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['properties', 'objects', 'basics']
+      },
+      {
+        id: '9-49',
+        question: 'What is an expression?',
+        answer: 'An expression is a combination of values, variables, and operators that evaluates to a single value.',
+        code: `let x = 5 + 3;        // Expression: 5 + 3
+let y = x * 2;        // Expression: x * 2
+let isValid = x > 5;  // Expression: x > 5`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['expressions', 'operators', 'basics']
+      },
+      {
+        id: '9-50',
+        question: 'What is a statement?',
+        answer: 'A statement is a complete instruction that performs an action in a program.',
+        code: `let x = 5;              // Assignment statement
+console.log("Hello");   // Function call statement
+if (x > 0) { }          // Conditional statement
+for (let i = 0; i < 5; i++) { } // Loop statement`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'easy',
+        tags: ['statements', 'syntax', 'basics']
+      }
+    ]
   }
 ];

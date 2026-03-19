@@ -20,6 +20,8 @@ export default function DeckCard({ deck }: DeckCardProps) {
     'C#': 'bg-purple-500 text-white border-purple-600',
     'EF Core': 'bg-indigo-500 text-white border-indigo-600',
     'SQL': 'bg-orange-500 text-white border-orange-600',
+    'Web API': 'bg-green-500 text-white border-green-600',
+    'Fundamentals': 'bg-teal-500 text-white border-teal-600',
     default: 'bg-gray-500 text-white border-gray-600'
   };
 
