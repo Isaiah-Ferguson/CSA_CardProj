@@ -4,7 +4,7 @@ export const decks: Deck[] = [
   {
     id: '1',
     name: 'JavaScript Fundamentals',
-    description: 'Core JavaScript concepts every developer should know',
+    description: 'JavaScript concepts every developer should know',
     category: 'JavaScript',
     cards: [
       {
@@ -1864,7 +1864,7 @@ import { value } from './module';`,
   {
     id: '4',
     name: 'CSS & HTML Fundamentals',
-    description: 'Essential CSS and HTML concepts for web development',
+    description: 'CSS and HTML concepts for web development',
     category: 'CSS/HTML',
     cards: [
       {
@@ -3171,7 +3171,7 @@ Print(1, 2, 3, 4);`,
   {
     id: '6',
     name: 'Entity Framework Core',
-    description: 'Essential EF Core concepts for database operations',
+    description: 'EF Core concepts for database operations',
     category: 'EF Core',
     cards: [
       {
