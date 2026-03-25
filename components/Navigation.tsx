@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Code2, Home, Library } from 'lucide-react';
+import { Code2, Home, Library, Lightbulb } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Navigation() {
@@ -54,6 +54,17 @@ export default function Navigation() {
             >
               <Library className="h-4 w-4" />
               All Decks
+            </Link>
+            <Link
+              href="/concepts"
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                isActive('/concepts')
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-foreground/60 hover:text-foreground hover:bg-accent'
+              }`}
+            >
+              <Lightbulb className="h-4 w-4" />
+              Weekly Concepts
             </Link>
           </div>
         </div>

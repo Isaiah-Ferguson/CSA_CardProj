@@ -32,7 +32,7 @@ export default function DecksPage() {
               <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 All Decks
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-foreground">
                 Browse and study from our collection of {decks.length} coding flashcard decks
               </p>
             </div>

@@ -55,7 +55,7 @@ export default function Home() {
           
           <motion.p 
             variants={itemVariants}
-            className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto"
+            className="text-xl text-foreground mb-12 max-w-2xl mx-auto"
           >
             Learn and review essential programming concepts with interactive flashcards. 
             Build your skills one card at a time.
