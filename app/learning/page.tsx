@@ -13,8 +13,8 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export default function LearningPage() {
   const [selectedLevel, setSelectedLevel] = useState(learningLevels[0]);
-  const [selectedWeek, setSelectedWeek] = useState(selectedLevel.weeks[0]);
-  const [selectedConcept, setSelectedConcept] = useState(selectedWeek.concepts[0]);
+  const [selectedWeek, setSelectedWeek] = useState(learningLevels[0].weeks[0]);
+  const [selectedConcept, setSelectedConcept] = useState(learningLevels[0].weeks[0].concepts[0]);
   const [activeExample, setActiveExample] = useState(0);
 
   return (
