@@ -1,25 +1,76 @@
 'use client';
 
 import { useState } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { learningLevels } from '@/data/learning-concepts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Code2, Lightbulb, GitCompare, Trophy } from 'lucide-react';
+import { BookOpen, Calendar, ChevronLeft, Code2, Lightbulb, GitCompare } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-export default function LearningPage() {
-  const [selectedLevel, setSelectedLevel] = useState(learningLevels[0]);
-  const [selectedWeek, setSelectedWeek] = useState(learningLevels[0].weeks[0]);
-  const [selectedConcept, setSelectedConcept] = useState(learningLevels[0].weeks[0].concepts[0]);
+export default function ConceptsLevelPage() {
+  const params = useParams();
+  const levelParam = params.level as string;
+  const levelNumber = parseInt(levelParam);
+  
+  // Find the level data based on the level number from URL
+  const currentLevel = learningLevels.find(level => level.levelNumber === levelNumber);
+  
+  // If level not found, redirect or show error
+  if (!currentLevel || currentLevel.weeks.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Level Not Found</h1>
+          <Link href="/concepts">
+            <Button>Back to Levels</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+  
+  const [selectedWeek, setSelectedWeek] = useState(currentLevel.weeks[0]);
+  const [selectedConcept, setSelectedConcept] = useState(currentLevel.weeks[0].concepts[0]);
   const [activeExample, setActiveExample] = useState(0);
+
+  // If no concept is selected or available, show message
+  if (!selectedConcept) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">No Concepts Available</h1>
+          <p className="text-muted-foreground mb-4">This week doesn't have any concepts yet.</p>
+          <Link href="/concepts">
+            <Button>Back to Levels</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-blue-50/30 to-purple-50/30 dark:from-background dark:via-blue-950/20 dark:to-purple-950/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Breadcrumb */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mb-6"
+        >
+          <Link href="/concepts">
+            <Button variant="ghost" className="gap-2 text-foreground hover:text-primary">
+              <ChevronLeft className="h-4 w-4" />
+              Back to Levels
+            </Button>
+          </Link>
+        </motion.div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -28,20 +79,23 @@ export default function LearningPage() {
         >
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
-              <Trophy className="h-6 w-6 text-white" />
+              <Lightbulb className="h-6 w-6 text-white" />
             </div>
             <div>
+              <Badge variant="secondary" className="mb-2">
+                {currentLevel.title}
+              </Badge>
               <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Learning Path
+                {currentLevel.title}
               </h1>
               <p className="text-foreground">
-                Master programming fundamentals level by level, week by week
+                {currentLevel.description}
               </p>
             </div>
           </div>
         </motion.div>
 
-        {/* Level Selection */}
+        {/* Week Selection */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -49,73 +103,20 @@ export default function LearningPage() {
           className="mb-8"
         >
           <div className="flex items-center gap-2 mb-4">
-            <Trophy className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium text-muted-foreground">Select a level</span>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {learningLevels.map((level) => (
-              <Button
-                key={level.id}
-                variant={selectedLevel.id === level.id ? 'default' : 'outline'}
-                onClick={() => {
-                  setSelectedLevel(level);
-                  setSelectedWeek(level.weeks[0]);
-                  setSelectedConcept(level.weeks[0].concepts[0]);
-                  setActiveExample(0);
-                }}
-                className={selectedLevel.id === level.id 
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700' 
-                  : 'text-foreground hover:bg-accent'}
-              >
-                Level {level.levelNumber}: {level.title}
-              </Button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Selected Level Info */}
-        <motion.div
-          key={selectedLevel.id}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-8"
-        >
-          <Card className="border-2 border-primary/20">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-2xl mb-2">{selectedLevel.title}</CardTitle>
-                  <CardDescription className="text-base">{selectedLevel.description}</CardDescription>
-                </div>
-                <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                  {selectedLevel.weeks.length} Weeks
-                </Badge>
-              </div>
-            </CardHeader>
-          </Card>
-        </motion.div>
-
-        {/* Week Selection */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mb-8"
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <BookOpen className="h-4 w-4 text-muted-foreground" />
+            <Calendar className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm font-medium text-muted-foreground">Select a week</span>
           </div>
           <div className="flex flex-wrap gap-3">
-            {selectedLevel.weeks.map((week) => (
+            {currentLevel.weeks.map((week) => (
               <Button
                 key={week.id}
                 variant={selectedWeek.id === week.id ? 'default' : 'outline'}
                 onClick={() => {
                   setSelectedWeek(week);
-                  setSelectedConcept(week.concepts[0]);
-                  setActiveExample(0);
+                  if (week.concepts && week.concepts.length > 0) {
+                    setSelectedConcept(week.concepts[0]);
+                    setActiveExample(0);
+                  }
                 }}
                 className={selectedWeek.id === week.id 
                   ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700' 
@@ -132,13 +133,20 @@ export default function LearningPage() {
           key={selectedWeek.id}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.2 }}
           className="mb-8"
         >
-          <Card className="border-2">
+          <Card className="border-2 border-primary/20">
             <CardHeader>
-              <CardTitle className="text-xl">{selectedWeek.title}</CardTitle>
-              <CardDescription>{selectedWeek.description}</CardDescription>
+              <div className="flex items-start justify-between">
+                <div>
+                  <CardTitle className="text-2xl mb-2">{selectedWeek.title}</CardTitle>
+                  <CardDescription className="text-base">{selectedWeek.description}</CardDescription>
+                </div>
+                <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                  Week {selectedWeek.weekNumber}
+                </Badge>
+              </div>
             </CardHeader>
           </Card>
         </motion.div>
@@ -149,7 +157,7 @@ export default function LearningPage() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.3 }}
             className="lg:col-span-1"
           >
             <Card className="sticky top-4">
@@ -160,7 +168,7 @@ export default function LearningPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                {selectedWeek.concepts.map((concept) => (
+                {selectedWeek.concepts.map((concept, index) => (
                   <Button
                     key={concept.id}
                     variant={selectedConcept.id === concept.id ? 'secondary' : 'ghost'}
@@ -186,7 +194,7 @@ export default function LearningPage() {
             key={selectedConcept.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.4 }}
             className="lg:col-span-3 space-y-6"
           >
             {/* Concept Header */}
@@ -207,7 +215,7 @@ export default function LearningPage() {
                         key={index}
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.7 + index * 0.1 }}
+                        transition={{ delay: 0.5 + index * 0.1 }}
                         className="flex items-start gap-3"
                       >
                         <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 mt-2 flex-shrink-0" />
@@ -291,7 +299,7 @@ export default function LearningPage() {
                         key={index}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.8 + index * 0.1 }}
+                        transition={{ delay: 0.6 + index * 0.1 }}
                       >
                         <Card className="h-full border-2 hover:border-primary transition-colors">
                           <CardHeader>
@@ -305,7 +313,7 @@ export default function LearningPage() {
                             </div>
                             <div>
                               <span className="text-sm font-semibold text-muted-foreground">Example:</span>
-                              <p className="text-sm text-foreground mt-1 font-mono bg-muted p-2 rounded">{option.example}</p>
+                              <p className="text-sm text-foreground mt-1">{option.example}</p>
                             </div>
                           </CardContent>
                         </Card>

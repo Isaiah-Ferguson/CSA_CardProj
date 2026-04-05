@@ -1,3 +1,8 @@
+import { levelOne } from './level-one-concepts';
+import { levelTwo } from './level-two-concepts';
+import { levelThree } from './level-three-concepts';
+import { levelFour } from './level-four-concepts';
+
 export interface CodeExample {
   title: string;
   code: string;
@@ -42,13 +47,13 @@ export interface Level {
 
 export const learningLevels: Level[] = [
   {
-    id: 'level-1',
-    levelNumber: 1,
+    id: 'Combine',
+    levelNumber: 0,
     title: 'The Combine',
     description: 'Master the fundamentals of C# programming - variables, control flow, data structures, and object-oriented basics',
     weeks: [
       {
-        id: 'level-1-week-1',
+        id: 'Combine-week-1',
         weekNumber: 1,
         title: 'C# Basics',
         description: 'Variables, strings, conditionals, and console I/O',
@@ -730,11 +735,419 @@ if (validOperation)
                 explanation: 'Complete example showing input validation, type conversion, conditionals, and formatted output. Always validate user input and handle edge cases like division by zero.'
               }
             ]
+          },
+          {
+            id: 'assignment-operators',
+            title: 'Assignment Operators',
+            description: 'Understanding assignment and compound assignment operators in C#',
+            keyPoints: [
+              'The = operator assigns a value to a variable',
+              'Compound operators combine assignment with arithmetic operations',
+              '+=, -=, *=, /=, %= perform operation and assignment in one step',
+              'Increment (++) and decrement (--) operators change value by 1',
+              'Compound operators make code more concise and readable'
+            ],
+            codeExamples: [
+              {
+                title: 'Basic Assignment Operator',
+                code: `// Simple assignment with =
+int age = 25;
+string name = "Alice";
+double price = 19.99;
+bool isActive = true;
+
+// Assignment copies the value
+int x = 10;
+int y = x;      // y gets the value 10
+x = 20;         // Changing x doesn't affect y
+Console.WriteLine(y);  // Still 10
+
+// Reassignment
+int score = 0;
+score = 50;     // score is now 50
+score = 100;    // score is now 100`,
+                language: 'csharp',
+                explanation: 'The = operator assigns the value on the right to the variable on the left. It copies the value, so changing the original doesn\'t affect the copy.'
+              },
+              {
+                title: 'Compound Assignment Operators',
+                code: `int count = 10;
+
+// Addition assignment (+=)
+count += 5;     // Same as: count = count + 5
+Console.WriteLine(count);  // 15
+
+// Subtraction assignment (-=)
+count -= 3;     // Same as: count = count - 3
+Console.WriteLine(count);  // 12
+
+// Multiplication assignment (*=)
+count *= 2;     // Same as: count = count * 2
+Console.WriteLine(count);  // 24
+
+// Division assignment (/=)
+count /= 4;     // Same as: count = count / 4
+Console.WriteLine(count);  // 6
+
+// Modulus assignment (%=)
+count %= 4;     // Same as: count = count % 4
+Console.WriteLine(count);  // 2`,
+                language: 'csharp',
+                explanation: 'Compound operators perform an operation and assignment together. count += 5 is shorthand for count = count + 5. This makes code more concise.'
+              },
+              {
+                title: 'Increment and Decrement Operators',
+                code: `int counter = 5;
+
+// Post-increment (use value, then add 1)
+int a = counter++;
+Console.WriteLine(a);       // 5 (original value)
+Console.WriteLine(counter); // 6 (incremented)
+
+counter = 5;  // Reset
+
+// Pre-increment (add 1, then use value)
+int b = ++counter;
+Console.WriteLine(b);       // 6 (incremented value)
+Console.WriteLine(counter); // 6
+
+counter = 5;  // Reset
+
+// Post-decrement (use value, then subtract 1)
+int c = counter--;
+Console.WriteLine(c);       // 5 (original value)
+Console.WriteLine(counter); // 4 (decremented)
+
+counter = 5;  // Reset
+
+// Pre-decrement (subtract 1, then use value)
+int d = --counter;
+Console.WriteLine(d);       // 4 (decremented value)
+Console.WriteLine(counter); // 4`,
+                language: 'csharp',
+                explanation: 'Post-increment (x++) uses the current value then adds 1. Pre-increment (++x) adds 1 then uses the new value. Same logic applies to decrement (x-- and --x).'
+              },
+              {
+                title: 'Practical Examples',
+                code: `// Accumulating a total
+double total = 0;
+total += 10.50;  // Add first item
+total += 5.25;   // Add second item
+total += 8.75;   // Add third item
+Console.WriteLine($"Total: $ {total}");  // $24.50
+
+// Applying a discount
+double price = 100;
+price *= 0.9;    // Apply 10% discount (multiply by 0.9)
+Console.WriteLine($ "Discounted: $ {price}");  // $90
+
+// Counting in a loop
+int count = 0;
+for (int i = 0; i < 5; i++)
+{
+    count++;     // Increment counter
+}
+Console.WriteLine($"Count: {count}");  // 5
+
+// Score tracking
+int score = 100;
+score -= 10;     // Lose 10 points
+score += 25;     // Gain 25 points
+score *= 2;      // Double bonus
+Console.WriteLine($"Final score: {score}");  // 230`,
+                language: 'csharp',
+                explanation: 'Compound operators are commonly used for accumulating totals, applying calculations, counting iterations, and updating game scores.'
+              },
+              {
+                title: 'String Concatenation with +=',
+                code: `// Building strings with +=
+string message = "Hello";
+message += " ";
+message += "World";
+message += "!";
+Console.WriteLine(message);  // "Hello World!"
+
+// Building a list
+string items = "";
+items += "Apple, ";
+items += "Banana, ";
+items += "Orange";
+Console.WriteLine(items);  // "Apple, Banana, Orange"
+
+// Building formatted output
+string report = "Report:\\n";
+report += "Name: John\\n";
+report += "Age: 25\\n";
+report += "Score: 95\\n";
+Console.WriteLine(report);`,
+                language: 'csharp',
+                explanation: 'The += operator also works with strings to append (add to the end). Each += creates a new string with the combined content.'
+              }
+            ],
+            comparison: {
+              title: 'Assignment Operator Comparison',
+              options: [
+                {
+                  name: 'Simple Assignment (=)',
+                  description: 'Assigns a value to a variable',
+                  whenToUse: 'Setting initial values or replacing values completely',
+                  example: 'int x = 10; x = 20;'
+                },
+                {
+                  name: 'Compound Assignment (+=, -=, etc.)',
+                  description: 'Performs operation and assigns result',
+                  whenToUse: 'Modifying existing values, accumulating totals',
+                  example: 'count += 5; total -= discount;'
+                },
+                {
+                  name: 'Increment/Decrement (++, --)',
+                  description: 'Adds or subtracts 1',
+                  whenToUse: 'Counters, loops, incrementing by exactly 1',
+                  example: 'count++; index--;'
+                }
+              ]
+            }
+          },
+          {
+            id: 'pseudocode',
+            title: 'Pseudocode',
+            description: 'Planning your code with plain language before writing actual code',
+            keyPoints: [
+              'Pseudocode is a plain-language description of code logic',
+              'It helps plan your solution before writing actual code',
+              'Use simple, clear language that anyone can understand',
+              'Focus on the logic and steps, not syntax',
+              'Pseudocode makes it easier to spot logical errors early'
+            ],
+            codeExamples: [
+              {
+                title: 'What is Pseudocode?',
+                code: `// Pseudocode Example: Calculate average of three numbers
+/*
+START
+  GET number1 from user
+  GET number2 from user
+  GET number3 from user
+  
+  SET sum = number1 + number2 + number3
+  SET average = sum / 3
+  
+  DISPLAY average
+END
+*/
+
+// Actual C# code based on pseudocode:
+Console.Write("Enter first number: ");
+double num1 = double.Parse(Console.ReadLine());
+
+Console.Write("Enter second number: ");
+double num2 = double.Parse(Console.ReadLine());
+
+Console.Write("Enter third number: ");
+double num3 = double.Parse(Console.ReadLine());
+
+double sum = num1 + num2 + num3;
+double average = sum / 3;
+
+Console.WriteLine($"Average: {average}");`,
+                language: 'csharp',
+                explanation: 'Pseudocode uses plain language to describe the logic. It helps you think through the problem before worrying about syntax. Then you translate it to actual code.'
+              },
+              {
+                title: 'Pseudocode for Conditionals',
+                code: `// Pseudocode: Check if student passed
+/*
+START
+  GET score from user
+  
+  IF score >= 60 THEN
+    DISPLAY "You passed!"
+  ELSE
+    DISPLAY "You failed."
+  END IF
+END
+*/
+
+// C# Implementation:
+Console.Write("Enter your score: ");
+int score = int.Parse(Console.ReadLine());
+
+if (score >= 60)
+{
+    Console.WriteLine("You passed!");
+}
+else
+{
+    Console.WriteLine("You failed.");
+}`,
+                language: 'csharp',
+                explanation: 'Pseudocode for conditionals uses IF-THEN-ELSE structure. It clearly shows the decision logic before you write the actual if-else code.'
+              },
+              {
+                title: 'Pseudocode for Loops',
+                code: `// Pseudocode: Count from 1 to 10
+/*
+START
+  SET counter = 1
+  
+  WHILE counter <= 10 DO
+    DISPLAY counter
+    INCREMENT counter by 1
+  END WHILE
+END
+*/
+
+// C# Implementation:
+int counter = 1;
+
+while (counter <= 10)
+{
+    Console.WriteLine(counter);
+    counter++;
+}`,
+                language: 'csharp',
+                explanation: 'Pseudocode for loops uses WHILE-DO or FOR structures. It shows the loop logic clearly: initialize, check condition, execute, update.'
+              },
+              {
+                title: 'Complex Pseudocode Example',
+                code: `// Pseudocode: Simple login system
+/*
+START
+  SET maxAttempts = 3
+  SET attempts = 0
+  SET correctPassword = "secret123"
+  SET isLoggedIn = false
+  
+  WHILE attempts < maxAttempts AND isLoggedIn is false DO
+    DISPLAY "Enter password: "
+    GET userPassword from user
+    
+    IF userPassword equals correctPassword THEN
+      DISPLAY "Login successful!"
+      SET isLoggedIn = true
+    ELSE
+      INCREMENT attempts by 1
+      SET remaining = maxAttempts - attempts
+      
+      IF remaining > 0 THEN
+        DISPLAY "Wrong password. " + remaining + " attempts left."
+      ELSE
+        DISPLAY "Account locked. Too many failed attempts."
+      END IF
+    END IF
+  END WHILE
+END
+*/
+
+// C# Implementation:
+int maxAttempts = 3;
+int attempts = 0;
+string correctPassword = "secret123";
+bool isLoggedIn = false;
+
+while (attempts < maxAttempts && !isLoggedIn)
+{
+    Console.Write("Enter password: ");
+    string userPassword = Console.ReadLine();
+    
+    if (userPassword == correctPassword)
+    {
+        Console.WriteLine("Login successful!");
+        isLoggedIn = true;
+    }
+    else
+    {
+        attempts++;
+        int remaining = maxAttempts - attempts;
+        
+        if (remaining > 0)
+        {
+            Console.WriteLine($"Wrong password. {remaining} attempts left.");
+        }
+        else
+        {
+            Console.WriteLine("Account locked. Too many failed attempts.");
+        }
+    }
+}`,
+                language: 'csharp',
+                explanation: 'Complex pseudocode breaks down complicated logic into clear steps. Write pseudocode first to plan your approach, then translate each section to actual code.'
+              },
+              {
+                title: 'Pseudocode Best Practices',
+                code: `// GOOD Pseudocode - Clear and structured
+/*
+START
+  GET temperature from user
+  
+  IF temperature > 100 THEN
+    DISPLAY "Water is boiling"
+  ELSE IF temperature > 32 THEN
+    DISPLAY "Water is liquid"
+  ELSE
+    DISPLAY "Water is frozen"
+  END IF
+END
+*/
+
+// BAD Pseudocode - Too vague
+/*
+get temp
+check temp
+show result
+*/
+
+// BAD Pseudocode - Too much like actual code
+/*
+Console.Write("Enter temp: ");
+int temp = int.Parse(Console.ReadLine());
+if (temp > 100) { Console.WriteLine("Boiling"); }
+*/
+
+// GOOD - Right level of detail
+/*
+START Program
+  INITIALIZE variables
+  
+  REPEAT until user quits
+    DISPLAY menu options
+    GET user choice
+    
+    CASE choice OF
+      1: Call AddNumbers function
+      2: Call SubtractNumbers function
+      3: SET quit to true
+      DEFAULT: DISPLAY error message
+    END CASE
+  END REPEAT
+END Program
+*/`,
+                language: 'csharp',
+                explanation: 'Good pseudocode is clear but not too detailed. Avoid being too vague or too close to actual code. Use consistent keywords like START, END, IF, WHILE, GET, DISPLAY, SET.'
+              }
+            ],
+            comparison: {
+              title: 'Pseudocode vs Actual Code',
+              options: [
+                {
+                  name: 'Pseudocode',
+                  description: 'Plain language description of logic',
+                  whenToUse: 'Planning, designing, communicating ideas, learning',
+                  example: 'IF score >= 90 THEN DISPLAY "A grade"'
+                },
+                {
+                  name: 'Actual Code',
+                  description: 'Syntax-correct programming language',
+                  whenToUse: 'Implementation, execution, production',
+                  example: 'if (score >= 90) { Console.WriteLine("A grade"); }'
+                }
+              ]
+            }
           }
         ]
       },
       {
-        id: 'level-1-week-2',
+        id: 'Combine-week-2',
         weekNumber: 2,
         title: 'Loops & TryParse',
         description: 'Repeating code with while, do-while, for, and foreach loops, plus safe input parsing',
@@ -1350,11 +1763,542 @@ Console.WriteLine($"Price: \\$\{price:F2}");`,
                 explanation: 'Combine TryParse() with loops for robust input validation. Keep asking until you get valid input within the expected range. Provide clear error messages.'
               }
             ]
+          },
+          {
+            id: 'arithmetic-operators',
+            title: 'Arithmetic Operators',
+            description: 'Mathematical operations in C# - addition, subtraction, multiplication, division, and modulus',
+            keyPoints: [
+              'Arithmetic operators perform mathematical calculations',
+              'Basic operators: + (add), - (subtract), * (multiply), / (divide), % (modulus)',
+              'Integer division truncates decimal parts',
+              'Modulus (%) returns the remainder after division',
+              'Order of operations follows PEMDAS (Parentheses, Exponents, Multiply/Divide, Add/Subtract)'
+            ],
+            codeExamples: [
+              {
+                title: 'Basic Arithmetic Operators',
+                code: `// Addition
+int sum = 10 + 5;
+Console.WriteLine($"10 + 5 = {sum}");  // 15
+
+// Subtraction
+int difference = 10 - 5;
+Console.WriteLine($"10 - 5 = {difference}");  // 5
+
+// Multiplication
+int product = 10 * 5;
+Console.WriteLine($"10 * 5 = {product}");  // 50
+
+// Division
+int quotient = 10 / 5;
+Console.WriteLine($"10 / 5 = {quotient}");  // 2
+
+// Modulus (remainder)
+int remainder = 10 % 3;
+Console.WriteLine($"10 % 3 = {remainder}");  // 1
+
+// Negative numbers
+int negative = -10;
+int result = negative + 5;
+Console.WriteLine($"-10 + 5 = {result}");  // -5`,
+                language: 'csharp',
+                explanation: 'The five basic arithmetic operators work like a calculator. Addition (+), subtraction (-), multiplication (*), division (/), and modulus (%) for remainder.'
+              },
+              {
+                title: 'Integer vs Decimal Division',
+                code: `// Integer division - truncates decimal
+int a = 10;
+int b = 3;
+int result1 = a / b;
+Console.WriteLine($"10 / 3 = {result1}");  // 3 (not 3.333...)
+
+// Decimal division - keeps decimal
+double c = 10.0;
+double d = 3.0;
+double result2 = c / d;
+Console.WriteLine($"10.0 / 3.0 = {result2}");  // 3.333...
+
+// Mixed types - converts to decimal
+double result3 = 10 / 3.0;
+Console.WriteLine($"10 / 3.0 = {result3}");  // 3.333...
+
+// Cast to get decimal result
+int x = 10;
+int y = 3;
+double result4 = (double)x / y;
+Console.WriteLine($"(double)10 / 3 = {result4}");  // 3.333...
+
+// Common mistake
+int wrong = 10 / 3;  // 3, not 3.333
+double stillWrong = 10 / 3;  // 3.0, division happens first!
+double correct = 10.0 / 3;  // 3.333...`,
+                language: 'csharp',
+                explanation: 'Integer division discards the decimal part. To get decimal results, at least one operand must be a decimal type (double, decimal, float) or cast to decimal.'
+              },
+              {
+                title: 'Modulus Operator (%)',
+                code: `// Modulus returns the remainder
+Console.WriteLine($"10 % 3 = {10 % 3}");  // 1 (10 ÷ 3 = 3 remainder 1)
+Console.WriteLine($"15 % 4 = {15 % 4}");  // 3 (15 ÷ 4 = 3 remainder 3)
+Console.WriteLine($"20 % 5 = {20 % 5}");  // 0 (20 ÷ 5 = 4 remainder 0)
+
+// Check if number is even or odd
+int number = 7;
+if (number % 2 == 0)
+    Console.WriteLine($"{number} is even");
+else
+    Console.WriteLine($"{number} is odd");  // This executes
+
+// Check if divisible by another number
+int value = 15;
+if (value % 5 == 0)
+    Console.WriteLine($"{value} is divisible by 5");  // This executes
+
+// Cycle through values (wrapping)
+for (int i = 0; i < 10; i++)
+{
+    int cycled = i % 3;  // Cycles: 0, 1, 2, 0, 1, 2, 0, 1, 2, 0
+    Console.WriteLine($"i={i}, i%3={cycled}");
+}
+
+// Get last digit of a number
+int num = 12345;
+int lastDigit = num % 10;
+Console.WriteLine($"Last digit of {num} is {lastDigit}");  // 5`,
+                language: 'csharp',
+                explanation: 'Modulus (%) gives the remainder. Use it to check even/odd, test divisibility, cycle through values, or extract digits from numbers.'
+              },
+              {
+                title: 'Order of Operations',
+                code: `// PEMDAS: Parentheses, Exponents, Multiply/Divide, Add/Subtract
+int result1 = 2 + 3 * 4;
+Console.WriteLine(result1);  // 14 (not 20) - multiply first
+
+int result2 = (2 + 3) * 4;
+Console.WriteLine(result2);  // 20 - parentheses first
+
+int result3 = 10 - 5 - 2;
+Console.WriteLine(result3);  // 3 - left to right for same precedence
+
+int result4 = 20 / 4 * 2;
+Console.WriteLine(result4);  // 10 - left to right (not 2.5)
+
+// Complex expression
+int a = 5;
+int b = 3;
+int c = 2;
+int result5 = a + b * c - (a - b) / c;
+// Step by step:
+// 1. Parentheses: (5 - 3) = 2
+// 2. Multiply: 3 * 2 = 6
+// 3. Divide: 2 / 2 = 1
+// 4. Add/Subtract left to right: 5 + 6 - 1 = 10
+Console.WriteLine(result5);  // 10
+
+// Use parentheses for clarity
+int clear = ((a + b) * c) - ((a - b) / c);
+Console.WriteLine(clear);  // 15`,
+                language: 'csharp',
+                explanation: 'C# follows standard math order: Parentheses first, then Multiply/Divide (left to right), then Add/Subtract (left to right). Use parentheses to make your intent clear.'
+              },
+              {
+                title: 'Practical Arithmetic Examples',
+                code: `// Calculate average
+int score1 = 85, score2 = 92, score3 = 78;
+double average = (score1 + score2 + score3) / 3.0;
+Console.WriteLine($"Average: {average:F2}");  // 85.00
+
+// Calculate percentage
+double earned = 45;
+double total = 50;
+double percentage = (earned / total) * 100;
+Console.WriteLine($"Percentage: {percentage}%");  // 90%
+
+// Convert temperature (Celsius to Fahrenheit)
+double celsius = 25;
+double fahrenheit = (celsius * 9 / 5) + 32;
+Console.WriteLine($"{celsius}°C = {fahrenheit}°F");  // 77°F
+
+// Calculate discount
+double price = 100;
+double discountPercent = 20;
+double discountAmount = price * (discountPercent / 100);
+double finalPrice = price - discountAmount;
+Console.WriteLine($"Original: $ {price}");
+Console.WriteLine($"Discount: $ {discountAmount}");
+Console.WriteLine($"Final: $ {finalPrice}");  // $80
+
+// Split bill
+double billTotal = 125.50;
+int people = 4;
+double perPerson = billTotal / people;
+Console.WriteLine($"Each person pays: $ {perPerson:F2}");  // $31.38`,
+                language: 'csharp',
+                explanation: 'Common real-world uses: calculating averages, percentages, temperature conversion, discounts, and splitting costs. Always use decimal types for money calculations.'
+              }
+            ],
+            comparison: {
+              title: 'Arithmetic Operator Reference',
+              options: [
+                {
+                  name: 'Addition (+)',
+                  description: 'Adds two numbers together',
+                  whenToUse: 'Summing values, incrementing, concatenating strings',
+                  example: 'int sum = 10 + 5; // 15'
+                },
+                {
+                  name: 'Subtraction (-)',
+                  description: 'Subtracts second number from first',
+                  whenToUse: 'Finding difference, decrementing, calculating change',
+                  example: 'int diff = 10 - 5; // 5'
+                },
+                {
+                  name: 'Multiplication (*)',
+                  description: 'Multiplies two numbers',
+                  whenToUse: 'Scaling values, calculating totals, area/volume',
+                  example: 'int product = 10 * 5; // 50'
+                },
+                {
+                  name: 'Division (/)',
+                  description: 'Divides first number by second',
+                  whenToUse: 'Splitting values, averages, ratios',
+                  example: 'double quotient = 10.0 / 3; // 3.333'
+                },
+                {
+                  name: 'Modulus (%)',
+                  description: 'Returns remainder after division',
+                  whenToUse: 'Even/odd check, divisibility, cycling, extracting digits',
+                  example: 'int remainder = 10 % 3; // 1'
+                }
+              ]
+            }
+          },
+          {
+            id: 'logical-operators',
+            title: 'Logical Operators',
+            description: 'Combining and inverting boolean conditions with AND, OR, and NOT',
+            keyPoints: [
+              'Logical operators work with boolean values (true/false)',
+              'AND (&&) - both conditions must be true',
+              'OR (||) - at least one condition must be true',
+              'NOT (!) - inverts the boolean value',
+              'Short-circuit evaluation: && stops if first is false, || stops if first is true',
+              'Use parentheses to group complex conditions'
+            ],
+            codeExamples: [
+              {
+                title: 'AND Operator (&&)',
+                code: `// Both conditions must be true
+int age = 25;
+bool hasLicense = true;
+
+// Simple AND
+if (age >= 18 && hasLicense)
+{
+    Console.WriteLine("You can drive");  // Executes
+}
+
+// Multiple AND conditions
+int score = 85;
+bool attendedClass = true;
+bool submittedHomework = true;
+
+if (score >= 60 && attendedClass && submittedHomework)
+{
+    Console.WriteLine("You passed the course");  // Executes
+}
+
+// AND with comparisons
+int temperature = 72;
+if (temperature >= 60 && temperature <= 80)
+{
+    Console.WriteLine("Perfect weather!");  // Executes
+}
+
+// Truth table for AND
+Console.WriteLine($"true && true = {true && true}");      // true
+Console.WriteLine($"true && false = {true && false}");    // false
+Console.WriteLine($"false && true = {false && true}");    // false
+Console.WriteLine($"false && false = {false && false}");  // false`,
+                language: 'csharp',
+                explanation: 'AND (&&) requires ALL conditions to be true. If any condition is false, the entire expression is false. Use for checking multiple requirements.'
+              },
+              {
+                title: 'OR Operator (||)',
+                code: `// At least one condition must be true
+int age = 70;
+bool isStudent = false;
+
+// Simple OR
+if (age < 18 || age > 65)
+{
+    Console.WriteLine("Discounted ticket");  // Executes (age > 65 is true)
+}
+
+// Multiple OR conditions
+string day = "Saturday";
+if (day == "Saturday" || day == "Sunday" || day == "Holiday")
+{
+    Console.WriteLine("It's a day off!");  // Executes
+}
+
+// OR with different conditions
+int score = 95;
+bool hasExtraCredit = false;
+if (score >= 90 || hasExtraCredit)
+{
+    Console.WriteLine("Grade: A");  // Executes (score >= 90 is true)
+}
+
+// Truth table for OR
+Console.WriteLine($"true || true = {true || true}");      // true
+Console.WriteLine($"true || false = {true || false}");    // true
+Console.WriteLine($"false || true = {false || true}");    // true
+Console.WriteLine($"false || false = {false || false}");  // false`,
+                language: 'csharp',
+                explanation: 'OR (||) requires AT LEAST ONE condition to be true. If any condition is true, the entire expression is true. Use for checking alternatives.'
+              },
+              {
+                title: 'NOT Operator (!)',
+                code: `// NOT inverts the boolean value
+bool isRaining = false;
+
+// Simple NOT
+if (!isRaining)
+{
+    Console.WriteLine("Go for a walk");  // Executes
+}
+
+// NOT with comparisons
+int age = 15;
+if (!(age >= 18))
+{
+    Console.WriteLine("You are a minor");  // Executes
+}
+// Same as: if (age < 18)
+
+// Double NOT (back to original)
+bool value = true;
+Console.WriteLine($"!true = {!value}");    // false
+Console.WriteLine($"!!true = {!!value}");  // true
+
+// NOT with variables
+bool isLoggedIn = false;
+bool isGuest = !isLoggedIn;
+Console.WriteLine($"Is guest: {isGuest}");  // true
+
+// NOT in complex conditions
+bool hasPermission = false;
+bool isAdmin = true;
+if (!hasPermission && !isAdmin)
+{
+    Console.WriteLine("Access denied");
+}
+else
+{
+    Console.WriteLine("Access granted");  // Executes
+}`,
+                language: 'csharp',
+                explanation: 'NOT (!) flips the boolean value. true becomes false, false becomes true. Use to check for the opposite condition or to invert logic.'
+              },
+              {
+                title: 'Combining Logical Operators',
+                code: `// Complex conditions with AND, OR, NOT
+int age = 25;
+bool hasLicense = true;
+bool hasInsurance = true;
+bool hasCar = false;
+
+// AND + OR
+if ((age >= 18 && hasLicense) || hasInsurance)
+{
+    Console.WriteLine("Can potentially drive");  // Executes
+}
+
+// Multiple conditions
+string username = "admin";
+string password = "secret123";
+bool isActive = true;
+
+if (username == "admin" && password == "secret123" && isActive)
+{
+    Console.WriteLine("Login successful");  // Executes
+}
+
+// NOT with AND/OR
+bool isWeekend = true;
+bool isHoliday = false;
+bool hasWork = false;
+
+if ((isWeekend || isHoliday) && !hasWork)
+{
+    Console.WriteLine("Time to relax!");  // Executes
+}
+
+// Range checking with AND
+int score = 85;
+if (score >= 80 && score < 90)
+{
+    Console.WriteLine("Grade: B");  // Executes
+}
+
+// Multiple alternatives with OR
+char grade = 'A';
+if (grade == 'A' || grade == 'B' || grade == 'C')
+{
+    Console.WriteLine("Passing grade");  // Executes
+}`,
+                language: 'csharp',
+                explanation: 'Combine &&, ||, and ! to create complex conditions. Use parentheses to group conditions and make your logic clear. AND has higher precedence than OR.'
+              },
+              {
+                title: 'Short-Circuit Evaluation',
+                code: `// AND (&&) short-circuits if first condition is false
+int x = 5;
+if (x > 10 && x < 20)  // x > 10 is false, so x < 20 never checked
+{
+    Console.WriteLine("Between 10 and 20");
+}
+
+// OR (||) short-circuits if first condition is true
+int y = 15;
+if (y > 10 || y < 5)  // y > 10 is true, so y < 5 never checked
+{
+    Console.WriteLine("Outside 5-10 range");  // Executes
+}
+
+// Practical use: Null checking
+string name = null;
+if (name != null && name.Length > 0)  // Safe! Length not checked if name is null
+{
+    Console.WriteLine($"Hello, {name}");
+}
+
+// Dangerous without short-circuit
+// if (name.Length > 0 && name != null)  // CRASH! Checks Length on null
+
+// Division by zero prevention
+int a = 10;
+int b = 0;
+if (b != 0 && a / b > 5)  // Safe! Division not performed if b is 0
+{
+    Console.WriteLine("Result is greater than 5");
+}
+
+// Method call short-circuit
+bool IsValid(int num)
+{
+    Console.WriteLine("IsValid called");
+    return num > 0;
+}
+
+bool IsEven(int num)
+{
+    Console.WriteLine("IsEven called");
+    return num % 2 == 0;
+}
+
+int value = -5;
+if (IsValid(value) && IsEven(value))  // IsEven never called
+{
+    Console.WriteLine("Valid and even");
+}`,
+                language: 'csharp',
+                explanation: 'Short-circuit evaluation stops checking conditions once the result is determined. && stops if first is false, || stops if first is true. Use this to prevent errors and improve performance.'
+              },
+              {
+                title: 'Practical Logical Operator Examples',
+                code: `// Login validation
+string username = "alice";
+string password = "pass123";
+bool isActive = true;
+
+if (username.Length > 0 && password.Length >= 6 && isActive)
+{
+    Console.WriteLine("Valid login attempt");
+}
+
+// Age category checker
+int age = 25;
+if (age >= 0 && age <= 12)
+    Console.WriteLine("Child");
+else if (age >= 13 && age <= 19)
+    Console.WriteLine("Teenager");
+else if (age >= 20 && age <= 64)
+    Console.WriteLine("Adult");  // Executes
+else if (age >= 65)
+    Console.WriteLine("Senior");
+
+// Weekend or holiday check
+string day = "Saturday";
+bool isHoliday = false;
+if (day == "Saturday" || day == "Sunday" || isHoliday)
+{
+    Console.WriteLine("Store closed");  // Executes
+}
+
+// Access control
+bool isAdmin = false;
+bool isOwner = true;
+bool hasPermission = true;
+
+if (isAdmin || isOwner || hasPermission)
+{
+    Console.WriteLine("Access granted");  // Executes
+}
+
+// Form validation
+string email = "user@example.com";
+int phoneLength = 10;
+bool agreedToTerms = true;
+
+if (email.Contains("@") && phoneLength == 10 && agreedToTerms)
+{
+    Console.WriteLine("Form is valid");  // Executes
+}
+
+// Game logic
+int health = 50;
+int ammo = 0;
+bool hasShield = true;
+
+if ((health > 0 && ammo > 0) || hasShield)
+{
+    Console.WriteLine("Can continue fighting");  // Executes (hasShield is true)
+}`,
+                language: 'csharp',
+                explanation: 'Logical operators are essential for validation, access control, categorization, and game logic. Combine them to create sophisticated decision-making in your programs.'
+              }
+            ],
+            comparison: {
+              title: 'Logical Operator Reference',
+              options: [
+                {
+                  name: 'AND (&&)',
+                  description: 'Both conditions must be true',
+                  whenToUse: 'Multiple requirements, range checking, validation',
+                  example: 'if (age >= 18 && hasLicense) { }'
+                },
+                {
+                  name: 'OR (||)',
+                  description: 'At least one condition must be true',
+                  whenToUse: 'Alternative conditions, multiple valid options',
+                  example: 'if (day == "Sat" || day == "Sun") { }'
+                },
+                {
+                  name: 'NOT (!)',
+                  description: 'Inverts the boolean value',
+                  whenToUse: 'Checking opposite condition, negating results',
+                  example: 'if (!isRaining) { }'
+                }
+              ]
+            }
           }
         ]
       },
       {
-        id: 'level-1-week-3',
+        id: 'Combine-week-3',
         weekNumber: 3,
         title: 'Arrays, Lists, Random & Errors',
         description: 'Working with collections, generating random numbers, and understanding different types of errors',
@@ -1888,7 +2832,7 @@ else
         ]
       },
       {
-        id: 'level-1-week-4',
+        id: 'Combine-week-4',
         weekNumber: 4,
         title: 'Classes & Methods',
         description: 'Object-oriented programming basics - creating classes, methods, and objects',
@@ -2455,5 +3399,9 @@ Console.WriteLine("Hello");           // WriteLine is static`,
         ]
       }
     ]
-  }
+  },
+  levelOne,
+  levelTwo,
+  levelThree,
+  levelFour
 ];
