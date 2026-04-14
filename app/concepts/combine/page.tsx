@@ -170,7 +170,7 @@ export default function CombinePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="lg:col-span-3 space-y-6"
+            className="lg:col-span-3 space-y-6 min-w-0"
           >
             {/* Concept Header */}
             <Card className="border-2">
@@ -230,7 +230,7 @@ export default function CombinePage() {
                           transition={{ duration: 0.2 }}
                           className="space-y-4"
                         >
-                          <div className="rounded-lg overflow-hidden border-2 border-border">
+                          <div className="rounded-lg overflow-hidden border-2 border-border overflow-x-auto">
                             <SyntaxHighlighter
                               language={example.language}
                               style={vscDarkPlus}
@@ -238,7 +238,10 @@ export default function CombinePage() {
                                 margin: 0,
                                 borderRadius: 0,
                                 fontSize: '14px',
-                                padding: '1.5rem'
+                                padding: '1.5rem',
+                                overflowX: 'auto',
+                                wordBreak: 'normal',
+                                whiteSpace: 'pre'
                               }}
                             >
                               {example.code}

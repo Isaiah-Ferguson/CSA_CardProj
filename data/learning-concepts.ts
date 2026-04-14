@@ -572,7 +572,7 @@ bool sameIgnoreCase = name1.Equals(name2,
           },
           {
             id: 'console-io',
-            title: 'Console.WriteLine & Console.ReadLine',
+            title: 'Console.WriteLine & ReadLine',
             description: 'Reading input from users and displaying output to the console',
             keyPoints: [
               'Console.WriteLine() outputs text and moves to a new line',

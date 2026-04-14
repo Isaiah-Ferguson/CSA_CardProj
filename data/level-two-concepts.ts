@@ -1181,7 +1181,7 @@ public class ProductsController : ControllerBase
         },
         {
           id: 'http-methods',
-          title: 'HTTP Methods (GET, POST, PUT, DELETE)',
+          title: 'HTTP Methods',
           description: 'Using HTTP verbs to perform CRUD operations',
           keyPoints: [
             'GET retrieves data (read-only, no side effects)',

@@ -1312,7 +1312,7 @@ const config: Config = {
         },
         {
           id: 'array-methods',
-          title: 'Array Methods (map, filter, forEach, etc.)',
+          title: 'Array Methods',
           description: 'Essential array methods for data manipulation',
           keyPoints: [
             'map() transforms each element, returns new array',
