@@ -4428,6 +4428,597 @@ const complexResult = data
           }
         }
       ]
+    },
+    {
+      id: 'level-2-week-4',
+      weekNumber: 4,
+      title: 'Intro to Tailwind CSS',
+      description: 'Modern utility-first CSS framework for rapid UI development',
+      concepts: [
+        {
+          id: 'tailwind-basics',
+          title: 'What is Tailwind CSS?',
+          description: 'Understanding utility-first CSS and Tailwind\'s approach',
+          keyPoints: [
+            'Utility-first CSS framework with pre-built classes',
+            'Style elements directly in HTML without writing custom CSS',
+            'Responsive design built-in with breakpoint prefixes',
+            'Highly customizable through configuration',
+            'Smaller bundle sizes with production optimization'
+          ],
+          codeExamples: [
+            {
+              title: 'Traditional CSS vs Tailwind',
+              code: `<!-- Traditional CSS Approach -->
+<style>
+  .button {
+    background-color: blue;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+  }
+  .button:hover {
+    background-color: darkblue;
+  }
+</style>
+<button class="button">Click Me</button>
+
+<!-- Tailwind CSS Approach -->
+<button class="bg-blue-500 text-white px-4 py-2 rounded font-semibold hover:bg-blue-700">
+  Click Me
+</button>`,
+              language: 'html',
+              explanation: 'Tailwind uses utility classes directly in HTML instead of writing custom CSS. Each class does one thing (bg-blue-500 = background color, px-4 = horizontal padding, etc.).'
+            },
+            {
+              title: 'Basic Tailwind Setup',
+              code: `<!-- Include Tailwind via CDN (for learning/prototyping) -->
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div class="p-8">
+    <h1 class="text-3xl font-bold text-blue-600">
+      Hello Tailwind!
+    </h1>
+    <p class="text-gray-600 mt-4">
+      This is styled with Tailwind CSS utility classes.
+    </p>
+  </div>
+</body>
+</html>`,
+              language: 'html',
+              explanation: 'For learning, use the CDN script tag. For production, install Tailwind via npm. The utility classes style elements without writing CSS files.'
+            },
+            {
+              title: 'Common Utility Classes',
+              code: `<!-- Text Styling -->
+<p class="text-sm">Small text</p>
+<p class="text-base">Normal text</p>
+<p class="text-lg">Large text</p>
+<p class="text-xl">Extra large text</p>
+<p class="text-2xl">2X large text</p>
+
+<p class="font-light">Light weight</p>
+<p class="font-normal">Normal weight</p>
+<p class="font-semibold">Semibold weight</p>
+<p class="font-bold">Bold weight</p>
+
+<p class="text-gray-500">Gray text</p>
+<p class="text-blue-600">Blue text</p>
+<p class="text-red-500">Red text</p>
+
+<!-- Spacing -->
+<div class="m-4">Margin all sides</div>
+<div class="mt-4">Margin top</div>
+<div class="p-4">Padding all sides</div>
+<div class="px-4 py-2">Padding horizontal & vertical</div>`,
+              language: 'html',
+              explanation: 'Tailwind has intuitive naming: text-{size}, font-{weight}, text-{color}-{shade}, m-{size} for margin, p-{size} for padding. Numbers represent spacing scale (4 = 1rem = 16px).'
+            }
+          ]
+        },
+        {
+          id: 'layout-utilities',
+          title: 'Layout & Flexbox',
+          description: 'Creating layouts with Tailwind\'s flexbox and grid utilities',
+          keyPoints: [
+            'Use flex to create flexible layouts',
+            'justify-* controls horizontal alignment',
+            'items-* controls vertical alignment',
+            'gap-* adds spacing between flex items',
+            'flex-col changes direction to vertical'
+          ],
+          codeExamples: [
+            {
+              title: 'Flexbox Basics',
+              code: `<!-- Horizontal Flex Container -->
+<div class="flex gap-4">
+  <div class="bg-blue-500 p-4">Item 1</div>
+  <div class="bg-blue-500 p-4">Item 2</div>
+  <div class="bg-blue-500 p-4">Item 3</div>
+</div>
+
+<!-- Vertical Flex Container -->
+<div class="flex flex-col gap-4">
+  <div class="bg-green-500 p-4">Item 1</div>
+  <div class="bg-green-500 p-4">Item 2</div>
+  <div class="bg-green-500 p-4">Item 3</div>
+</div>
+
+<!-- Centered Content -->
+<div class="flex items-center justify-center h-screen">
+  <div class="bg-purple-500 p-8 text-white">
+    Perfectly Centered!
+  </div>
+</div>`,
+              language: 'html',
+              explanation: 'flex creates a flex container. flex-col makes it vertical. gap-4 adds spacing. items-center centers vertically, justify-center centers horizontally.'
+            },
+            {
+              title: 'Flex Alignment Options',
+              code: `<!-- Justify Content (Horizontal) -->
+<div class="flex justify-start">Left aligned</div>
+<div class="flex justify-center">Center aligned</div>
+<div class="flex justify-end">Right aligned</div>
+<div class="flex justify-between">Space between</div>
+<div class="flex justify-around">Space around</div>
+
+<!-- Align Items (Vertical) -->
+<div class="flex items-start h-32">Top aligned</div>
+<div class="flex items-center h-32">Center aligned</div>
+<div class="flex items-end h-32">Bottom aligned</div>
+<div class="flex items-stretch h-32">Stretched</div>
+
+<!-- Combined -->
+<div class="flex items-center justify-between">
+  <span>Left</span>
+  <span>Right</span>
+</div>`,
+              language: 'html',
+              explanation: 'justify-* controls main axis (horizontal by default). items-* controls cross axis (vertical by default). Combine them for precise positioning.'
+            },
+            {
+              title: 'Responsive Flexbox',
+              code: `<!-- Stack on mobile, row on desktop -->
+<div class="flex flex-col md:flex-row gap-4">
+  <div class="bg-blue-500 p-4 flex-1">Column 1</div>
+  <div class="bg-blue-500 p-4 flex-1">Column 2</div>
+  <div class="bg-blue-500 p-4 flex-1">Column 3</div>
+</div>
+
+<!-- Different alignment per breakpoint -->
+<div class="flex flex-col items-start md:flex-row md:items-center md:justify-between">
+  <h2 class="text-2xl font-bold">Title</h2>
+  <button class="bg-blue-500 text-white px-4 py-2 rounded">
+    Action
+  </button>
+</div>`,
+              language: 'html',
+              explanation: 'Breakpoint prefixes (md:, lg:, etc.) apply styles at different screen sizes. md:flex-row means "use flex-row on medium screens and up". Mobile-first approach.'
+            }
+          ]
+        },
+        {
+          id: 'colors-backgrounds',
+          title: 'Colors & Backgrounds',
+          description: 'Working with Tailwind\'s color system and backgrounds',
+          keyPoints: [
+            'Colors use format: {property}-{color}-{shade}',
+            'Shades range from 50 (lightest) to 950 (darkest)',
+            'Common colors: gray, red, blue, green, yellow, purple, pink',
+            'bg-* for backgrounds, text-* for text color',
+            'border-* for border colors'
+          ],
+          codeExamples: [
+            {
+              title: 'Color Palette',
+              code: `<!-- Background Colors -->
+<div class="bg-gray-100 p-4">Light gray background</div>
+<div class="bg-blue-500 p-4 text-white">Blue background</div>
+<div class="bg-red-600 p-4 text-white">Red background</div>
+<div class="bg-green-500 p-4 text-white">Green background</div>
+
+<!-- Text Colors -->
+<p class="text-gray-600">Gray text</p>
+<p class="text-blue-500">Blue text</p>
+<p class="text-red-500">Red text</p>
+<p class="text-green-600">Green text</p>
+
+<!-- Color Shades -->
+<div class="bg-blue-50 p-2">Lightest blue (50)</div>
+<div class="bg-blue-200 p-2">Light blue (200)</div>
+<div class="bg-blue-500 p-2 text-white">Medium blue (500)</div>
+<div class="bg-blue-700 p-2 text-white">Dark blue (700)</div>
+<div class="bg-blue-950 p-2 text-white">Darkest blue (950)</div>`,
+              language: 'html',
+              explanation: 'Tailwind provides a consistent color scale. 500 is the base shade. Lower numbers are lighter, higher are darker. Use text-white with dark backgrounds for readability.'
+            },
+            {
+              title: 'Gradients & Opacity',
+              code: `<!-- Linear Gradients -->
+<div class="bg-gradient-to-r from-blue-500 to-purple-600 p-8 text-white">
+  Left to right gradient
+</div>
+
+<div class="bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500 p-8 text-white">
+  Diagonal gradient with 3 colors
+</div>
+
+<!-- Gradient Directions -->
+<div class="bg-gradient-to-t">To top</div>
+<div class="bg-gradient-to-tr">To top-right</div>
+<div class="bg-gradient-to-r">To right</div>
+<div class="bg-gradient-to-br">To bottom-right</div>
+<div class="bg-gradient-to-b">To bottom</div>
+
+<!-- Opacity -->
+<div class="bg-blue-500 bg-opacity-50 p-4">50% opacity</div>
+<div class="bg-red-500 bg-opacity-75 p-4">75% opacity</div>
+<div class="text-gray-900 text-opacity-60">60% text opacity</div>`,
+              language: 'html',
+              explanation: 'Gradients use bg-gradient-to-{direction} with from-{color} and to-{color}. Add via-{color} for 3-color gradients. Control opacity with bg-opacity-{amount}.'
+            },
+            {
+              title: 'Borders & Shadows',
+              code: `<!-- Borders -->
+<div class="border border-gray-300 p-4">Default border</div>
+<div class="border-2 border-blue-500 p-4">Thicker blue border</div>
+<div class="border-4 border-red-500 p-4">Very thick red border</div>
+
+<!-- Border Sides -->
+<div class="border-t border-gray-300 p-4">Top border only</div>
+<div class="border-l-4 border-blue-500 p-4">Left accent border</div>
+
+<!-- Rounded Corners -->
+<div class="rounded p-4 bg-gray-200">Small rounded</div>
+<div class="rounded-lg p-4 bg-gray-200">Large rounded</div>
+<div class="rounded-full p-4 bg-gray-200">Fully rounded (pill)</div>
+
+<!-- Shadows -->
+<div class="shadow p-4">Small shadow</div>
+<div class="shadow-md p-4">Medium shadow</div>
+<div class="shadow-lg p-4">Large shadow</div>
+<div class="shadow-xl p-4">Extra large shadow</div>`,
+              language: 'html',
+              explanation: 'border adds 1px border. border-{n} controls thickness. rounded adds border-radius. shadow adds box-shadow. Combine for polished UI elements.'
+            }
+          ]
+        },
+        {
+          id: 'responsive-design',
+          title: 'Responsive Design',
+          description: 'Building mobile-first responsive layouts with breakpoints',
+          keyPoints: [
+            'Mobile-first approach - base styles apply to all sizes',
+            'Breakpoints: sm (640px), md (768px), lg (1024px), xl (1280px)',
+            'Use prefix like md: to apply styles at that breakpoint and up',
+            'Stack classes for different breakpoints',
+            'Hide/show elements at different sizes'
+          ],
+          codeExamples: [
+            {
+              title: 'Responsive Text & Spacing',
+              code: `<!-- Responsive Text Size -->
+<h1 class="text-2xl md:text-4xl lg:text-5xl">
+  Responsive Heading
+</h1>
+<!-- Mobile: 2xl, Tablet: 4xl, Desktop: 5xl -->
+
+<!-- Responsive Padding -->
+<div class="p-4 md:p-8 lg:p-12">
+  More padding on larger screens
+</div>
+
+<!-- Responsive Margin -->
+<div class="mt-4 md:mt-8 lg:mt-16">
+  More top margin on larger screens
+</div>
+
+<!-- Responsive Width -->
+<div class="w-full md:w-1/2 lg:w-1/3">
+  Full width mobile, half on tablet, third on desktop
+</div>`,
+              language: 'html',
+              explanation: 'Start with mobile styles (no prefix), then add breakpoint prefixes for larger screens. md: applies at 768px and up. Styles cascade upward.'
+            },
+            {
+              title: 'Responsive Layout',
+              code: `<!-- Responsive Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div class="bg-blue-500 p-4">Item 1</div>
+  <div class="bg-blue-500 p-4">Item 2</div>
+  <div class="bg-blue-500 p-4">Item 3</div>
+  <div class="bg-blue-500 p-4">Item 4</div>
+  <div class="bg-blue-500 p-4">Item 5</div>
+  <div class="bg-blue-500 p-4">Item 6</div>
+</div>
+<!-- Mobile: 1 column, Tablet: 2 columns, Desktop: 3 columns -->
+
+<!-- Responsive Flex Direction -->
+<div class="flex flex-col md:flex-row gap-4">
+  <div class="flex-1 bg-green-500 p-4">Sidebar</div>
+  <div class="flex-1 bg-green-500 p-4">Main Content</div>
+</div>
+<!-- Mobile: Stacked, Desktop: Side by side -->`,
+              language: 'html',
+              explanation: 'Grid and flex layouts adapt to screen size. grid-cols-1 on mobile, grid-cols-2 on tablet, grid-cols-3 on desktop. flex-col on mobile, flex-row on desktop.'
+            },
+            {
+              title: 'Hide/Show Elements',
+              code: `<!-- Hide on mobile, show on desktop -->
+<div class="hidden md:block">
+  Only visible on tablet and larger
+</div>
+
+<!-- Show on mobile, hide on desktop -->
+<div class="block md:hidden">
+  Only visible on mobile
+</div>
+
+<!-- Responsive Navigation -->
+<nav class="flex items-center justify-between p-4">
+  <div class="text-xl font-bold">Logo</div>
+  
+  <!-- Mobile menu button -->
+  <button class="md:hidden">
+    Menu
+  </button>
+  
+  <!-- Desktop navigation -->
+  <div class="hidden md:flex gap-4">
+    <a href="#" class="hover:text-blue-500">Home</a>
+    <a href="#" class="hover:text-blue-500">About</a>
+    <a href="#" class="hover:text-blue-500">Contact</a>
+  </div>
+</nav>`,
+              language: 'html',
+              explanation: 'hidden hides elements. block shows them. Combine with breakpoints to show/hide at different sizes. Common pattern: hamburger menu on mobile, full nav on desktop.'
+            }
+          ]
+        },
+        {
+          id: 'hover-states',
+          title: 'Interactive States',
+          description: 'Adding hover, focus, and active states to elements',
+          keyPoints: [
+            'hover: prefix for hover states',
+            'focus: prefix for focus states (inputs, buttons)',
+            'active: prefix for active/pressed states',
+            'group-hover: for parent hover effects',
+            'Transitions smooth state changes'
+          ],
+          codeExamples: [
+            {
+              title: 'Hover Effects',
+              code: `<!-- Hover Background Color -->
+<button class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded">
+  Hover Me
+</button>
+
+<!-- Hover Text Color -->
+<a href="#" class="text-blue-500 hover:text-blue-700 hover:underline">
+  Hover Link
+</a>
+
+<!-- Hover Scale -->
+<div class="bg-purple-500 p-4 hover:scale-110 transition">
+  Grows on hover
+</div>
+
+<!-- Hover Shadow -->
+<div class="bg-white p-4 shadow hover:shadow-lg transition">
+  Shadow increases on hover
+</div>
+
+<!-- Multiple Hover Effects -->
+<button class="bg-green-500 hover:bg-green-700 hover:scale-105 text-white px-6 py-3 rounded-lg transition">
+  Animated Button
+</button>`,
+              language: 'html',
+              explanation: 'Add hover: prefix to any utility class. Combine multiple hover effects. Add transition class for smooth animations between states.'
+            },
+            {
+              title: 'Focus & Active States',
+              code: `<!-- Focus States (for inputs) -->
+<input 
+  type="text" 
+  class="border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 p-2 rounded"
+  placeholder="Focus me"
+/>
+
+<!-- Focus on buttons -->
+<button class="bg-blue-500 focus:ring-4 focus:ring-blue-300 text-white px-4 py-2 rounded">
+  Focus Ring
+</button>
+
+<!-- Active State (when pressed) -->
+<button class="bg-blue-500 active:bg-blue-800 text-white px-4 py-2 rounded">
+  Press Me
+</button>
+
+<!-- Combined States -->
+<button class="bg-blue-500 hover:bg-blue-600 active:bg-blue-800 focus:ring-4 focus:ring-blue-300 text-white px-4 py-2 rounded transition">
+  Full Interactive Button
+</button>`,
+              language: 'html',
+              explanation: 'focus: styles appear when element is focused (tab or click). active: styles appear when pressed. focus:ring adds an outline ring for accessibility.'
+            },
+            {
+              title: 'Group Hover',
+              code: `<!-- Card with group hover -->
+<div class="group bg-white p-6 rounded-lg shadow hover:shadow-xl transition cursor-pointer">
+  <h3 class="text-xl font-bold group-hover:text-blue-500 transition">
+    Card Title
+  </h3>
+  <p class="text-gray-600 mt-2">
+    Hover over the card to see the title change color
+  </p>
+  <button class="mt-4 bg-blue-500 group-hover:bg-blue-700 text-white px-4 py-2 rounded transition">
+    Learn More
+  </button>
+</div>
+
+<!-- Image with overlay on hover -->
+<div class="group relative overflow-hidden rounded-lg">
+  <img src="image.jpg" class="group-hover:scale-110 transition duration-300" />
+  <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition">
+    <div class="flex items-center justify-center h-full opacity-0 group-hover:opacity-100 transition">
+      <span class="text-white text-xl font-bold">View Details</span>
+    </div>
+  </div>
+</div>`,
+              language: 'html',
+              explanation: 'Add group class to parent. Use group-hover: on children to style them when parent is hovered. Great for cards, images, and complex interactive components.'
+            }
+          ],
+          comparison: {
+            title: 'State Variants',
+            options: [
+              {
+                name: 'hover:',
+                description: 'Styles when mouse hovers over element',
+                whenToUse: 'Interactive elements like buttons, links, cards',
+                example: 'hover:bg-blue-700 hover:scale-105'
+              },
+              {
+                name: 'focus:',
+                description: 'Styles when element receives focus',
+                whenToUse: 'Form inputs, buttons for keyboard navigation',
+                example: 'focus:ring-2 focus:border-blue-500'
+              },
+              {
+                name: 'active:',
+                description: 'Styles when element is being pressed',
+                whenToUse: 'Buttons to show pressed state',
+                example: 'active:bg-blue-800 active:scale-95'
+              },
+              {
+                name: 'group-hover:',
+                description: 'Styles child when parent is hovered',
+                whenToUse: 'Complex components with multiple hover effects',
+                example: 'group-hover:text-blue-500'
+              }
+            ]
+          }
+        },
+        {
+          id: 'common-components',
+          title: 'Building Common Components',
+          description: 'Creating buttons, cards, and forms with Tailwind',
+          keyPoints: [
+            'Combine utilities to create reusable components',
+            'Use consistent spacing and colors',
+            'Add transitions for smooth interactions',
+            'Consider accessibility (focus states, contrast)',
+            'Start with a design system (colors, spacing, typography)'
+          ],
+          codeExamples: [
+            {
+              title: 'Button Variants',
+              code: `<!-- Primary Button -->
+<button class="bg-blue-500 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition">
+  Primary Button
+</button>
+
+<!-- Secondary Button -->
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-6 py-3 rounded-lg transition">
+  Secondary Button
+</button>
+
+<!-- Outline Button -->
+<button class="border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white font-semibold px-6 py-3 rounded-lg transition">
+  Outline Button
+</button>
+
+<!-- Danger Button -->
+<button class="bg-red-500 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition">
+  Delete
+</button>
+
+<!-- Button Sizes -->
+<button class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Small</button>
+<button class="bg-blue-500 text-white px-4 py-2 rounded">Medium</button>
+<button class="bg-blue-500 text-white px-6 py-3 rounded text-lg">Large</button>`,
+              language: 'html',
+              explanation: 'Create button variants by combining background, text, padding, and hover utilities. Use consistent patterns across your app. Add transitions for smooth effects.'
+            },
+            {
+              title: 'Card Component',
+              code: `<!-- Basic Card -->
+<div class="bg-white rounded-lg shadow-md p-6">
+  <h3 class="text-xl font-bold mb-2">Card Title</h3>
+  <p class="text-gray-600 mb-4">
+    This is a basic card component with shadow and padding.
+  </p>
+  <button class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
+    Action
+  </button>
+</div>
+
+<!-- Card with Image -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+  <img src="image.jpg" alt="Card" class="w-full h-48 object-cover" />
+  <div class="p-6">
+    <h3 class="text-xl font-bold mb-2">Card with Image</h3>
+    <p class="text-gray-600 mb-4">
+      Image cards are great for products, blog posts, and galleries.
+    </p>
+    <button class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
+      Read More
+    </button>
+  </div>
+</div>`,
+              language: 'html',
+              explanation: 'Cards combine background, shadow, rounded corners, and padding. Add overflow-hidden for images. Use hover:shadow-xl for interactive cards.'
+            },
+            {
+              title: 'Form Components',
+              code: `<!-- Form with Tailwind -->
+<form class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold mb-6">Contact Form</h2>
+  
+  <!-- Text Input -->
+  <div class="mb-4">
+    <label class="block text-gray-700 font-semibold mb-2">
+      Name
+    </label>
+    <input 
+      type="text" 
+      class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+      placeholder="Enter your name"
+    />
+  </div>
+  
+  <!-- Email Input -->
+  <div class="mb-4">
+    <label class="block text-gray-700 font-semibold mb-2">
+      Email
+    </label>
+    <input 
+      type="email" 
+      class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+      placeholder="your@email.com"
+    />
+  </div>
+  
+  <!-- Submit Button -->
+  <button 
+    type="submit" 
+    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition"
+  >
+    Send Message
+  </button>
+</form>`,
+              language: 'html',
+              explanation: 'Forms use consistent spacing, focus states, and transitions. w-full makes inputs full width. focus:ring adds accessible focus indicators. Use mb-{n} for spacing between fields.'
+            }
+          ]
+        }
+      ]
     }
   ]
 };
