@@ -364,7 +364,7 @@ export default function StudyPage() {
             Back to Decks
           </Button>
           
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <h1 className="text-3xl font-bold">
@@ -381,8 +381,8 @@ export default function StudyPage() {
                 {QUESTIONS_PER_SESSION} random questions per session
               </p>
             </div>
-            <Card className="border-2">
-              <CardContent className="p-4 text-center min-w-[120px]">
+            <Card className="border-2 self-start sm:self-auto">
+              <CardContent className="p-4 text-center w-full sm:w-[120px]">
                 <div className="text-sm text-muted-foreground mb-1">Progress</div>
                 <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   {Math.round(progress)}%
