@@ -954,6 +954,206 @@ export default function Filters() {
               }
             ]
           }
+        },
+        {
+          id: 'client-vs-server-components',
+          title: 'Client vs Server Components',
+          description: 'Understanding the two types of components in the Next.js App Router and when to use each',
+          keyPoints: [
+            'In the App Router, every component is a Server Component by default',
+            'Add the "use client" directive at the top of a file to make it a Client Component',
+            'Server Components run only on the server — no JavaScript ships to the browser',
+            'Client Components run in the browser and can use hooks, state, and event handlers',
+            'Server Components CAN be async and fetch data directly',
+            'Client Components CANNOT be async and cannot access databases or secrets',
+            'Props passed from Server → Client must be serializable (no functions, classes, Dates become strings)'
+          ],
+          codeExamples: [
+            {
+              title: 'Server Component (default)',
+              code: `// app/posts/page.tsx
+// No "use client" - this is a Server Component by default
+
+import { db } from "@/lib/db";
+
+// Server Components can be async and fetch data directly
+export default async function PostsPage() {
+  // Runs on the server - safe to use secrets, databases, filesystem
+  const posts = await db.post.findMany();
+
+  return (
+    <div>
+      <h1>Posts</h1>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>{post.title}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}`,
+              language: 'tsx',
+              explanation: 'Layouts and pages in the app/ directory are Server Components by default. They can be async and fetch data directly from a database or API. No JavaScript for this component is shipped to the browser — the user receives pre-rendered HTML.'
+            },
+            {
+              title: 'Client Component ("use client")',
+              code: `// app/ui/counter.tsx
+"use client";  // Must be the first line of the file
+
+import { useState } from "react";
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Clicked {count} times
+    </button>
+  );
+}`,
+              language: 'tsx',
+              explanation: 'Add "use client" at the top of the file to opt into a Client Component. Only Client Components can use useState, useEffect, event handlers (onClick), refs, and browser APIs like window or localStorage.'
+            },
+            {
+              title: 'Composing Server + Client Components',
+              code: `// app/posts/[id]/page.tsx  (Server Component)
+import LikeButton from "./like-button";
+import { getPost } from "@/lib/data";
+
+export default async function PostPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const post = await getPost(id); // server-side fetch
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <p>{post.body}</p>
+      {/* Pass server data as props to a Client Component */}
+      <LikeButton postId={post.id} initialLikes={post.likes} />
+    </article>
+  );
+}
+
+// app/posts/[id]/like-button.tsx  (Client Component)
+"use client";
+
+import { useState } from "react";
+
+type Props = { postId: string; initialLikes: number };
+
+export default function LikeButton({ postId, initialLikes }: Props) {
+  const [likes, setLikes] = useState(initialLikes);
+  return (
+    <button onClick={() => setLikes(likes + 1)}>
+      ❤ {likes}
+    </button>
+  );
+}`,
+              language: 'tsx',
+              explanation: 'The page is a Server Component that fetches data. It passes the data as props to a Client Component which handles interactivity. This is the most common pattern: render as much as possible on the server, and only make the interactive leaves client-side.'
+            },
+            {
+              title: 'Passing Server Components as children',
+              code: `// app/ui/modal.tsx  (Client Component)
+"use client";
+
+import { useState, ReactNode } from "react";
+
+export default function Modal({ children }: { children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Open</button>
+      {open && <div className="modal">{children}</div>}
+    </>
+  );
+}
+
+// app/page.tsx  (Server Component)
+import Modal from "./ui/modal";
+import Cart from "./ui/cart"; // async Server Component
+
+export default function Page() {
+  return (
+    // Cart is a Server Component rendered on the server
+    // and passed INTO a Client Component as children
+    <Modal>
+      <Cart />
+    </Modal>
+  );
+}`,
+              language: 'tsx',
+              explanation: 'A Client Component cannot import a Server Component, but it CAN render one passed in as children. This lets you keep data-fetching on the server while using client-side state (like modal open/close) to control visibility.'
+            },
+            {
+              title: 'The "use client" boundary',
+              code: `// Once a file has "use client", EVERY component it imports
+// also becomes part of the client bundle.
+
+// app/ui/search-bar.tsx
+"use client";
+import Button from "./button";   // Button is now client-side
+import Icon from "./icon";       // Icon is now client-side too
+// You do NOT need to add "use client" to Button or Icon
+
+// Best practice: put "use client" as DEEP in the tree as possible
+// so the rest stays server-rendered.
+
+// ❌ Bad - whole layout becomes a Client Component
+// app/layout.tsx
+"use client";
+export default function Layout({ children }) {
+  return <div>{children}</div>;
+}
+
+// ✅ Good - only the interactive piece is client
+// app/layout.tsx  (Server Component)
+import SearchBar from "./search-bar"; // the Client Component
+export default function Layout({ children }) {
+  return (
+    <div>
+      <SearchBar />
+      {children}
+    </div>
+  );
+}`,
+              language: 'tsx',
+              explanation: 'The "use client" directive marks a boundary. Everything imported by that file joins the client bundle. Add "use client" to the smallest leaf components possible — not to layouts or pages — to keep the JS bundle small.'
+            }
+          ],
+          comparison: {
+            title: 'Server vs Client Components',
+            options: [
+              {
+                name: 'Server Component (default)',
+                description: 'Runs only on the server; sends HTML to the browser',
+                whenToUse: 'Data fetching, DB/API access, secrets, static content, reducing JS bundle size',
+                example: 'export default async function Page() { const data = await db.query(...); }'
+              },
+              {
+                name: 'Client Component ("use client")',
+                description: 'Runs in the browser; hydrated with JavaScript',
+                whenToUse: 'useState, useEffect, onClick, refs, browser APIs (window, localStorage)',
+                example: '"use client"; export default function Counter() { const [n, setN] = useState(0); }'
+              },
+              {
+                name: 'Can be async?',
+                description: 'Only Server Components',
+                whenToUse: 'Fetch data with await directly in the component',
+                example: 'Server: async function Page() {} ✅   Client: async function ❌'
+              },
+              {
+                name: 'Props across boundary',
+                description: 'Server → Client props must be serializable',
+                whenToUse: 'Pass plain data (string, number, array, object). No functions, classes, Promises',
+                example: '<LikeButton likes={5} /> ✅   <LikeButton onLike={fn} /> ❌'
+              }
+            ]
+          }
         }
       ]
     },
@@ -3265,6 +3465,529 @@ public class FilesController : ControllerBase
                 description: 'Save files to server disk',
                 whenToUse: 'Development/testing only',
                 example: 'Not recommended for production'
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      id: 'level-3-week-4',
+      weekNumber: 4,
+      title: 'Reusable Components & Props',
+      description: 'Building reusable React components with props, typing, composition, and best practices',
+      concepts: [
+        {
+          id: 'component-basics',
+          title: 'What is a Reusable Component?',
+          description: 'Understanding why components should be reusable and how to design them',
+          keyPoints: [
+            'A component is a function that returns JSX/UI',
+            'Reusable components are configured via props rather than hardcoded values',
+            'Aim for one clear responsibility per component (Single Responsibility)',
+            'Prefer many small components over a few large ones',
+            'If you copy/paste JSX more than twice, extract a component'
+          ],
+          codeExamples: [
+            {
+              title: 'Non-Reusable vs Reusable',
+              code: `// ❌ Non-reusable - hardcoded values
+function WelcomeAlice() {
+  return <h1 className="text-2xl font-bold">Hello, Alice!</h1>;
+}
+
+function WelcomeBob() {
+  return <h1 className="text-2xl font-bold">Hello, Bob!</h1>;
+}
+
+// ✅ Reusable - configurable via props
+type WelcomeProps = {
+  name: string;
+};
+
+function Welcome({ name }: WelcomeProps) {
+  return <h1 className="text-2xl font-bold">Hello, {name}!</h1>;
+}
+
+// Use it anywhere
+<Welcome name="Alice" />
+<Welcome name="Bob" />
+<Welcome name="Charlie" />`,
+              language: 'tsx',
+              explanation: 'The first version duplicates code for every name. The reusable version takes data as props, so one component handles unlimited use cases.'
+            },
+            {
+              title: 'Component File Structure',
+              code: `// components/Button.tsx - One component per file
+type ButtonProps = {
+  label: string;
+  onClick: () => void;
+};
+
+export default function Button({ label, onClick }: ButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+    >
+      {label}
+    </button>
+  );
+}
+
+// app/page.tsx - Import and use
+import Button from "@/components/Button";
+
+export default function Page() {
+  return (
+    <div>
+      <Button label="Save" onClick={() => console.log("saved")} />
+      <Button label="Cancel" onClick={() => console.log("cancelled")} />
+    </div>
+  );
+}`,
+              language: 'tsx',
+              explanation: 'Keep one component per file named the same as the component. Place shared components in a /components folder. Import paths use the @/ alias in Next.js.'
+            }
+          ]
+        },
+        {
+          id: 'props-basics',
+          title: 'Props: Passing Data to Components',
+          description: 'Using props to make components dynamic and configurable',
+          keyPoints: [
+            'Props are the arguments passed to a component',
+            'Props are read-only — a component never mutates its own props',
+            'Destructure props in the function signature for clean code',
+            'Type props with TypeScript to catch errors early',
+            'Use default values for optional props'
+          ],
+          codeExamples: [
+            {
+              title: 'Basic Props with TypeScript',
+              code: `type UserCardProps = {
+  name: string;
+  email: string;
+  age: number;
+  isAdmin: boolean;
+};
+
+function UserCard({ name, email, age, isAdmin }: UserCardProps) {
+  return (
+    <div className="border rounded p-4">
+      <h2 className="text-xl font-bold">{name}</h2>
+      <p>{email}</p>
+      <p>Age: {age}</p>
+      {isAdmin && <span className="badge">Admin</span>}
+    </div>
+  );
+}
+
+// Usage
+<UserCard
+  name="Alice"
+  email="alice@example.com"
+  age={25}
+  isAdmin={true}
+/>`,
+              language: 'tsx',
+              explanation: 'Define a props type describing the shape of the data. Destructure props in the function parameter. TypeScript will error if a required prop is missing or the wrong type.'
+            },
+            {
+              title: 'Optional Props & Default Values',
+              code: `type ButtonProps = {
+  label: string;
+  onClick: () => void;
+  variant?: "primary" | "secondary" | "danger"; // ? = optional
+  disabled?: boolean;
+  size?: "sm" | "md" | "lg";
+};
+
+function Button({
+  label,
+  onClick,
+  variant = "primary",  // default value
+  disabled = false,
+  size = "md",
+}: ButtonProps) {
+  const variantClasses = {
+    primary: "bg-blue-500 text-white",
+    secondary: "bg-gray-200 text-gray-800",
+    danger: "bg-red-500 text-white",
+  };
+
+  const sizeClasses = {
+    sm: "px-2 py-1 text-sm",
+    md: "px-4 py-2",
+    lg: "px-6 py-3 text-lg",
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={\`rounded \${variantClasses[variant]} \${sizeClasses[size]}\`}
+    >
+      {label}
+    </button>
+  );
+}
+
+// Use with or without optional props
+<Button label="Save" onClick={save} />
+<Button label="Delete" onClick={remove} variant="danger" size="lg" />`,
+              language: 'tsx',
+              explanation: 'Use ? to mark props optional. Set defaults when destructuring. Use string-literal union types ("primary" | "secondary") to restrict values to a specific set of options.'
+            },
+            {
+              title: 'Event Handler Props',
+              code: `type SearchBarProps = {
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
+  placeholder?: string;
+};
+
+function SearchBar({ value, onChange, onSubmit, placeholder = "Search..." }: SearchBarProps) {
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+      className="flex gap-2"
+    >
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="border rounded px-3 py-2 flex-1"
+      />
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+        Go
+      </button>
+    </form>
+  );
+}
+
+// Parent owns the state
+function App() {
+  const [query, setQuery] = useState("");
+
+  return (
+    <SearchBar
+      value={query}
+      onChange={setQuery}
+      onSubmit={() => console.log("Searching:", query)}
+    />
+  );
+}`,
+              language: 'tsx',
+              explanation: 'Pass callback functions as props so parents can react to child events. This pattern is called "lifting state up" — the parent owns state and passes both the value and an updater function to the child.'
+            }
+          ]
+        },
+        {
+          id: 'children-composition',
+          title: 'Children & Composition',
+          description: 'Using the children prop to build flexible, composable components',
+          keyPoints: [
+            'children is a special prop containing nested JSX',
+            'Type children with React.ReactNode',
+            'Use children for layout wrappers like Card, Modal, Layout',
+            'Composition is more flexible than configuration via many props',
+            'Pass multiple "slots" using named ReactNode props (header, footer, etc.)'
+          ],
+          codeExamples: [
+            {
+              title: 'Children Prop',
+              code: `import { ReactNode } from "react";
+
+type CardProps = {
+  children: ReactNode;
+};
+
+function Card({ children }: CardProps) {
+  return (
+    <div className="border rounded-lg p-6 shadow-md bg-white">
+      {children}
+    </div>
+  );
+}
+
+// Pass any JSX between the opening and closing tags
+<Card>
+  <h2>Title</h2>
+  <p>Some description here</p>
+  <button>Action</button>
+</Card>
+
+<Card>
+  <img src="/photo.jpg" alt="photo" />
+  <p>Completely different content</p>
+</Card>`,
+              language: 'tsx',
+              explanation: 'children lets a component render whatever the parent passes in. Use ReactNode as the type — it covers JSX, strings, numbers, arrays, null, etc.'
+            },
+            {
+              title: 'Multiple Slots (Named Props)',
+              code: `import { ReactNode } from "react";
+
+type PageLayoutProps = {
+  header: ReactNode;
+  sidebar: ReactNode;
+  children: ReactNode;
+  footer?: ReactNode;
+};
+
+function PageLayout({ header, sidebar, children, footer }: PageLayoutProps) {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <header className="border-b p-4">{header}</header>
+      <div className="flex-1 flex">
+        <aside className="w-64 border-r p-4">{sidebar}</aside>
+        <main className="flex-1 p-6">{children}</main>
+      </div>
+      {footer && <footer className="border-t p-4">{footer}</footer>}
+    </div>
+  );
+}
+
+// Usage
+<PageLayout
+  header={<Nav />}
+  sidebar={<Menu />}
+  footer={<p>© 2025</p>}
+>
+  <h1>Page content goes here</h1>
+</PageLayout>`,
+              language: 'tsx',
+              explanation: 'When a component needs multiple distinct sections, accept them as named ReactNode props. This is more flexible than a hundred configuration flags.'
+            },
+            {
+              title: 'Compound Components',
+              code: `// Break a complex component into composable pieces
+type CardProps = { children: ReactNode };
+type CardHeaderProps = { children: ReactNode };
+type CardBodyProps = { children: ReactNode };
+type CardFooterProps = { children: ReactNode };
+
+function Card({ children }: CardProps) {
+  return <div className="border rounded-lg shadow-md bg-white">{children}</div>;
+}
+
+function CardHeader({ children }: CardHeaderProps) {
+  return <div className="border-b p-4 font-bold">{children}</div>;
+}
+
+function CardBody({ children }: CardBodyProps) {
+  return <div className="p-4">{children}</div>;
+}
+
+function CardFooter({ children }: CardFooterProps) {
+  return <div className="border-t p-4 bg-gray-50">{children}</div>;
+}
+
+// Usage — consumer controls the structure
+<Card>
+  <CardHeader>User Profile</CardHeader>
+  <CardBody>
+    <p>Name: Alice</p>
+    <p>Email: alice@example.com</p>
+  </CardBody>
+  <CardFooter>
+    <button>Edit</button>
+  </CardFooter>
+</Card>`,
+              language: 'tsx',
+              explanation: 'Compound components (Card + CardHeader + CardBody) give consumers full control over layout while keeping styling consistent. This is the pattern used by shadcn/ui and Radix.'
+            }
+          ]
+        },
+        {
+          id: 'component-patterns',
+          title: 'Common Reusable Component Patterns',
+          description: 'Real-world examples of building components you will use over and over',
+          keyPoints: [
+            'List/Item split — a wrapper renders multiple child components',
+            'Pass unique data down; pass callbacks up',
+            'Use key prop when rendering arrays',
+            'Avoid putting business logic inside reusable UI components',
+            'Accept className as a prop to allow custom styling'
+          ],
+          codeExamples: [
+            {
+              title: 'List + Item Components',
+              code: `type Todo = {
+  id: string;
+  text: string;
+  done: boolean;
+};
+
+type TodoItemProps = {
+  todo: Todo;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+};
+
+function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
+  return (
+    <li className="flex items-center gap-3 p-2 border-b">
+      <input
+        type="checkbox"
+        checked={todo.done}
+        onChange={() => onToggle(todo.id)}
+      />
+      <span className={todo.done ? "line-through text-gray-400" : ""}>
+        {todo.text}
+      </span>
+      <button
+        onClick={() => onDelete(todo.id)}
+        className="ml-auto text-red-500"
+      >
+        Delete
+      </button>
+    </li>
+  );
+}
+
+type TodoListProps = {
+  todos: Todo[];
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+};
+
+function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
+  return (
+    <ul>
+      {todos.map((todo) => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          onToggle={onToggle}
+          onDelete={onDelete}
+        />
+      ))}
+    </ul>
+  );
+}`,
+              language: 'tsx',
+              explanation: 'Split list UIs into a List component (handles iteration) and an Item component (handles a single row). Always pass a unique key when mapping — the item id is ideal, NOT the array index.'
+            },
+            {
+              title: 'Accepting className for Flexibility',
+              code: `type BadgeProps = {
+  children: ReactNode;
+  color?: "blue" | "green" | "red";
+  className?: string;  // allow extra styling
+};
+
+function Badge({ children, color = "blue", className = "" }: BadgeProps) {
+  const colorClasses = {
+    blue: "bg-blue-100 text-blue-800",
+    green: "bg-green-100 text-green-800",
+    red: "bg-red-100 text-red-800",
+  };
+
+  return (
+    <span
+      className={\`inline-block px-2 py-1 text-xs rounded \${colorClasses[color]} \${className}\`}
+    >
+      {children}
+    </span>
+  );
+}
+
+// Consumers can add their own positioning/margin utilities
+<Badge color="green">Active</Badge>
+<Badge color="red" className="ml-2">Error</Badge>
+<Badge className="absolute top-2 right-2">New</Badge>`,
+              language: 'tsx',
+              explanation: 'Accepting className lets consumers tweak spacing and layout without forking the component. Concatenate the custom className at the end so it can override defaults when needed.'
+            },
+            {
+              title: 'Input Component (Controlled)',
+              code: `type InputProps = {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: "text" | "email" | "password" | "number";
+  placeholder?: string;
+  error?: string;
+};
+
+function Input({
+  label,
+  value,
+  onChange,
+  type = "text",
+  placeholder,
+  error,
+}: InputProps) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-sm font-medium">{label}</label>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className={\`border rounded px-3 py-2 \${
+          error ? "border-red-500" : "border-gray-300"
+        }\`}
+      />
+      {error && <span className="text-sm text-red-500">{error}</span>}
+    </div>
+  );
+}
+
+// Usage
+function SignupForm() {
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  return (
+    <Input
+      label="Email"
+      type="email"
+      value={email}
+      onChange={setEmail}
+      error={emailError}
+      placeholder="you@example.com"
+    />
+  );
+}`,
+              language: 'tsx',
+              explanation: 'A reusable Input component wraps label, field, and error message together. The parent controls value and error state. Now every form in your app looks and behaves consistently.'
+            }
+          ],
+          comparison: {
+            title: 'Reusability Strategies',
+            options: [
+              {
+                name: 'Props Configuration',
+                description: 'Configure behavior/appearance via many props',
+                whenToUse: 'Simple, well-defined components like Button, Badge',
+                example: '<Button variant="primary" size="lg" disabled />'
+              },
+              {
+                name: 'children / Composition',
+                description: 'Accept arbitrary content via children',
+                whenToUse: 'Layout wrappers, Cards, Modals, sections',
+                example: '<Card><h2>Title</h2><p>Body</p></Card>'
+              },
+              {
+                name: 'Compound Components',
+                description: 'Related components used together (Card + CardHeader)',
+                whenToUse: 'Complex UI where consumer needs layout control',
+                example: '<Tabs><TabsList><TabsTrigger /></TabsList></Tabs>'
+              },
+              {
+                name: 'Render Props / Slots',
+                description: 'Pass ReactNode props for specific regions',
+                whenToUse: 'When you need multiple distinct content areas',
+                example: '<Layout header={<Nav/>} sidebar={<Menu/>}>...</Layout>'
               }
             ]
           }

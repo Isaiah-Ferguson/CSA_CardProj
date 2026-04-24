@@ -5019,6 +5019,1012 @@ const complexResult = data
           ]
         }
       ]
+    },
+    {
+      id: 'level-2-week-5',
+      weekNumber: 5,
+      title: 'N-Tier API Architecture (Fundamentals)',
+      description: 'Separating a C# Web API into Presentation, Business Logic, and Data Access layers with DTOs',
+      concepts: [
+        {
+          id: 'what-is-n-tier',
+          title: 'What is N-Tier Architecture?',
+          description: 'Separating an application into distinct layers with clear responsibilities',
+          keyPoints: [
+            'N-Tier means organizing code into multiple layers (tiers), each with one responsibility',
+            'Common 3 layers: Presentation (API) → Business Logic (Services) → Data Access (Repositories)',
+            'Each layer only talks to the layer directly below it',
+            'Goals: separation of concerns, testability, maintainability, reusability',
+            'Trade-off: more files and boilerplate vs simpler maintenance long term'
+          ],
+          codeExamples: [
+            {
+              title: 'Before vs After N-Tier',
+              code: `// ❌ BEFORE - Everything in the Controller (hard to test, hard to change)
+[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    private readonly AppDbContext _db;
+    public ProductsController(AppDbContext db) => _db = db;
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        // Data access + business logic + HTTP response ALL in one place
+        var products = await _db.Products.Where(p => p.IsActive).ToListAsync();
+        foreach (var p in products) p.Price *= 1.1m; // tax logic mixed in
+        return Ok(products); // returns entity directly - leaks DB model
+    }
+}
+
+// ✅ AFTER - Layers separated
+// Controller: only handles HTTP
+// Service: contains business rules (tax calculation)
+// Repository: owns database queries
+// DTO: shape returned to the client
+
+// Controller
+[HttpGet]
+public async Task<IActionResult> GetAll()
+{
+    var products = await _productService.GetActiveProductsAsync();
+    return Ok(products);
+}`,
+              language: 'csharp',
+              explanation: 'The first version mixes HTTP, business logic, and database queries together. N-Tier splits each concern so you can test, swap, or change one layer without touching the others.'
+            },
+            {
+              title: 'The Three Layers',
+              code: `// ╔══════════════════════════════════════╗
+// ║  PRESENTATION LAYER (Controllers)    ║  ← Handles HTTP requests/responses
+// ║  - Receives requests                  ║
+// ║  - Returns HTTP status codes          ║
+// ║  - Calls into Services                ║
+// ╚══════════════════════════════════════╝
+//                   ▼
+// ╔══════════════════════════════════════╗
+// ║  BUSINESS LOGIC LAYER (Services)     ║  ← The "rules" of your app
+// ║  - Validation                         ║
+// ║  - Calculations                       ║
+// ║  - Orchestrates multiple repositories ║
+// ║  - Maps between entities and DTOs     ║
+// ╚══════════════════════════════════════╝
+//                   ▼
+// ╔══════════════════════════════════════╗
+// ║  DATA ACCESS LAYER (Repositories)    ║  ← Talks to the database
+// ║  - EF Core / SQL queries              ║
+// ║  - Returns entities                   ║
+// ║  - No business rules                  ║
+// ╚══════════════════════════════════════╝
+//                   ▼
+//              Database`,
+              language: 'text',
+              explanation: 'Data flows downward (request) and back up (response). Each layer depends only on the layer directly below it. Controllers never touch the database; repositories never know about HTTP.'
+            },
+            {
+              title: 'Folder Structure',
+              code: `MyApi/
+├── Controllers/
+│   └── ProductsController.cs       ← Presentation
+├── Services/
+│   ├── IProductService.cs
+│   └── ProductService.cs           ← Business Logic
+├── Repositories/
+│   ├── IProductRepository.cs
+│   └── ProductRepository.cs        ← Data Access
+├── Models/
+│   └── Product.cs                  ← Entity (matches DB)
+├── DTOs/
+│   ├── ProductDto.cs               ← What the API returns
+│   ├── CreateProductDto.cs         ← What the API accepts
+│   └── UpdateProductDto.cs
+├── Data/
+│   └── AppDbContext.cs
+└── Program.cs                      ← Wires everything up (DI)`,
+              language: 'text',
+              explanation: 'A typical N-Tier project structure. Each folder represents a layer. Keep entities (DB shape) and DTOs (API shape) in separate folders to make the boundary obvious.'
+            }
+          ]
+        },
+        {
+          id: 'presentation-layer',
+          title: 'Presentation Layer (Controllers)',
+          description: 'Controllers should only handle HTTP — never contain business logic or query the database directly',
+          keyPoints: [
+            'Controllers handle routing, HTTP status codes, and request/response shapes',
+            'They call into Services — never directly into DbContext or Repositories',
+            'Controllers should be "thin" — ideally just a few lines per action',
+            'Return DTOs, not entities',
+            'Validation attributes live on DTOs so controllers stay clean'
+          ],
+          codeExamples: [
+            {
+              title: 'A Thin Controller',
+              code: `[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    private readonly IProductService _productService;
+
+    public ProductsController(IProductService productService)
+    {
+        _productService = productService;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll()
+    {
+        var products = await _productService.GetAllAsync();
+        return Ok(products);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ProductDto>> GetById(int id)
+    {
+        var product = await _productService.GetByIdAsync(id);
+        if (product == null) return NotFound();
+        return Ok(product);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<ProductDto>> Create(CreateProductDto dto)
+    {
+        var created = await _productService.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, UpdateProductDto dto)
+    {
+        var success = await _productService.UpdateAsync(id, dto);
+        return success ? NoContent() : NotFound();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var success = await _productService.DeleteAsync(id);
+        return success ? NoContent() : NotFound();
+    }
+}`,
+              language: 'csharp',
+              explanation: 'Notice the controller has ZERO business logic. Each action is 1–3 lines: call the service, translate the result to an HTTP response. This is what "thin controller" means.'
+            },
+            {
+              title: 'Validation on DTOs',
+              code: `using System.ComponentModel.DataAnnotations;
+
+public class CreateProductDto
+{
+    [Required]
+    [StringLength(100, MinimumLength = 3)]
+    public string Name { get; set; } = string.Empty;
+
+    [Range(0.01, 10000)]
+    public decimal Price { get; set; }
+
+    [StringLength(500)]
+    public string? Description { get; set; }
+}
+
+// Controller automatically validates via [ApiController] attribute
+[HttpPost]
+public async Task<ActionResult<ProductDto>> Create(CreateProductDto dto)
+{
+    // If dto is invalid, ASP.NET automatically returns 400 Bad Request
+    // with a list of errors — we don't have to write any checks here.
+    var created = await _productService.CreateAsync(dto);
+    return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+}`,
+              language: 'csharp',
+              explanation: 'Validation attributes ([Required], [Range], etc.) go on DTOs. The [ApiController] attribute auto-returns 400 with a detailed error body when validation fails, so controllers stay clean.'
+            }
+          ]
+        },
+        {
+          id: 'business-logic-layer',
+          title: 'Business Logic Layer (Services)',
+          description: 'Services hold application rules — validation, calculations, and orchestration',
+          keyPoints: [
+            'Services define the actual behavior of your application',
+            'They are the only place business rules should live',
+            'Always define an interface (IProductService) and register via DI',
+            'Services call repositories to get/save data — they never call DbContext directly',
+            'Services handle mapping between entities and DTOs'
+          ],
+          codeExamples: [
+            {
+              title: 'Service Interface',
+              code: `public interface IProductService
+{
+    Task<IEnumerable<ProductDto>> GetAllAsync();
+    Task<ProductDto?> GetByIdAsync(int id);
+    Task<ProductDto> CreateAsync(CreateProductDto dto);
+    Task<bool> UpdateAsync(int id, UpdateProductDto dto);
+    Task<bool> DeleteAsync(int id);
+}`,
+              language: 'csharp',
+              explanation: 'Define an interface first. This allows controllers to depend on an abstraction (not a concrete class), which makes unit testing and swapping implementations easy.'
+            },
+            {
+              title: 'Service Implementation',
+              code: `public class ProductService : IProductService
+{
+    private readonly IProductRepository _repository;
+
+    public ProductService(IProductRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task<IEnumerable<ProductDto>> GetAllAsync()
+    {
+        var products = await _repository.GetAllAsync();
+        return products.Select(MapToDto);
+    }
+
+    public async Task<ProductDto?> GetByIdAsync(int id)
+    {
+        var product = await _repository.GetByIdAsync(id);
+        return product == null ? null : MapToDto(product);
+    }
+
+    public async Task<ProductDto> CreateAsync(CreateProductDto dto)
+    {
+        // Business rule: apply 10% tax before storing
+        var product = new Product
+        {
+            Name = dto.Name.Trim(),
+            Price = dto.Price * 1.10m,
+            Description = dto.Description
+        };
+
+        var created = await _repository.AddAsync(product);
+        return MapToDto(created);
+    }
+
+    public async Task<bool> UpdateAsync(int id, UpdateProductDto dto)
+    {
+        var product = await _repository.GetByIdAsync(id);
+        if (product == null) return false;
+
+        product.Name = dto.Name.Trim();
+        product.Price = dto.Price;
+        product.Description = dto.Description;
+
+        await _repository.UpdateAsync(product);
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var product = await _repository.GetByIdAsync(id);
+        if (product == null) return false;
+        await _repository.DeleteAsync(product);
+        return true;
+    }
+
+    private static ProductDto MapToDto(Product p) => new()
+    {
+        Id = p.Id,
+        Name = p.Name,
+        Price = p.Price,
+        Description = p.Description
+    };
+}`,
+              language: 'csharp',
+              explanation: 'The service contains business rules (tax calculation, trimming whitespace) and maps Product entities to ProductDtos. It never uses EF Core directly — it always goes through the repository.'
+            }
+          ]
+        },
+        {
+          id: 'data-access-layer',
+          title: 'Data Access Layer (Repositories)',
+          description: 'Repositories wrap the database so the rest of the app does not know (or care) about EF Core',
+          keyPoints: [
+            'Repositories encapsulate all database queries',
+            'Return entities, not DTOs — the service decides what to expose',
+            'One repository per aggregate/entity type (ProductRepository, OrderRepository)',
+            'Contain NO business logic — only data access',
+            'Use async methods for all database operations'
+          ],
+          codeExamples: [
+            {
+              title: 'Repository Interface',
+              code: `public interface IProductRepository
+{
+    Task<IEnumerable<Product>> GetAllAsync();
+    Task<Product?> GetByIdAsync(int id);
+    Task<Product> AddAsync(Product product);
+    Task UpdateAsync(Product product);
+    Task DeleteAsync(Product product);
+}`,
+              language: 'csharp',
+              explanation: 'A repository interface hides the implementation detail (EF Core, Dapper, MongoDB) from the rest of the code. Services only see this contract.'
+            },
+            {
+              title: 'Repository Implementation',
+              code: `public class ProductRepository : IProductRepository
+{
+    private readonly AppDbContext _db;
+
+    public ProductRepository(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<IEnumerable<Product>> GetAllAsync()
+    {
+        return await _db.Products.ToListAsync();
+    }
+
+    public async Task<Product?> GetByIdAsync(int id)
+    {
+        return await _db.Products.FindAsync(id);
+    }
+
+    public async Task<Product> AddAsync(Product product)
+    {
+        _db.Products.Add(product);
+        await _db.SaveChangesAsync();
+        return product;
+    }
+
+    public async Task UpdateAsync(Product product)
+    {
+        _db.Products.Update(product);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(Product product)
+    {
+        _db.Products.Remove(product);
+        await _db.SaveChangesAsync();
+    }
+}`,
+              language: 'csharp',
+              explanation: 'Notice there is no logic here — just CRUD. If you later switch from EF Core to Dapper or a different database, only this file changes.'
+            }
+          ]
+        },
+        {
+          id: 'dtos-vs-entities',
+          title: 'DTOs vs Entities',
+          description: 'Understanding why you should never return database entities directly from an API',
+          keyPoints: [
+            'Entity = class that maps to a database table (e.g., Product)',
+            'DTO = Data Transfer Object, the shape sent over the wire (e.g., ProductDto)',
+            'Entities contain navigation properties, internal IDs, sensitive data',
+            'DTOs let you control exactly what the client sees',
+            'Different DTOs for different operations: CreateProductDto, UpdateProductDto, ProductDto'
+          ],
+          codeExamples: [
+            {
+              title: 'Entity vs DTO',
+              code: `// Entity - the database shape
+public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public decimal InternalCost { get; set; }     // 🔒 Never expose!
+    public string? Description { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public int CategoryId { get; set; }
+    public Category? Category { get; set; }       // Navigation property
+    public List<Review> Reviews { get; set; } = new();
+}
+
+// DTO - what the API returns (safe to send to clients)
+public class ProductDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public string? Description { get; set; }
+    // InternalCost, CreatedAt, navigation props all excluded
+}
+
+// DTO - what the API accepts for creating
+public class CreateProductDto
+{
+    [Required, StringLength(100)]
+    public string Name { get; set; } = string.Empty;
+
+    [Range(0.01, 10000)]
+    public decimal Price { get; set; }
+
+    public string? Description { get; set; }
+    // No Id - server generates it
+    // No CreatedAt - server sets it
+    // No InternalCost - client shouldn't set this
+}`,
+              language: 'csharp',
+              explanation: 'Entities can contain secrets (InternalCost), audit fields (CreatedAt), or huge object graphs (Reviews). DTOs let you pick exactly what crosses the API boundary.'
+            },
+            {
+              title: 'Why You Need Separate DTOs',
+              code: `// ❌ BAD: returning the entity
+[HttpGet("{id}")]
+public async Task<Product?> GetById(int id)
+{
+    return await _db.Products
+        .Include(p => p.Reviews)
+        .FirstOrDefaultAsync(p => p.Id == id);
+}
+// Problems:
+// - Leaks InternalCost
+// - Can cause infinite JSON loops (Product → Reviews → Product)
+// - Coupling: changing the DB shape breaks the API
+// - Slow: fetches data the client doesn't need
+
+// ✅ GOOD: returning a DTO
+[HttpGet("{id}")]
+public async Task<ActionResult<ProductDto>> GetById(int id)
+{
+    var dto = await _productService.GetByIdAsync(id);
+    return dto == null ? NotFound() : Ok(dto);
+}
+// Benefits:
+// - Complete control over the response shape
+// - DB schema changes don't break clients
+// - Smaller payloads = faster responses
+// - Different DTOs for different endpoints (ProductSummaryDto vs ProductDetailDto)`,
+              language: 'csharp',
+              explanation: 'Returning entities directly couples your API to your database schema and can leak sensitive data. DTOs act as a stable contract between your API and its clients.'
+            }
+          ],
+          comparison: {
+            title: 'Entity vs DTO',
+            options: [
+              {
+                name: 'Entity',
+                description: 'Maps to a database table',
+                whenToUse: 'Inside repositories and services only',
+                example: 'public class Product { int Id; decimal InternalCost; List<Review> Reviews; }'
+              },
+              {
+                name: 'Read DTO',
+                description: 'What the API returns',
+                whenToUse: 'Response bodies sent to clients',
+                example: 'public class ProductDto { int Id; string Name; decimal Price; }'
+              },
+              {
+                name: 'Create DTO',
+                description: 'What the API accepts on POST',
+                whenToUse: 'Creating new resources (no Id)',
+                example: 'public class CreateProductDto { string Name; decimal Price; }'
+              },
+              {
+                name: 'Update DTO',
+                description: 'What the API accepts on PUT/PATCH',
+                whenToUse: 'Updating existing resources',
+                example: 'public class UpdateProductDto { string Name; decimal Price; }'
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      id: 'level-2-week-6',
+      weekNumber: 6,
+      title: 'N-Tier API Architecture (Applied)',
+      description: 'Wiring up N-Tier with Dependency Injection, mapping, async flow, and testing',
+      concepts: [
+        {
+          id: 'dependency-injection',
+          title: 'Dependency Injection Across Tiers',
+          description: 'Registering services and repositories so each layer can find its dependencies at runtime',
+          keyPoints: [
+            'Register each interface and its implementation in Program.cs',
+            'Controllers receive IService, services receive IRepository — via constructor injection',
+            'Three lifetimes: Singleton (one forever), Scoped (per request), Transient (every time)',
+            'Use Scoped for services/repositories that touch DbContext',
+            'Never "new up" a service or repository manually — let DI do it'
+          ],
+          codeExamples: [
+            {
+              title: 'Wiring Up Dependencies (Program.cs)',
+              code: `var builder = WebApplication.CreateBuilder(args);
+
+// Database
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Repositories (Data Access Layer)
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+// Services (Business Logic Layer)
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
+// Controllers (Presentation Layer)
+builder.Services.AddControllers();
+
+var app = builder.Build();
+app.MapControllers();
+app.Run();`,
+              language: 'csharp',
+              explanation: 'Every interface in your layered app must be registered. AddScoped means "create one instance per HTTP request, then dispose" — perfect for anything using DbContext.'
+            },
+            {
+              title: 'Constructor Injection in Each Layer',
+              code: `// Controller depends on Service (NOT DbContext, NOT Repository)
+public class ProductsController : ControllerBase
+{
+    private readonly IProductService _service;
+    public ProductsController(IProductService service) => _service = service;
+}
+
+// Service depends on Repository (NOT DbContext)
+public class ProductService : IProductService
+{
+    private readonly IProductRepository _repository;
+    public ProductService(IProductRepository repository) => _repository = repository;
+}
+
+// Repository depends on DbContext
+public class ProductRepository : IProductRepository
+{
+    private readonly AppDbContext _db;
+    public ProductRepository(AppDbContext db) => _db = db;
+}`,
+              language: 'csharp',
+              explanation: 'Each layer depends only on the layer directly below it via an interface. This enforces the N-Tier boundary and makes every layer independently testable with mocks.'
+            },
+            {
+              title: 'DI Lifetimes',
+              code: `// Singleton - one instance for the entire app lifetime
+// Use for: stateless helpers, configuration, caches
+builder.Services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
+
+// Scoped - one instance per HTTP request
+// Use for: anything using DbContext (services, repositories)
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+// Transient - new instance every time it's requested
+// Use for: lightweight, stateless objects
+builder.Services.AddTransient<IDateTimeProvider, DateTimeProvider>();`,
+              language: 'csharp',
+              explanation: 'DbContext is Scoped by default, so anything that uses it must also be Scoped (or it will break). Singleton + DbContext = concurrency bugs. When in doubt, use AddScoped.'
+            }
+          ]
+        },
+        {
+          id: 'end-to-end-flow',
+          title: 'End-to-End Request Flow',
+          description: 'Tracing an HTTP request as it flows through all three layers and back',
+          keyPoints: [
+            'Request comes in → Controller → Service → Repository → Database',
+            'Response goes back: Entity → DTO → JSON → Client',
+            'Each arrow is an interface boundary, not a concrete class',
+            'Every layer handles its own concerns and hides the rest',
+            'If a layer misbehaves, you can replace it without touching the others'
+          ],
+          codeExamples: [
+            {
+              title: 'POST /api/products — Full Flow',
+              code: `// 1️⃣ CLIENT sends: POST /api/products
+//    Body: { "name": "Laptop", "price": 999.99 }
+
+// 2️⃣ CONTROLLER (Presentation)
+[HttpPost]
+public async Task<ActionResult<ProductDto>> Create(CreateProductDto dto)
+{
+    // [ApiController] auto-validates the DTO (400 if invalid)
+    var created = await _productService.CreateAsync(dto);
+    return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+}
+
+// 3️⃣ SERVICE (Business Logic)
+public async Task<ProductDto> CreateAsync(CreateProductDto dto)
+{
+    // Apply business rules
+    var product = new Product
+    {
+        Name = dto.Name.Trim(),
+        Price = dto.Price * 1.10m,      // 10% tax
+        CreatedAt = DateTime.UtcNow      // audit field
+    };
+
+    var saved = await _repository.AddAsync(product);
+    return MapToDto(saved);              // entity → DTO
+}
+
+// 4️⃣ REPOSITORY (Data Access)
+public async Task<Product> AddAsync(Product product)
+{
+    _db.Products.Add(product);
+    await _db.SaveChangesAsync();        // SQL INSERT
+    return product;                      // now has DB-generated Id
+}
+
+// 5️⃣ DATABASE returns new Id
+
+// 6️⃣ Response flows back up:
+//    Repository returns Product entity
+//    Service maps to ProductDto
+//    Controller returns 201 Created with ProductDto as JSON
+//    Client receives: { "id": 42, "name": "Laptop", "price": 1099.989 }`,
+              language: 'csharp',
+              explanation: 'Follow the data: request DTO → entity → DB → entity → response DTO. Notice that each layer only deals with the types it cares about. The controller never sees Product; the repository never sees ProductDto.'
+            },
+            {
+              title: 'GET /api/products/42 — Full Flow',
+              code: `// 1️⃣ CLIENT sends: GET /api/products/42
+
+// 2️⃣ CONTROLLER
+[HttpGet("{id}")]
+public async Task<ActionResult<ProductDto>> GetById(int id)
+{
+    var dto = await _productService.GetByIdAsync(id);
+    return dto == null ? NotFound() : Ok(dto);
+}
+
+// 3️⃣ SERVICE
+public async Task<ProductDto?> GetByIdAsync(int id)
+{
+    var product = await _repository.GetByIdAsync(id);
+    return product == null ? null : MapToDto(product);
+}
+
+// 4️⃣ REPOSITORY
+public async Task<Product?> GetByIdAsync(int id)
+{
+    return await _db.Products.FindAsync(id);  // SQL SELECT
+}
+
+// Response: 200 OK with ProductDto JSON
+//           OR 404 Not Found if product doesn't exist`,
+              language: 'csharp',
+              explanation: 'The "null flows up" pattern: repository returns null when not found → service returns null → controller returns 404. Each layer communicates results cleanly without throwing exceptions for expected cases.'
+            }
+          ]
+        },
+        {
+          id: 'mapping-entities-dtos',
+          title: 'Mapping Between Entities and DTOs',
+          description: 'Three approaches: manual mapping, extension methods, and AutoMapper',
+          keyPoints: [
+            'Mapping is the translation between entity (DB) and DTO (API) shapes',
+            'Manual mapping is explicit and performant but verbose',
+            'Extension methods keep mapping logic beside the types',
+            'AutoMapper reduces boilerplate via conventions',
+            'Mapping always lives in the Service layer (or a dedicated Mapper)'
+          ],
+          codeExamples: [
+            {
+              title: 'Manual Mapping',
+              code: `public class ProductService : IProductService
+{
+    private static ProductDto MapToDto(Product p) => new()
+    {
+        Id = p.Id,
+        Name = p.Name,
+        Price = p.Price,
+        Description = p.Description
+    };
+
+    private static Product MapToEntity(CreateProductDto dto) => new()
+    {
+        Name = dto.Name.Trim(),
+        Price = dto.Price,
+        Description = dto.Description,
+        CreatedAt = DateTime.UtcNow
+    };
+
+    public async Task<ProductDto> CreateAsync(CreateProductDto dto)
+    {
+        var product = MapToEntity(dto);
+        var saved = await _repository.AddAsync(product);
+        return MapToDto(saved);
+    }
+}`,
+              language: 'csharp',
+              explanation: 'Manual mapping is the simplest approach: plain C# methods. No magic, no dependencies, easy to debug. The downside is you must update both the type AND the mapper when properties change.'
+            },
+            {
+              title: 'Extension Method Mappers',
+              code: `// Mappers/ProductMappings.cs
+public static class ProductMappings
+{
+    public static ProductDto ToDto(this Product product) => new()
+    {
+        Id = product.Id,
+        Name = product.Name,
+        Price = product.Price,
+        Description = product.Description
+    };
+
+    public static Product ToEntity(this CreateProductDto dto) => new()
+    {
+        Name = dto.Name.Trim(),
+        Price = dto.Price,
+        Description = dto.Description,
+        CreatedAt = DateTime.UtcNow
+    };
+
+    public static IEnumerable<ProductDto> ToDtoList(this IEnumerable<Product> products)
+        => products.Select(ToDto);
+}
+
+// Service uses fluent syntax
+public async Task<ProductDto> CreateAsync(CreateProductDto dto)
+{
+    var product = dto.ToEntity();
+    var saved = await _repository.AddAsync(product);
+    return saved.ToDto();
+}
+
+public async Task<IEnumerable<ProductDto>> GetAllAsync()
+{
+    var products = await _repository.GetAllAsync();
+    return products.ToDtoList();
+}`,
+              language: 'csharp',
+              explanation: 'Extension methods read naturally (product.ToDto()) and keep mapping logic in one file. A great middle ground between verbose manual mapping and auto-magic libraries.'
+            },
+            {
+              title: 'AutoMapper',
+              code: `// 1. Install: dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection
+
+// 2. Create a profile
+public class ProductProfile : Profile
+{
+    public ProductProfile()
+    {
+        CreateMap<Product, ProductDto>();
+        CreateMap<CreateProductDto, Product>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+        CreateMap<UpdateProductDto, Product>();
+    }
+}
+
+// 3. Register in Program.cs
+builder.Services.AddAutoMapper(typeof(Program));
+
+// 4. Inject IMapper and use it
+public class ProductService : IProductService
+{
+    private readonly IProductRepository _repository;
+    private readonly IMapper _mapper;
+
+    public ProductService(IProductRepository repository, IMapper mapper)
+    {
+        _repository = repository;
+        _mapper = mapper;
+    }
+
+    public async Task<ProductDto> CreateAsync(CreateProductDto dto)
+    {
+        var product = _mapper.Map<Product>(dto);
+        var saved = await _repository.AddAsync(product);
+        return _mapper.Map<ProductDto>(saved);
+    }
+
+    public async Task<IEnumerable<ProductDto>> GetAllAsync()
+    {
+        var products = await _repository.GetAllAsync();
+        return _mapper.Map<IEnumerable<ProductDto>>(products);
+    }
+}`,
+              language: 'csharp',
+              explanation: 'AutoMapper uses conventions (matching property names) to generate mappings at runtime. Saves a lot of boilerplate for large APIs, but adds a dependency and can hide bugs if properties silently don\'t match.'
+            }
+          ],
+          comparison: {
+            title: 'Mapping Approaches',
+            options: [
+              {
+                name: 'Manual (private method)',
+                description: 'Plain static method that copies properties',
+                whenToUse: 'Small projects, maximum clarity, easy debugging',
+                example: 'private static ProductDto MapToDto(Product p) => new() { ... };'
+              },
+              {
+                name: 'Extension Methods',
+                description: 'Static mapper class with extension methods',
+                whenToUse: 'Medium projects, fluent syntax, keep mapping beside types',
+                example: 'product.ToDto(); dto.ToEntity();'
+              },
+              {
+                name: 'AutoMapper',
+                description: 'Convention-based mapping library',
+                whenToUse: 'Large APIs with many similar DTOs',
+                example: '_mapper.Map<ProductDto>(product);'
+              },
+              {
+                name: 'Mapperly (source-generated)',
+                description: 'Compile-time generated mappers (newer alternative)',
+                whenToUse: 'Need AutoMapper-style syntax with zero runtime cost',
+                example: '[Mapper] public partial class ProductMapper { ... }'
+              }
+            ]
+          }
+        },
+        {
+          id: 'testing-layers',
+          title: 'Testing Each Layer',
+          description: 'How N-Tier makes unit testing dramatically easier with mocks',
+          keyPoints: [
+            'Each layer depends on an interface, so tests can mock the layer below',
+            'Test services by mocking repositories — no database needed',
+            'Test controllers by mocking services — no HTTP needed',
+            'Integration tests use the real stack with an in-memory DB',
+            'Use Moq, NSubstitute, or FakeItEasy for mocking'
+          ],
+          codeExamples: [
+            {
+              title: 'Unit Testing a Service (with Moq)',
+              code: `// dotnet add package Moq
+// dotnet add package xunit
+
+public class ProductServiceTests
+{
+    [Fact]
+    public async Task CreateAsync_AppliesTenPercentTax()
+    {
+        // Arrange - mock the repository
+        var mockRepo = new Mock<IProductRepository>();
+        mockRepo
+            .Setup(r => r.AddAsync(It.IsAny<Product>()))
+            .ReturnsAsync((Product p) => p);
+
+        var service = new ProductService(mockRepo.Object);
+
+        var dto = new CreateProductDto { Name = "Laptop", Price = 100m };
+
+        // Act
+        var result = await service.CreateAsync(dto);
+
+        // Assert - business rule applied
+        Assert.Equal(110m, result.Price);
+        mockRepo.Verify(r => r.AddAsync(It.IsAny<Product>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_ReturnsNull_WhenNotFound()
+    {
+        var mockRepo = new Mock<IProductRepository>();
+        mockRepo.Setup(r => r.GetByIdAsync(42)).ReturnsAsync((Product?)null);
+        var service = new ProductService(mockRepo.Object);
+
+        var result = await service.GetByIdAsync(42);
+
+        Assert.Null(result);
+    }
+}`,
+              language: 'csharp',
+              explanation: 'Because ProductService depends on IProductRepository (an interface), we can replace it with a Mock in tests. No database, no HTTP — just pure C# testing the business logic in isolation.'
+            },
+            {
+              title: 'Unit Testing a Controller',
+              code: `public class ProductsControllerTests
+{
+    [Fact]
+    public async Task GetById_ReturnsNotFound_WhenProductMissing()
+    {
+        // Arrange - mock the service
+        var mockService = new Mock<IProductService>();
+        mockService.Setup(s => s.GetByIdAsync(99)).ReturnsAsync((ProductDto?)null);
+
+        var controller = new ProductsController(mockService.Object);
+
+        // Act
+        var result = await controller.GetById(99);
+
+        // Assert
+        Assert.IsType<NotFoundResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetById_ReturnsOk_WhenProductExists()
+    {
+        var dto = new ProductDto { Id = 1, Name = "Laptop", Price = 999m };
+        var mockService = new Mock<IProductService>();
+        mockService.Setup(s => s.GetByIdAsync(1)).ReturnsAsync(dto);
+
+        var controller = new ProductsController(mockService.Object);
+
+        var result = await controller.GetById(1);
+
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var returned = Assert.IsType<ProductDto>(okResult.Value);
+        Assert.Equal("Laptop", returned.Name);
+    }
+}`,
+              language: 'csharp',
+              explanation: 'Controller tests mock IProductService and verify the right HTTP response is returned. These tests run in milliseconds — no server, no database, no network.'
+            }
+          ]
+        },
+        {
+          id: 'n-tier-best-practices',
+          title: 'N-Tier Best Practices',
+          description: 'Rules of thumb to keep your layered architecture clean as the project grows',
+          keyPoints: [
+            'Dependencies flow DOWN only — never let a repository call a service',
+            'Controllers should be "dumb" — no business logic, no mapping',
+            'Never return entities from a controller — always DTOs',
+            'Each layer gets an interface so it can be swapped or mocked',
+            'One repository per aggregate root, one service per use case',
+            'Keep namespaces/folders aligned with layers for discoverability'
+          ],
+          codeExamples: [
+            {
+              title: 'Do This',
+              code: `// ✅ Controller → Service → Repository → DbContext
+public class OrdersController(IOrderService service) : ControllerBase { }
+public class OrderService(IOrderRepository repo, IProductRepository productRepo) : IOrderService { }
+public class OrderRepository(AppDbContext db) : IOrderRepository { }
+
+// ✅ A service CAN use multiple repositories
+public async Task<OrderDto> CreateAsync(CreateOrderDto dto)
+{
+    var product = await _productRepo.GetByIdAsync(dto.ProductId);
+    if (product == null) throw new NotFoundException();
+
+    var order = new Order { ProductId = product.Id, Quantity = dto.Quantity };
+    await _orderRepo.AddAsync(order);
+    return order.ToDto();
+}
+
+// ✅ Validation attributes on DTOs
+public class CreateOrderDto
+{
+    [Required] public int ProductId { get; set; }
+    [Range(1, 1000)] public int Quantity { get; set; }
+}`,
+              language: 'csharp',
+              explanation: 'Services can orchestrate multiple repositories — that is exactly what they are for. Controllers stay thin and validation stays on DTOs.'
+            },
+            {
+              title: "Don't Do This",
+              code: `// ❌ Controller skipping the service
+[HttpGet]
+public async Task<IActionResult> GetAll([FromServices] AppDbContext db)
+{
+    return Ok(await db.Products.ToListAsync()); // leaks entity, no business logic
+}
+
+// ❌ Repository calling a service (dependency flowing UP)
+public class ProductRepository(IEmailService emailService) : IProductRepository
+{
+    public async Task<Product> AddAsync(Product p)
+    {
+        await emailService.SendAsync("Product created"); // WRONG layer!
+        // ...
+    }
+}
+
+// ❌ Business logic in the controller
+[HttpPost]
+public async Task<IActionResult> Create(CreateProductDto dto)
+{
+    if (dto.Price < 0) return BadRequest(); // Should be validation attribute
+    var p = new Product { Name = dto.Name, Price = dto.Price * 1.10m }; // tax in controller!
+    _db.Products.Add(p);                                                 // DB access in controller!
+    await _db.SaveChangesAsync();
+    return Ok(p); // returning entity!
+}
+
+// ❌ Shared repository that does "everything"
+public interface IGenericRepository
+{
+    Task<T> GetAsync<T>(int id);
+    Task SaveAsync<T>(T entity);
+    // Too generic - harder to test and reason about
+}`,
+              language: 'csharp',
+              explanation: 'The common anti-patterns: skipping layers, putting logic in the wrong layer, and creating "god" repositories. Watch for these as your codebase grows — they erode the architecture quickly.'
+            }
+          ]
+        }
+      ]
     }
   ]
 };

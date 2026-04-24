@@ -4526,6 +4526,242 @@ const observer = new IntersectionObserver((entries) => {
               }
             ]
           }
+        },
+        {
+          id: 'json-basics',
+          title: 'JSON & JSON Files',
+          description: 'Working with JSON data format: parsing, stringifying, and reading/writing JSON files',
+          keyPoints: [
+            'JSON (JavaScript Object Notation) is a lightweight text-based data format',
+            'Keys must be strings wrapped in double quotes',
+            'Values can be strings, numbers, booleans, null, arrays, or objects',
+            'JSON does not support functions, undefined, comments, or trailing commas',
+            'JSON.stringify() converts objects to JSON strings',
+            'JSON.parse() converts JSON strings back into objects',
+            'JSON files use the .json extension and are commonly used for config, APIs, and storage'
+          ],
+          codeExamples: [
+            {
+              title: 'JSON Syntax Basics',
+              code: `// A valid JSON string (must use double quotes for keys and strings)
+const jsonString = \`{
+  "name": "Alice",
+  "age": 25,
+  "isStudent": false,
+  "hobbies": ["reading", "coding", "hiking"],
+  "address": {
+    "city": "Seattle",
+    "zip": "98101"
+  },
+  "spouse": null
+}\`;
+
+// Valid JSON value types:
+// - string:  "hello"
+// - number:  42, 3.14
+// - boolean: true, false
+// - null:    null
+// - array:   [1, 2, 3]
+// - object:  { "key": "value" }
+
+// NOT allowed in JSON:
+// - Functions
+// - undefined
+// - Comments
+// - Trailing commas
+// - Single quotes`,
+              language: 'javascript',
+              explanation: 'JSON is a strict subset of JavaScript object syntax. All keys and string values must use double quotes. Numbers, booleans, null, arrays, and nested objects are supported. Functions and undefined are not valid JSON.'
+            },
+            {
+              title: 'JSON.stringify() - Object to JSON',
+              code: `const user = {
+    name: "Alice",
+    age: 25,
+    hobbies: ["reading", "coding"]
+};
+
+// Convert object to JSON string
+const jsonString = JSON.stringify(user);
+console.log(jsonString);
+// {"name":"Alice","age":25,"hobbies":["reading","coding"]}
+
+// Pretty print with indentation (2 spaces)
+const pretty = JSON.stringify(user, null, 2);
+console.log(pretty);
+// {
+//   "name": "Alice",
+//   "age": 25,
+//   "hobbies": ["reading", "coding"]
+// }
+
+// Filter which keys to include
+const filtered = JSON.stringify(user, ["name", "age"]);
+console.log(filtered);
+// {"name":"Alice","age":25}`,
+              language: 'javascript',
+              explanation: 'JSON.stringify() converts a JavaScript value to a JSON string. The second argument is an optional replacer (function or array of keys). The third argument controls indentation for pretty-printing.'
+            },
+            {
+              title: 'JSON.parse() - JSON to Object',
+              code: `const jsonString = '{"name":"Alice","age":25,"hobbies":["reading","coding"]}';
+
+// Parse JSON string into JavaScript object
+const user = JSON.parse(jsonString);
+
+console.log(user.name);          // "Alice"
+console.log(user.age);           // 25
+console.log(user.hobbies[0]);    // "reading"
+
+// Always wrap in try/catch - invalid JSON throws an error
+try {
+    const data = JSON.parse('{ invalid json }');
+} catch (error) {
+    console.log("Failed to parse JSON:", error.message);
+}
+
+// Optional reviver function to transform values during parsing
+const parsed = JSON.parse(jsonString, (key, value) => {
+    if (key === "age") return value + 1;
+    return value;
+});
+console.log(parsed.age);  // 26`,
+              language: 'javascript',
+              explanation: 'JSON.parse() converts a JSON string into a JavaScript value. Always wrap it in try/catch because malformed JSON throws a SyntaxError. The optional second argument is a reviver function for transforming values.'
+            },
+            {
+              title: 'Reading a JSON File (Browser - fetch)',
+              code: `// Given a file called data.json:
+// {
+//   "users": [
+//     { "id": 1, "name": "Alice" },
+//     { "id": 2, "name": "Bob" }
+//   ]
+// }
+
+async function loadUsers() {
+    try {
+        const response = await fetch("./data.json");
+        
+        if (!response.ok) {
+            throw new Error(\`HTTP error: \${response.status}\`);
+        }
+        
+        // .json() automatically parses the response body
+        const data = await response.json();
+        
+        console.log(data.users);
+        data.users.forEach(user => {
+            console.log(\`\${user.id}: \${user.name}\`);
+        });
+    } catch (error) {
+        console.error("Failed to load JSON:", error);
+    }
+}
+
+loadUsers();`,
+              language: 'javascript',
+              explanation: 'In the browser, use fetch() to load a JSON file. The response.json() method automatically parses the JSON for you. Always check response.ok and use try/catch for error handling.'
+            },
+            {
+              title: 'Reading & Writing JSON Files (Node.js)',
+              code: `import fs from "fs/promises";
+
+// READ a JSON file
+async function readConfig() {
+    try {
+        const fileContents = await fs.readFile("./config.json", "utf-8");
+        const config = JSON.parse(fileContents);
+        console.log(config);
+        return config;
+    } catch (error) {
+        console.error("Error reading file:", error);
+    }
+}
+
+// WRITE a JSON file
+async function saveUser(user) {
+    try {
+        const jsonString = JSON.stringify(user, null, 2);
+        await fs.writeFile("./user.json", jsonString, "utf-8");
+        console.log("User saved!");
+    } catch (error) {
+        console.error("Error writing file:", error);
+    }
+}
+
+// UPDATE a JSON file (read -> modify -> write)
+async function addUser(newUser) {
+    const data = JSON.parse(await fs.readFile("./users.json", "utf-8"));
+    data.users.push(newUser);
+    await fs.writeFile("./users.json", JSON.stringify(data, null, 2));
+}
+
+saveUser({ name: "Alice", age: 25 });`,
+              language: 'javascript',
+              explanation: 'In Node.js, use fs.readFile() to read a JSON file as text, then JSON.parse() to convert it. To write, use JSON.stringify() then fs.writeFile(). The null, 2 arguments pretty-print with 2-space indentation.'
+            },
+            {
+              title: 'Common Use Cases',
+              code: `// 1. API responses (most REST APIs return JSON)
+const response = await fetch("https://api.example.com/users");
+const users = await response.json();
+
+// 2. localStorage (only stores strings)
+const settings = { theme: "dark", fontSize: 14 };
+localStorage.setItem("settings", JSON.stringify(settings));
+
+const saved = JSON.parse(localStorage.getItem("settings"));
+console.log(saved.theme);  // "dark"
+
+// 3. Deep cloning an object (simple cases only)
+const original = { name: "Alice", hobbies: ["reading"] };
+const clone = JSON.parse(JSON.stringify(original));
+clone.hobbies.push("coding");
+console.log(original.hobbies);  // ["reading"] - unchanged
+
+// 4. Configuration files (package.json, tsconfig.json, etc.)
+// These are JSON files read by tools
+
+// 5. Sending data in HTTP requests
+await fetch("/api/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "Alice", age: 25 })
+});`,
+              language: 'javascript',
+              explanation: 'JSON is everywhere: API requests/responses, localStorage, config files (package.json, tsconfig.json), and deep cloning. Always set Content-Type: application/json when sending JSON in a request body.'
+            }
+          ],
+          comparison: {
+            title: 'JSON vs JavaScript Object',
+            options: [
+              {
+                name: 'JSON',
+                description: 'Text-based data format (a string)',
+                whenToUse: 'Sending data over network, saving to files, config',
+                example: '\'{"name":"Alice","age":25}\' // a string with double quotes'
+              },
+              {
+                name: 'JavaScript Object',
+                description: 'In-memory data structure (live values)',
+                whenToUse: 'Working with data in your code',
+                example: '{ name: "Alice", age: 25 } // keys unquoted, can hold functions'
+              },
+              {
+                name: 'JSON.stringify()',
+                description: 'Object → JSON string',
+                whenToUse: 'Before sending, saving, or storing data',
+                example: 'JSON.stringify(obj)'
+              },
+              {
+                name: 'JSON.parse()',
+                description: 'JSON string → Object',
+                whenToUse: 'After receiving, reading, or retrieving data',
+                example: 'JSON.parse(jsonString)'
+              }
+            ]
+          }
         }
       ]
     }
