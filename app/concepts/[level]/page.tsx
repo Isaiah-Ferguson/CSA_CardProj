@@ -245,7 +245,7 @@ export default function ConceptsLevelPage() {
                     ))}
                   </TabsList>
                   
-                  <AnimatePresence mode="wait">
+                  <AnimatePresence>
                     {selectedConcept.codeExamples.map((example, index) => (
                       <TabsContent key={index} value={index.toString()}>
                         <motion.div

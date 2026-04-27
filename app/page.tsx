@@ -48,7 +48,7 @@ export default function Home() {
           
           <motion.h1 
             variants={itemVariants}
-            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+            className="text-5xl md:text-7xl font-bold mb-6 pb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
           >
             Master Coding Concepts
           </motion.h1>
