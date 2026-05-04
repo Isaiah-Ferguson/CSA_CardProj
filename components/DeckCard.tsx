@@ -30,10 +30,10 @@ export default function DeckCard({ deck }: DeckCardProps) {
   return (
     <Link href={`/study/${deck.id}`} className="block group">
       <motion.div
-        whileHover={{ y: -4 }}
-        transition={{ duration: 0.2 }}
+        whileHover={{ scale: 1.01 }}
+        transition={{ duration: 0.15 }}
       >
-        <Card className="h-full border-2 hover:border-primary transition-all duration-300 hover:shadow-lg overflow-hidden">
+        <Card className="h-full border-2 hover:border-primary transition-all duration-300 hover:shadow-md">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between mb-2">
               <Badge variant="secondary" className={`${categoryColor} border`}>
@@ -71,13 +71,13 @@ export default function DeckCard({ deck }: DeckCardProps) {
                         ? 'bg-yellow-500'
                         : 'bg-red-500'
                     }`}
+                    aria-label={card.difficulty}
+                    role="img"
                   />
                 ))}
               </div>
             </div>
           </CardContent>
-          
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </Card>
       </motion.div>
     </Link>

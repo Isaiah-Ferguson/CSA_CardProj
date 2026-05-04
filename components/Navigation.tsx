@@ -19,19 +19,19 @@ export default function Navigation() {
   ];
 
   return (
-    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+    <nav className="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2 group">
             <motion.div
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.5 }}
-              className="p-2 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600"
+              className="p-2 rounded-lg bg-primary"
             >
               <Code2 className="h-5 w-5 text-white" />
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="text-xl font-bold text-foreground">
                 CodeStack Academy
               </span>
               <span className="text-xs text-muted-foreground -mt-1">Flashcard Learning</span>
@@ -58,9 +58,10 @@ export default function Navigation() {
 
           {/* Hamburger button */}
           <button
-            className="sm:hidden p-2 rounded-lg hover:bg-accent transition-colors"
+            className="sm:hidden p-2 rounded-lg hover:bg-accent transition-colors min-h-11 min-w-11 flex items-center justify-center"
             onClick={() => setMenuOpen((prev) => !prev)}
             aria-label="Toggle menu"
+            aria-expanded={menuOpen}
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>

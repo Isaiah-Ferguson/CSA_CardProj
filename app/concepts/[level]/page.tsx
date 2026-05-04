@@ -55,7 +55,7 @@ export default function ConceptsLevelPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-blue-50/30 to-purple-50/30 dark:from-background dark:via-blue-950/20 dark:to-purple-950/20">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Breadcrumb */}
         <motion.div
@@ -78,14 +78,14 @@ export default function ConceptsLevelPage() {
           className="mb-12"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
-              <Lightbulb className="h-6 w-6 text-white" />
+            <div className="p-3 rounded-lg bg-primary">
+              <Lightbulb className="h-6 w-6 text-primary-foreground" />
             </div>
             <div>
               <Badge variant="secondary" className="mb-2">
                 {currentLevel.title}
               </Badge>
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
                 {currentLevel.title}
               </h1>
               <p className="text-foreground">
@@ -118,8 +118,8 @@ export default function ConceptsLevelPage() {
                     setActiveExample(0);
                   }
                 }}
-                className={selectedWeek.id === week.id 
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700' 
+                className={selectedWeek.id === week.id
+                  ? 'bg-primary text-primary-foreground hover:bg-primary/90'
                   : 'text-foreground hover:bg-accent'}
               >
                 Week {week.weekNumber}
@@ -143,7 +143,7 @@ export default function ConceptsLevelPage() {
                   <CardTitle className="text-2xl mb-2">{selectedWeek.title}</CardTitle>
                   <CardDescription className="text-base">{selectedWeek.description}</CardDescription>
                 </div>
-                <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                <Badge variant="secondary">
                   Week {selectedWeek.weekNumber}
                 </Badge>
               </div>
@@ -173,8 +173,8 @@ export default function ConceptsLevelPage() {
                     key={concept.id}
                     variant={selectedConcept.id === concept.id ? 'secondary' : 'ghost'}
                     className={`w-full justify-start text-left h-auto py-3 ${
-                      selectedConcept.id === concept.id 
-                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700' 
+                      selectedConcept.id === concept.id
+                        ? 'bg-primary text-primary-foreground hover:bg-primary/90'
                         : 'hover:bg-accent'
                     }`}
                     onClick={() => {
@@ -182,7 +182,7 @@ export default function ConceptsLevelPage() {
                       setActiveExample(0);
                     }}
                   >
-                    <span className="text-sm font-medium break-words w-full">{concept.title}</span>
+                    <span className="text-sm font-medium wrap-break-word w-full">{concept.title}</span>
                   </Button>
                 ))}
               </CardContent>
@@ -215,10 +215,10 @@ export default function ConceptsLevelPage() {
                         key={index}
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5 + index * 0.1 }}
+                        transition={{ duration: 0.2 }}
                         className="flex items-start gap-3"
                       >
-                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
                         <span className="text-foreground">{point}</span>
                       </motion.li>
                     ))}
@@ -239,7 +239,7 @@ export default function ConceptsLevelPage() {
                 <Tabs value={activeExample.toString()} onValueChange={(v: string) => setActiveExample(parseInt(v))}>
                   <TabsList className="w-full justify-start mb-4 flex-wrap h-auto gap-2 p-2">
                     {selectedConcept.codeExamples.map((example, index) => (
-                      <TabsTrigger key={index} value={index.toString()} className="px-4 py-2 whitespace-normal text-center min-h-[2.5rem]">
+                      <TabsTrigger key={index} value={index.toString()} className="px-4 py-2 whitespace-normal text-center min-h-10">
                         {example.title}
                       </TabsTrigger>
                     ))}
@@ -272,9 +272,9 @@ export default function ConceptsLevelPage() {
                               {example.code}
                             </SyntaxHighlighter>
                           </div>
-                          <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 p-4 rounded-r-lg">
+                          <div className="bg-primary/5 border border-primary/20 p-4 rounded-lg">
                             <p className="text-sm text-foreground leading-relaxed">
-                              <span className="font-semibold text-blue-700 dark:text-blue-400">💡 Explanation: </span>
+                              <span className="font-semibold text-primary">💡 Explanation: </span>
                               {example.explanation}
                             </p>
                           </div>
@@ -302,7 +302,7 @@ export default function ConceptsLevelPage() {
                         key={index}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.6 + index * 0.1 }}
+                        transition={{ duration: 0.2 }}
                       >
                         <Card className="h-full border-2 hover:border-primary transition-colors">
                           <CardHeader>
