@@ -138,35 +138,7 @@ export default function ConceptsHomePage() {
           })}
         </div>
 
-        {/* Info Section */}
-        <Card className="max-w-3xl mx-auto border-2">
-          <CardContent className="p-8">
-            <h3 className="text-lg font-semibold mb-6">How It Works</h3>
-            <div className="grid md:grid-cols-3 gap-6 text-left">
-              <div>
-                <div className="text-2xl mb-2">📚</div>
-                <h4 className="font-semibold mb-1.5 text-sm">Choose Your Level</h4>
-                <p className="text-sm text-muted-foreground">
-                  Select a level that matches your current skill level
-                </p>
-              </div>
-              <div>
-                <div className="text-2xl mb-2">💡</div>
-                <h4 className="font-semibold mb-1.5 text-sm">Explore Concepts</h4>
-                <p className="text-sm text-muted-foreground">
-                  Dive deep into weekly concepts with interactive examples
-                </p>
-              </div>
-              <div>
-                <div className="text-2xl mb-2">🚀</div>
-                <h4 className="font-semibold mb-1.5 text-sm">Master Skills</h4>
-                <p className="text-sm text-muted-foreground">
-                  Progress through levels and become a stronger developer
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+
       </div>
     </div>
   );
