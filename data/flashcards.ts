@@ -602,6 +602,1131 @@ greet(); // "Hello, Guest"`,
         category: 'JavaScript',
         difficulty: 'easy',
         tags: ['default', 'parameters', 'functions']
+      },
+      {
+        id: '1-51',
+        question: 'What is optional chaining (?.)?',
+        answer: 'Optional chaining returns undefined instead of throwing an error when accessing properties on null or undefined.',
+        code: `const user = null;
+
+// Without optional chaining - throws TypeError
+// console.log(user.address.city);
+
+// With optional chaining - returns undefined safely
+console.log(user?.address?.city); // undefined
+
+const arr = null;
+console.log(arr?.[0]);       // undefined
+console.log(arr?.length);    // undefined`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['optional-chaining', 'es2020', 'null-safety']
+      },
+      {
+        id: '1-52',
+        question: 'What is the nullish coalescing operator (??)?',
+        answer: '?? returns the right-hand value only when the left is null or undefined (not falsy).',
+        code: `const value = null ?? "default";   // "default"
+const zero  = 0    ?? "default";   // 0 (not null/undefined)
+const empty = ""   ?? "default";   // "" (not null/undefined)
+const undef = undefined ?? "fallback"; // "fallback"
+
+// vs || which treats all falsy values as "missing"
+const a = 0 || "default";  // "default" (may be unexpected)
+const b = 0 ?? "default";  // 0 (intended behavior)`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['nullish-coalescing', 'es2020', 'operators']
+      },
+      {
+        id: '1-53',
+        question: 'What are logical assignment operators (&&=, ||=, ??=)?',
+        answer: 'Logical assignment combines a logical operator with assignment. Only assigns if the condition is met.',
+        code: `let a = null;
+a ??= "default"; // a = "default" (assigned because a was null)
+
+let b = 1;
+b &&= 99;        // b = 99 (assigned because b was truthy)
+
+let c = 0;
+c ||= 42;        // c = 42 (assigned because c was falsy)
+
+// Useful for initializing object properties
+const config = {};
+config.timeout ??= 3000; // Only sets if not already set`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['logical-assignment', 'es2021', 'operators']
+      },
+      {
+        id: '1-54',
+        question: 'What is Array.from()?',
+        answer: 'Array.from() creates an array from an array-like or iterable object.',
+        code: `// From string
+Array.from("hello");        // ['h','e','l','l','o']
+
+// From Set (deduplicate)
+Array.from(new Set([1, 2, 2, 3])); // [1, 2, 3]
+
+// From NodeList
+Array.from(document.querySelectorAll("p"));
+
+// With mapping function
+Array.from({ length: 5 }, (_, i) => i * 2); // [0, 2, 4, 6, 8]`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['array-from', 'arrays', 'es6']
+      },
+      {
+        id: '1-55',
+        question: 'What is the flat() method?',
+        answer: 'flat() creates a new array with sub-array elements flattened up to the specified depth.',
+        code: `const nested = [1, [2, 3], [4, [5, 6]]];
+
+nested.flat();     // [1, 2, 3, 4, [5, 6]]  (depth 1)
+nested.flat(2);    // [1, 2, 3, 4, 5, 6]    (depth 2)
+nested.flat(Infinity); // fully flattens any depth`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['flat', 'arrays', 'es2019']
+      },
+      {
+        id: '1-56',
+        question: 'What is the flatMap() method?',
+        answer: 'flatMap() maps each element then flattens the result by one level. Equivalent to map() followed by flat(1).',
+        code: `const sentences = ["Hello World", "Foo Bar"];
+
+// map then flat
+sentences.map(s => s.split(" ")).flat();
+// ['Hello', 'World', 'Foo', 'Bar']
+
+// flatMap is shorter
+sentences.flatMap(s => s.split(" "));
+// ['Hello', 'World', 'Foo', 'Bar']
+
+// Useful for expanding items
+[1, 2, 3].flatMap(n => [n, n * 2]); // [1, 2, 2, 4, 3, 6]`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['flatmap', 'arrays', 'es2019']
+      },
+      {
+        id: '1-57',
+        question: 'What is Object.assign()?',
+        answer: 'Object.assign() copies enumerable own properties from source objects into a target object.',
+        code: `const target = { a: 1 };
+const source = { b: 2, c: 3 };
+
+Object.assign(target, source);
+console.log(target); // { a: 1, b: 2, c: 3 }
+
+// Shallow clone
+const clone = Object.assign({}, target);
+
+// Merge multiple sources
+const merged = Object.assign({}, obj1, obj2, obj3);`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['object-assign', 'objects', 'cloning']
+      },
+      {
+        id: '1-58',
+        question: 'What is a getter and setter in JavaScript?',
+        answer: 'Getters and setters are accessor properties that run functions when a property is read or written.',
+        code: `const person = {
+  _name: "Alice",
+  get name() {
+    return this._name.toUpperCase();
+  },
+  set name(value) {
+    if (typeof value !== "string") throw new TypeError("Name must be string");
+    this._name = value;
+  }
+};
+
+console.log(person.name); // "ALICE"
+person.name = "Bob";
+console.log(person.name); // "BOB"`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['getters', 'setters', 'objects']
+      },
+      {
+        id: '1-59',
+        question: 'What is the in operator in JavaScript?',
+        answer: 'The in operator returns true if a property exists in an object or its prototype chain.',
+        code: `const car = { make: "Toyota", model: "Camry" };
+
+"make" in car;      // true
+"year" in car;      // false
+"toString" in car;  // true (inherited from Object.prototype)
+
+// Common use: check if key exists before accessing
+if ("make" in car) {
+  console.log(car.make);
+}`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['in-operator', 'objects', 'properties']
+      },
+      {
+        id: '1-60',
+        question: 'What is instanceof in JavaScript?',
+        answer: 'instanceof tests whether an object was created by a constructor, checking the prototype chain.',
+        code: `class Animal {}
+class Dog extends Animal {}
+
+const d = new Dog();
+d instanceof Dog;    // true
+d instanceof Animal; // true (prototype chain)
+d instanceof Object; // true
+
+// Primitives
+"hello" instanceof String; // false (primitives are not objects)
+[] instanceof Array;       // true`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['instanceof', 'prototype', 'classes']
+      },
+      {
+        id: '1-61',
+        question: 'What is the for...of loop?',
+        answer: 'for...of iterates over iterable objects (arrays, strings, Sets, Maps). It gives values, not indices.',
+        code: `const arr = [10, 20, 30];
+for (const value of arr) {
+  console.log(value); // 10, 20, 30
+}
+
+// String
+for (const char of "hello") console.log(char); // h, e, l, l, o
+
+// Map entries
+const map = new Map([["a", 1], ["b", 2]]);
+for (const [key, val] of map) console.log(key, val);`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['for-of', 'iterables', 'loops']
+      },
+      {
+        id: '1-62',
+        question: 'What is the for...in loop?',
+        answer: 'for...in iterates over the enumerable string-keyed properties of an object, including inherited ones.',
+        code: `const obj = { a: 1, b: 2, c: 3 };
+for (const key in obj) {
+  console.log(key, obj[key]); // a 1, b 2, c 3
+}
+
+// Warning: includes inherited enumerable properties
+// Use hasOwnProperty to filter
+for (const key in obj) {
+  if (Object.hasOwn(obj, key)) {
+    console.log(key);
+  }
+}`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['for-in', 'objects', 'loops']
+      },
+      {
+        id: '1-63',
+        question: 'What is a Set in JavaScript?',
+        answer: 'A Set is a collection of unique values. Duplicates are automatically ignored.',
+        code: `const set = new Set([1, 2, 2, 3, 3]);
+console.log(set.size); // 3
+set.add(4);
+set.has(2); // true
+set.delete(1);
+
+// Convert to array
+const arr = [...set]; // [2, 3, 4]
+
+// Remove duplicates from array
+const unique = [...new Set([1, 1, 2, 3, 3])]; // [1, 2, 3]`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['set', 'data-structures', 'es6']
+      },
+      {
+        id: '1-64',
+        question: 'What is a Map in JavaScript?',
+        answer: 'A Map is a key-value store where any type can be a key (unlike plain objects which only allow strings/symbols).',
+        code: `const map = new Map();
+map.set("name", "Alice");
+map.set(42, "answer");
+map.set({ id: 1 }, "object key");
+
+map.get("name"); // "Alice"
+map.has(42);     // true
+map.size;        // 3
+
+// Iterate
+for (const [key, value] of map) {
+  console.log(key, value);
+}`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['map', 'data-structures', 'es6']
+      },
+      {
+        id: '1-65',
+        question: 'What is a generator function?',
+        answer: 'A generator function uses function* and yield to produce a sequence of values lazily, one at a time.',
+        code: `function* counter(start = 0) {
+  while (true) {
+    yield start++;
+  }
+}
+
+const gen = counter(1);
+gen.next().value; // 1
+gen.next().value; // 2
+gen.next().value; // 3
+
+// Finite generator
+function* range(from, to) {
+  for (let i = from; i <= to; i++) yield i;
+}
+[...range(1, 5)]; // [1, 2, 3, 4, 5]`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['generators', 'iterators', 'es6']
+      },
+      {
+        id: '1-66',
+        question: 'What is Promise.race()?',
+        answer: 'Promise.race() settles as soon as the first promise settles, whether fulfilled or rejected.',
+        code: `const slow = new Promise(res => setTimeout(() => res("slow"), 3000));
+const fast = new Promise(res => setTimeout(() => res("fast"), 500));
+const fail = new Promise((_, rej) => setTimeout(() => rej("error"), 1000));
+
+const result = await Promise.race([slow, fast]);
+console.log(result); // "fast" (resolves first)
+
+// Timeout pattern
+const timeout = new Promise((_, rej) =>
+  setTimeout(() => rej(new Error("Timeout")), 2000));
+
+const data = await Promise.race([fetchData(), timeout]);`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['promise-race', 'promises', 'async']
+      },
+      {
+        id: '1-67',
+        question: 'What is Promise.any()?',
+        answer: 'Promise.any() resolves with the first fulfilled promise. It only rejects if all promises reject (AggregateError).',
+        code: `const p1 = Promise.reject("fail 1");
+const p2 = Promise.resolve("success");
+const p3 = Promise.reject("fail 3");
+
+const result = await Promise.any([p1, p2, p3]);
+console.log(result); // "success"
+
+// All reject
+try {
+  await Promise.any([Promise.reject("a"), Promise.reject("b")]);
+} catch (e) {
+  console.log(e instanceof AggregateError); // true
+  console.log(e.errors); // ["a", "b"]
+}`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['promise-any', 'promises', 'es2021']
+      },
+      {
+        id: '1-68',
+        question: 'What is structuredClone()?',
+        answer: 'structuredClone() creates a true deep clone of an object, including nested objects, arrays, dates, and more.',
+        code: `const original = {
+  name: "Alice",
+  address: { city: "NYC" },
+  date: new Date(),
+  nums: [1, 2, 3]
+};
+
+const clone = structuredClone(original);
+clone.address.city = "LA";
+
+console.log(original.address.city); // "NYC" (not affected)
+console.log(clone.date instanceof Date); // true (Date preserved)`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['structuredclone', 'deep-clone', 'objects']
+      },
+      {
+        id: '1-69',
+        question: 'What is the globalThis object?',
+        answer: 'globalThis provides a standard way to access the global object in any environment (browser, Node.js, workers).',
+        code: `// Browser:  globalThis === window
+// Node.js:  globalThis === global
+// Worker:   globalThis === self
+
+// Universal code that works everywhere
+globalThis.myGlobal = "shared";
+
+// Check environment
+if (typeof globalThis.window !== "undefined") {
+  console.log("Running in browser");
+} else {
+  console.log("Running in Node.js");
+}`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['globalthis', 'environments', 'es2020']
+      },
+      {
+        id: '1-70',
+        question: 'What is the AbortController?',
+        answer: 'AbortController allows you to cancel async operations like fetch requests.',
+        code: `const controller = new AbortController();
+const { signal } = controller;
+
+// Cancel after 3 seconds
+setTimeout(() => controller.abort(), 3000);
+
+try {
+  const res = await fetch("/api/data", { signal });
+  const data = await res.json();
+} catch (err) {
+  if (err.name === "AbortError") {
+    console.log("Request was cancelled");
+  }
+}`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['abortcontroller', 'fetch', 'cancellation']
+      },
+      {
+        id: '1-71',
+        question: 'What is the Symbol type?',
+        answer: 'Symbol creates a unique, immutable primitive value, often used as object property keys to avoid name collisions.',
+        code: `const id1 = Symbol("id");
+const id2 = Symbol("id");
+id1 === id2; // false (always unique)
+
+const user = {
+  [id1]: 123, // Symbol as key
+  name: "Alice"
+};
+
+console.log(user[id1]); // 123
+// Symbol keys are hidden from for...in, JSON.stringify
+console.log(Object.keys(user)); // ["name"]`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['symbol', 'primitives', 'es6']
+      },
+      {
+        id: '1-72',
+        question: 'What is Object.fromEntries()?',
+        answer: 'Object.fromEntries() converts an iterable of key-value pairs (like a Map or array) into a plain object.',
+        code: `// From Map
+const map = new Map([["a", 1], ["b", 2]]);
+Object.fromEntries(map); // { a: 1, b: 2 }
+
+// From array of pairs
+Object.fromEntries([["x", 10], ["y", 20]]); // { x: 10, y: 20 }
+
+// Practical: transform object values
+const prices = { apple: 1, banana: 0.5 };
+const doubled = Object.fromEntries(
+  Object.entries(prices).map(([k, v]) => [k, v * 2])
+);
+// { apple: 2, banana: 1 }`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['object-fromentries', 'objects', 'es2019']
+      },
+      {
+        id: '1-73',
+        question: 'What is Array.at()?',
+        answer: 'Array.at() returns an element at a given index. Negative indices count from the end.',
+        code: `const arr = [10, 20, 30, 40, 50];
+
+arr.at(0);   // 10  (first element)
+arr.at(-1);  // 50  (last element)
+arr.at(-2);  // 40  (second to last)
+
+// vs bracket notation
+arr[arr.length - 1]; // 50 (verbose)
+arr.at(-1);          // 50 (concise)
+
+// Works on strings too
+"hello".at(-1); // "o"`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['array-at', 'arrays', 'es2022']
+      },
+      {
+        id: '1-74',
+        question: 'What is the String.matchAll() method?',
+        answer: 'matchAll() returns an iterator of all regex matches in a string, including capture groups.',
+        code: `const str = "cat bat sat";
+const regex = /([a-z])at/g;
+
+const matches = [...str.matchAll(regex)];
+// Each match: [fullMatch, group1, ...] with index
+matches.forEach(m => {
+  console.log(m[0], m[1], "at index", m.index);
+});
+// "cat" "c" at index 0
+// "bat" "b" at index 4
+// "sat" "s" at index 8`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['matchall', 'regex', 'strings']
+      },
+      {
+        id: '1-75',
+        question: 'What is the difference between Object.keys(), Object.values(), and Object.entries()?',
+        answer: 'keys() returns property names, values() returns property values, entries() returns [key, value] pairs — all as arrays.',
+        code: `const obj = { a: 1, b: 2, c: 3 };
+
+Object.keys(obj);    // ["a", "b", "c"]
+Object.values(obj);  // [1, 2, 3]
+Object.entries(obj); // [["a", 1], ["b", 2], ["c", 3]]
+
+// Common pattern: iterate object
+for (const [key, value] of Object.entries(obj)) {
+  console.log(\`\${key} = \${value}\`);
+}`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'medium',
+        tags: ['object-keys', 'object-values', 'object-entries']
+      },
+      {
+        id: '1-76',
+        question: 'What is the Proxy object in JavaScript?',
+        answer: 'Proxy wraps an object and intercepts fundamental operations like property access, assignment, and function calls.',
+        code: `const handler = {
+  get(target, prop) {
+    return prop in target ? target[prop] : \`Property "\${prop}" not found\`;
+  },
+  set(target, prop, value) {
+    if (typeof value !== "number") throw new TypeError("Only numbers allowed");
+    target[prop] = value;
+    return true;
+  }
+};
+
+const obj = new Proxy({}, handler);
+obj.x = 42;
+console.log(obj.x);     // 42
+console.log(obj.y);     // 'Property "y" not found'`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['proxy', 'metaprogramming', 'es6']
+      },
+      {
+        id: '1-77',
+        question: 'How does the prototype chain work in JavaScript?',
+        answer: 'Every object has a [[Prototype]] link. Property lookup walks up the chain until found or null is reached.',
+        code: `const animal = {
+  speak() { return \`\${this.name} makes a noise.\`; }
+};
+
+const dog = Object.create(animal);
+dog.name = "Rex";
+
+dog.speak(); // "Rex makes a noise." (found on prototype)
+
+// Inspect the chain
+Object.getPrototypeOf(dog) === animal; // true
+Object.getPrototypeOf(animal) === Object.prototype; // true
+Object.getPrototypeOf(Object.prototype); // null (end of chain)`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['prototype-chain', 'inheritance', 'objects']
+      },
+      {
+        id: '1-78',
+        question: 'What is the difference between call(), apply(), and bind()?',
+        answer: 'All three set `this`. call() passes args individually, apply() passes args as an array, bind() returns a new function with `this` bound.',
+        code: `function greet(greeting, punctuation) {
+  return \`\${greeting}, \${this.name}\${punctuation}\`;
+}
+const user = { name: "Alice" };
+
+greet.call(user,  "Hello", "!");   // "Hello, Alice!"
+greet.apply(user, ["Hi", "?"]);    // "Hi, Alice?"
+
+const boundGreet = greet.bind(user, "Hey");
+boundGreet(".");  // "Hey, Alice."  (this + first arg pre-bound)`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['call', 'apply', 'bind']
+      },
+      {
+        id: '1-79',
+        question: 'What is a WeakMap in JavaScript?',
+        answer: 'WeakMap holds key-value pairs where keys must be objects. Keys are weakly referenced, allowing garbage collection.',
+        code: `const cache = new WeakMap();
+
+function process(obj) {
+  if (cache.has(obj)) return cache.get(obj);
+  const result = expensiveCompute(obj);
+  cache.set(obj, result);
+  return result;
+}
+
+// When obj is garbage collected, the WeakMap entry is removed too
+// WeakMap is not iterable (no .keys(), .values(), .entries())`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['weakmap', 'memory', 'garbage-collection']
+      },
+      {
+        id: '1-80',
+        question: 'What is a WeakSet in JavaScript?',
+        answer: 'WeakSet stores weakly referenced objects. Objects are automatically removed when garbage collected.',
+        code: `const visited = new WeakSet();
+
+function markVisited(node) {
+  visited.add(node);
+}
+
+function isVisited(node) {
+  return visited.has(node);
+}
+
+const el = document.getElementById("btn");
+markVisited(el);
+isVisited(el); // true
+
+// When el is removed from DOM and dereferenced,
+// it is automatically removed from the WeakSet`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['weakset', 'memory', 'garbage-collection']
+      },
+      {
+        id: '1-81',
+        question: 'What is the Iterator protocol in JavaScript?',
+        answer: 'An iterator is an object with a next() method that returns { value, done }. The Iterator protocol defines this contract.',
+        code: `function makeRange(start, end) {
+  let current = start;
+  return {
+    next() {
+      if (current <= end) {
+        return { value: current++, done: false };
+      }
+      return { value: undefined, done: true };
+    }
+  };
+}
+
+const iter = makeRange(1, 3);
+iter.next(); // { value: 1, done: false }
+iter.next(); // { value: 2, done: false }
+iter.next(); // { value: 3, done: false }
+iter.next(); // { value: undefined, done: true }`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['iterator', 'protocol', 'es6']
+      },
+      {
+        id: '1-82',
+        question: 'How does Symbol.iterator make an object iterable?',
+        answer: 'Add a [Symbol.iterator]() method that returns an iterator to make a custom object work with for...of.',
+        code: `class Range {
+  constructor(start, end) {
+    this.start = start;
+    this.end   = end;
+  }
+  [Symbol.iterator]() {
+    let current = this.start;
+    const end = this.end;
+    return {
+      next() {
+        return current <= end
+          ? { value: current++, done: false }
+          : { value: undefined, done: true };
+      }
+    };
+  }
+}
+
+for (const n of new Range(1, 5)) console.log(n); // 1 2 3 4 5
+[...new Range(1, 3)]; // [1, 2, 3]`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['symbol-iterator', 'iterable', 'protocol']
+      },
+      {
+        id: '1-83',
+        question: 'What is a tagged template literal?',
+        answer: 'A tagged template is a function call where the function receives the template parts and interpolated values as arguments.',
+        code: `function highlight(strings, ...values) {
+  return strings.reduce((result, str, i) => {
+    const val = values[i] !== undefined
+      ? \`<b>\${values[i]}</b>\`
+      : "";
+    return result + str + val;
+  }, "");
+}
+
+const name = "Alice";
+const score = 95;
+const html = highlight\`Hello \${name}, your score is \${score}!\`;
+// "Hello <b>Alice</b>, your score is <b>95</b>!"`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['tagged-templates', 'template-literals', 'advanced']
+      },
+      {
+        id: '1-84',
+        question: 'What is the difference between microtasks and macrotasks?',
+        answer: 'Microtasks (Promises, queueMicrotask) run before the next macrotask (setTimeout, setInterval, I/O). Microtask queue is drained completely first.',
+        code: `console.log("1 - sync");
+
+setTimeout(() => console.log("4 - macrotask"), 0);
+
+Promise.resolve()
+  .then(() => console.log("2 - microtask"))
+  .then(() => console.log("3 - microtask 2"));
+
+console.log("1b - sync");
+
+// Output order: 1 - sync, 1b - sync, 2 - microtask, 3 - microtask 2, 4 - macrotask`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['microtasks', 'macrotasks', 'event-loop']
+      },
+      {
+        id: '1-85',
+        question: 'What are ES Modules (import/export)?',
+        answer: 'ES Modules provide static imports/exports. They are async, strict mode by default, and resolved at parse time.',
+        code: `// math.js - named exports
+export const PI = 3.14159;
+export function add(a, b) { return a + b; }
+export default class Calculator { /* ... */ }
+
+// main.js - named imports
+import Calculator, { PI, add } from "./math.js";
+import * as math from "./math.js"; // namespace import
+
+// Dynamic import (lazy loading)
+const { add: addFn } = await import("./math.js");`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['es-modules', 'import', 'export']
+      },
+      {
+        id: '1-86',
+        question: 'What is memoization in JavaScript?',
+        answer: 'Memoization caches the results of expensive function calls and returns the cached result for repeated inputs.',
+        code: `function memoize(fn) {
+  const cache = new Map();
+  return function(...args) {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key);
+    const result = fn.apply(this, args);
+    cache.set(key, result);
+    return result;
+  };
+}
+
+const slowFib = n => n <= 1 ? n : slowFib(n-1) + slowFib(n-2);
+const fastFib = memoize(slowFib);
+
+fastFib(40); // Computed once, subsequent calls instant`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['memoization', 'performance', 'functional']
+      },
+      {
+        id: '1-87',
+        question: 'What is currying in JavaScript?',
+        answer: 'Currying transforms a function with multiple arguments into a chain of functions each taking one argument.',
+        code: `function curry(fn) {
+  return function curried(...args) {
+    if (args.length >= fn.length) {
+      return fn(...args);
+    }
+    return (...more) => curried(...args, ...more);
+  };
+}
+
+const add = curry((a, b, c) => a + b + c);
+
+add(1)(2)(3);     // 6
+add(1, 2)(3);     // 6
+add(1)(2, 3);     // 6
+add(1, 2, 3);     // 6`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['currying', 'functional', 'closures']
+      },
+      {
+        id: '1-88',
+        question: 'What is function composition in JavaScript?',
+        answer: 'Function composition combines multiple functions so that the output of one becomes the input of the next.',
+        code: `const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x);
+const pipe    = (...fns) => x => fns.reduce((v, f) => f(v), x);
+
+const double  = x => x * 2;
+const addOne  = x => x + 1;
+const square  = x => x * x;
+
+// compose: right-to-left
+const transform = compose(square, addOne, double);
+transform(3); // square(addOne(double(3))) = square(7) = 49
+
+// pipe: left-to-right
+const process = pipe(double, addOne, square);
+process(3); // square(addOne(double(3))) = 49`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['composition', 'functional', 'pipe']
+      },
+      {
+        id: '1-89',
+        question: 'What is the Observer pattern in JavaScript?',
+        answer: 'The Observer pattern lets objects subscribe to events and get notified when state changes.',
+        code: `class EventEmitter {
+  #listeners = new Map();
+
+  on(event, fn) {
+    if (!this.#listeners.has(event)) this.#listeners.set(event, []);
+    this.#listeners.get(event).push(fn);
+  }
+
+  off(event, fn) {
+    const fns = this.#listeners.get(event) ?? [];
+    this.#listeners.set(event, fns.filter(f => f !== fn));
+  }
+
+  emit(event, ...args) {
+    (this.#listeners.get(event) ?? []).forEach(fn => fn(...args));
+  }
+}
+
+const emitter = new EventEmitter();
+emitter.on("data", d => console.log("Received:", d));
+emitter.emit("data", { id: 1 }); // "Received: { id: 1 }"`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['observer', 'design-patterns', 'events']
+      },
+      {
+        id: '1-90',
+        question: 'What is the Singleton pattern in JavaScript?',
+        answer: 'The Singleton pattern ensures a class has only one instance and provides a global access point to it.',
+        code: `class Database {
+  static #instance = null;
+  #connection;
+
+  constructor(url) {
+    if (Database.#instance) return Database.#instance;
+    this.#connection = \`Connected to \${url}\`;
+    Database.#instance = this;
+  }
+
+  getConnection() { return this.#connection; }
+}
+
+const db1 = new Database("mongodb://localhost");
+const db2 = new Database("postgres://localhost");
+
+db1 === db2; // true (same instance)
+db2.getConnection(); // "Connected to mongodb://localhost"`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['singleton', 'design-patterns', 'classes']
+      },
+      {
+        id: '1-91',
+        question: 'What is debounce in JavaScript?',
+        answer: 'Debounce delays function execution until after a pause in calls. Only the last call in a burst executes.',
+        code: `function debounce(fn, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+const search = debounce((query) => {
+  console.log("Searching for:", query);
+}, 300);
+
+// User types rapidly - only final value triggers search
+search("j");
+search("ja");
+search("jav");
+search("java"); // Only this executes (after 300ms pause)`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['debounce', 'performance', 'events']
+      },
+      {
+        id: '1-92',
+        question: 'What is throttle in JavaScript?',
+        answer: 'Throttle limits function execution to once per interval, ignoring calls in between.',
+        code: `function throttle(fn, interval) {
+  let lastTime = 0;
+  return function(...args) {
+    const now = Date.now();
+    if (now - lastTime >= interval) {
+      lastTime = now;
+      fn.apply(this, args);
+    }
+  };
+}
+
+const onScroll = throttle(() => {
+  console.log("Scroll event handled at", Date.now());
+}, 200);
+
+window.addEventListener("scroll", onScroll);
+// Fires at most once every 200ms regardless of scroll speed`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['throttle', 'performance', 'events']
+      },
+      {
+        id: '1-93',
+        question: 'What is an async generator in JavaScript?',
+        answer: 'An async generator function uses async function* with yield to produce a sequence of Promises consumed with for await...of.',
+        code: `async function* paginate(url) {
+  let page = 1;
+  while (true) {
+    const res = await fetch(\`\${url}?page=\${page}\`);
+    const data = await res.json();
+    if (!data.items.length) return;
+    yield data.items;
+    page++;
+  }
+}
+
+for await (const items of paginate("/api/products")) {
+  console.log("Page of items:", items);
+  if (items.length < 10) break; // last page
+}`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['async-generators', 'async', 'iterators']
+      },
+      {
+        id: '1-94',
+        question: 'What is the Reflect API?',
+        answer: 'Reflect provides methods mirroring Proxy traps for performing default object operations. It improves Proxy handlers.',
+        code: `const obj = { x: 1 };
+
+// Reflect mirrors Object and function operations
+Reflect.has(obj, "x");           // true  (like "x" in obj)
+Reflect.get(obj, "x");           // 1     (like obj.x)
+Reflect.set(obj, "y", 2);        // true  (sets obj.y = 2)
+Reflect.deleteProperty(obj, "x");// true
+
+// Best used in Proxy handlers to call default behavior
+const proxy = new Proxy(obj, {
+  get(target, prop, receiver) {
+    console.log("Getting:", prop);
+    return Reflect.get(target, prop, receiver); // correct 'this' binding
+  }
+});`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['reflect', 'metaprogramming', 'proxy']
+      },
+      {
+        id: '1-95',
+        question: 'What are private class fields (#) in JavaScript?',
+        answer: 'Private fields use # prefix. They are truly private — inaccessible outside the class, even from subclasses.',
+        code: `class BankAccount {
+  #balance = 0;
+  #owner;
+
+  constructor(owner, initial) {
+    this.#owner = owner;
+    this.#balance = initial;
+  }
+
+  deposit(amount) { this.#balance += amount; }
+  get balance()   { return this.#balance; }
+
+  static #fee = 2.50; // private static
+  static getFee() { return BankAccount.#fee; }
+}
+
+const acct = new BankAccount("Alice", 100);
+acct.deposit(50);
+acct.balance;      // 150
+acct.#balance;     // SyntaxError (truly private)`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['private-fields', 'classes', 'encapsulation']
+      },
+      {
+        id: '1-96',
+        question: 'What is the Module pattern in JavaScript?',
+        answer: 'The Module pattern uses IIFE and closures to create private state and expose a public API.',
+        code: `const counter = (() => {
+  let count = 0; // private
+
+  return {
+    increment() { count++; },
+    decrement() { count--; },
+    reset()     { count = 0; },
+    get value() { return count; }
+  };
+})();
+
+counter.increment();
+counter.increment();
+counter.value;   // 2
+counter.count;   // undefined (private)`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['module-pattern', 'closures', 'iife']
+      },
+      {
+        id: '1-97',
+        question: 'What is the difference between deep copy and shallow copy?',
+        answer: 'Shallow copy duplicates the top-level structure; nested objects are still shared. Deep copy duplicates everything recursively.',
+        code: `const original = { a: 1, nested: { b: 2 } };
+
+// Shallow copy - nested object is shared
+const shallow = { ...original };
+shallow.nested.b = 99;
+original.nested.b; // 99 (mutated!)
+
+// Deep copy - fully independent
+const deep = structuredClone(original);
+deep.nested.b = 42;
+original.nested.b; // 99 (unchanged)
+
+// Other deep copy methods
+const json = JSON.parse(JSON.stringify(original)); // loses Dates/undefined`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['deep-copy', 'shallow-copy', 'cloning']
+      },
+      {
+        id: '1-98',
+        question: 'What is tail call optimization?',
+        answer: 'Tail call optimization reuses the current stack frame when a function\'s last action is a call to another function, preventing stack overflow.',
+        code: `// Non-tail recursive (adds stack frame each call)
+function factorial(n) {
+  if (n <= 1) return 1;
+  return n * factorial(n - 1); // NOT a tail call (multiplication after)
+}
+
+// Tail recursive (tail call - last action is the recursive call)
+function factTail(n, acc = 1) {
+  if (n <= 1) return acc;
+  return factTail(n - 1, n * acc); // tail call
+}
+
+// JavaScript engines with TCO (strict mode in some engines):
+"use strict";
+factTail(10000); // No stack overflow with TCO`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['tail-call', 'recursion', 'optimization']
+      },
+      {
+        id: '1-99',
+        question: 'What is the difference between synchronous and asynchronous iteration?',
+        answer: 'Synchronous iteration uses for...of with Symbol.iterator. Asynchronous iteration uses for await...of with Symbol.asyncIterator.',
+        code: `// Sync iterator
+const syncRange = {
+  [Symbol.iterator]() {
+    let i = 0;
+    return { next: () => i < 3 ? { value: i++, done: false } : { done: true } };
+  }
+};
+for (const n of syncRange) console.log(n); // 0, 1, 2
+
+// Async iterator
+const asyncRange = {
+  [Symbol.asyncIterator]() {
+    let i = 0;
+    return {
+      async next() {
+        await new Promise(r => setTimeout(r, 100));
+        return i < 3 ? { value: i++, done: false } : { done: true };
+      }
+    };
+  }
+};
+for await (const n of asyncRange) console.log(n); // 0, 1, 2`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['async-iteration', 'iterators', 'for-await-of']
+      },
+      {
+        id: '1-100',
+        question: 'What is the Temporal Dead Zone (TDZ)?',
+        answer: 'TDZ is the period between entering a scope and a let/const declaration being evaluated. Accessing the variable in TDZ throws a ReferenceError.',
+        code: `// var - hoisted and initialized to undefined (no TDZ)
+console.log(x); // undefined
+var x = 5;
+
+// let/const - hoisted but NOT initialized (TDZ)
+console.log(y); // ReferenceError: Cannot access 'y' before initialization
+let y = 10;
+
+// TDZ inside blocks
+{
+  // TDZ for z starts here
+  console.log(z); // ReferenceError
+  let z = "value"; // TDZ ends here
+}`,
+        language: 'javascript',
+        category: 'JavaScript',
+        difficulty: 'hard',
+        tags: ['tdz', 'hoisting', 'let-const']
       }
     ]
   },
@@ -3797,6 +4922,973 @@ context.Products.AddRange(product1, product2, product3);`,
         category: 'EF Core',
         difficulty: 'easy',
         tags: ['add', 'addrange', 'crud']
+      },
+      {
+        id: '6-51',
+        question: 'How do you configure HasMany() with Fluent API?',
+        answer: 'HasMany() configures a one-to-many relationship from the "one" side.',
+        code: `modelBuilder.Entity<Customer>()
+    .HasMany(c => c.Orders)
+    .WithOne(o => o.Customer)
+    .HasForeignKey(o => o.CustomerId);`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['hasmany', 'fluent-api', 'relationships']
+      },
+      {
+        id: '6-52',
+        question: 'How do you configure HasOne() with Fluent API?',
+        answer: 'HasOne() configures a one-to-one or many-to-one relationship.',
+        code: `modelBuilder.Entity<Order>()
+    .HasOne(o => o.Customer)
+    .WithMany(c => c.Orders)
+    .HasForeignKey(o => o.CustomerId)
+    .OnDelete(DeleteBehavior.Restrict);`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['hasone', 'fluent-api', 'relationships']
+      },
+      {
+        id: '6-53',
+        question: 'How do you configure a many-to-many relationship in EF Core?',
+        answer: 'EF Core 5+ supports implicit many-to-many via collection navigation properties. Use Fluent API for join table configuration.',
+        code: `// Implicit (EF Core 5+)
+public class Student { public ICollection<Course> Courses { get; set; } }
+public class Course  { public ICollection<Student> Students { get; set; } }
+
+// Explicit join table
+modelBuilder.Entity<Student>()
+    .HasMany(s => s.Courses)
+    .WithMany(c => c.Students)
+    .UsingEntity(j => j.ToTable("StudentCourses"));`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['many-to-many', 'relationships', 'fluent-api']
+      },
+      {
+        id: '6-54',
+        question: 'How do you use Where() for filtering in EF Core?',
+        answer: 'Where() translates a LINQ predicate to a SQL WHERE clause.',
+        code: `var activeProducts = await context.Products
+    .Where(p => p.IsActive && p.Price > 10)
+    .OrderBy(p => p.Name)
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['where', 'linq', 'filtering']
+      },
+      {
+        id: '6-55',
+        question: 'How do you use Select() for projection in EF Core?',
+        answer: 'Select() projects query results into a different shape, fetching only required columns.',
+        code: `var names = await context.Products
+    .Where(p => p.IsActive)
+    .Select(p => new { p.Id, p.Name, p.Price })
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['select', 'projection', 'linq']
+      },
+      {
+        id: '6-56',
+        question: 'How do you use OrderBy() and OrderByDescending() in EF Core?',
+        answer: 'OrderBy() sorts ascending. OrderByDescending() sorts descending. Use ThenBy() for secondary sorts.',
+        code: `var products = await context.Products
+    .OrderBy(p => p.Category)
+    .ThenByDescending(p => p.Price)
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['orderby', 'sorting', 'linq']
+      },
+      {
+        id: '6-57',
+        question: 'How do you implement pagination with Skip() and Take()?',
+        answer: 'Skip() skips N records; Take() fetches N records. Combine them for offset-based pagination.',
+        code: `int page = 2, pageSize = 10;
+
+var products = await context.Products
+    .OrderBy(p => p.Id)
+    .Skip((page - 1) * pageSize)
+    .Take(pageSize)
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['pagination', 'skip', 'take']
+      },
+      {
+        id: '6-58',
+        question: 'How do you use GroupBy() in EF Core?',
+        answer: 'GroupBy() groups results by a key. Use with aggregate functions like Count() or Sum().',
+        code: `var grouped = await context.Orders
+    .GroupBy(o => o.CustomerId)
+    .Select(g => new
+    {
+        CustomerId = g.Key,
+        OrderCount = g.Count(),
+        TotalSpent = g.Sum(o => o.Total)
+    })
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['groupby', 'aggregation', 'linq']
+      },
+      {
+        id: '6-59',
+        question: 'How do you use Sum(), Min(), Max(), and Average() in EF Core?',
+        answer: 'These aggregate methods translate directly to SQL aggregates.',
+        code: `decimal total   = await context.Orders.SumAsync(o => o.Total);
+decimal cheapest = await context.Products.MinAsync(p => p.Price);
+decimal priciest = await context.Products.MaxAsync(p => p.Price);
+double avgPrice  = await context.Products.AverageAsync(p => (double)p.Price);`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['aggregates', 'sum', 'linq']
+      },
+      {
+        id: '6-60',
+        question: 'How do you use FromSqlRaw() in EF Core?',
+        answer: 'FromSqlRaw() allows raw SQL queries that return entities tracked by the context.',
+        code: `var products = await context.Products
+    .FromSqlRaw("SELECT * FROM Products WHERE Price > {0}", 100)
+    .ToListAsync();
+
+// Can chain LINQ after
+var cheap = await context.Products
+    .FromSqlRaw("SELECT * FROM Products")
+    .Where(p => p.Price < 50)
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['fromsqlraw', 'raw-sql', 'queries']
+      },
+      {
+        id: '6-61',
+        question: 'How do you configure cascade delete with Fluent API?',
+        answer: 'Use OnDelete() to set DeleteBehavior: Cascade, Restrict, SetNull, or NoAction.',
+        code: `modelBuilder.Entity<Order>()
+    .HasOne(o => o.Customer)
+    .WithMany(c => c.Orders)
+    .HasForeignKey(o => o.CustomerId)
+    .OnDelete(DeleteBehavior.Cascade);   // Deleting Customer deletes Orders
+    // or DeleteBehavior.Restrict        // Prevents delete if Orders exist
+    // or DeleteBehavior.SetNull         // Sets FK to null on delete`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['cascade-delete', 'fluent-api', 'relationships']
+      },
+      {
+        id: '6-62',
+        question: 'How do you configure string max length with Fluent API?',
+        answer: 'Use HasMaxLength() on the property builder in OnModelCreating.',
+        code: `modelBuilder.Entity<Product>()
+    .Property(p => p.Name)
+    .HasMaxLength(100)
+    .IsRequired();
+
+modelBuilder.Entity<Product>()
+    .Property(p => p.Description)
+    .HasMaxLength(500)
+    .IsRequired(false);`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['hasmaxlength', 'fluent-api', 'configuration']
+      },
+      {
+        id: '6-63',
+        question: 'What is the difference between Code-First and Database-First?',
+        answer: 'Code-First: you define C# classes and EF generates the database. Database-First: you scaffold classes from an existing database.',
+        code: `// Code-First: define model, then migrate
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+
+// Database-First: scaffold from existing DB
+dotnet ef dbcontext scaffold "ConnectionString" \\
+    Microsoft.EntityFrameworkCore.SqlServer \\
+    -o Models`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['code-first', 'database-first', 'migrations']
+      },
+      {
+        id: '6-64',
+        question: 'How do you register DbContext with Dependency Injection?',
+        answer: 'Use AddDbContext<T>() in Program.cs, specifying the provider and connection string.',
+        code: `// Program.cs
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// appsettings.json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=.;Database=MyDb;Trusted_Connection=True;"
+  }
+}`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['dependency-injection', 'dbcontext', 'configuration']
+      },
+      {
+        id: '6-65',
+        question: 'How do you use the IEntityTypeConfiguration<T> interface?',
+        answer: 'IEntityTypeConfiguration<T> lets you split Fluent API configuration into separate files.',
+        code: `public class ProductConfiguration : IEntityTypeConfiguration<Product>
+{
+    public void Configure(EntityTypeBuilder<Product> builder)
+    {
+        builder.HasKey(p => p.Id);
+        builder.Property(p => p.Name).HasMaxLength(100).IsRequired();
+        builder.HasIndex(p => p.Sku).IsUnique();
+    }
+}
+
+// In OnModelCreating
+modelBuilder.ApplyConfiguration(new ProductConfiguration());
+// Or apply all at once:
+modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['configuration', 'fluent-api', 'ientitytypeconfiguration']
+      },
+      {
+        id: '6-66',
+        question: 'How do you use the In-Memory provider for testing?',
+        answer: 'Install Microsoft.EntityFrameworkCore.InMemory and configure it in test setup.',
+        code: `var options = new DbContextOptionsBuilder<AppDbContext>()
+    .UseInMemoryDatabase("TestDb")
+    .Options;
+
+using var context = new AppDbContext(options);
+context.Products.Add(new Product { Name = "Test", Price = 10 });
+await context.SaveChangesAsync();
+
+var products = await context.Products.ToListAsync();
+Assert.Single(products);`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['in-memory', 'testing', 'unit-tests']
+      },
+      {
+        id: '6-67',
+        question: 'How do you track entity state manually in EF Core?',
+        answer: 'Use context.Entry().State to manually set entity tracking state.',
+        code: `var product = new Product { Id = 1, Name = "Updated Name", Price = 99 };
+
+// Attach and mark as modified (for disconnected scenarios)
+context.Entry(product).State = EntityState.Modified;
+await context.SaveChangesAsync();
+
+// Check state
+var entry = context.Entry(product);
+Console.WriteLine(entry.State); // Modified, Added, Deleted, Unchanged, Detached`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['entity-state', 'change-tracking', 'disconnected']
+      },
+      {
+        id: '6-68',
+        question: 'How do you query related data with projection (no Include)?',
+        answer: 'Use Select() to project related data directly, avoiding separate Include() queries.',
+        code: `var result = await context.Orders
+    .Select(o => new OrderDto
+    {
+        Id = o.Id,
+        Total = o.Total,
+        CustomerName = o.Customer.Name,    // No Include needed
+        ItemCount = o.Items.Count()
+    })
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['projection', 'select', 'performance']
+      },
+      {
+        id: '6-69',
+        question: 'How do you use the [DatabaseGenerated] attribute?',
+        answer: '[DatabaseGenerated] controls how a column value is generated by the database.',
+        code: `public class Product
+{
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public DateTime LastModified { get; set; }
+
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public Guid ExternalId { get; set; } // Set manually
+}`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['databasegenerated', 'attributes', 'keys']
+      },
+      {
+        id: '6-70',
+        question: 'How do you configure a default column value in EF Core?',
+        answer: 'Use HasDefaultValue() or HasDefaultValueSql() in Fluent API.',
+        code: `modelBuilder.Entity<Product>()
+    .Property(p => p.CreatedAt)
+    .HasDefaultValueSql("GETUTCDATE()");
+
+modelBuilder.Entity<Product>()
+    .Property(p => p.IsActive)
+    .HasDefaultValue(true);`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['default-value', 'fluent-api', 'configuration']
+      },
+      {
+        id: '6-71',
+        question: 'How do you apply all entity configurations from an assembly?',
+        answer: 'Use ApplyConfigurationsFromAssembly() to automatically apply all IEntityTypeConfiguration<T> classes.',
+        code: `protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.ApplyConfigurationsFromAssembly(
+        typeof(AppDbContext).Assembly);
+}`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['configuration', 'assembly', 'fluent-api']
+      },
+      {
+        id: '6-72',
+        question: 'How do you revert a migration in EF Core?',
+        answer: 'Use dotnet ef database update <PreviousMigrationName> to roll back, then remove the latest migration.',
+        code: `# Roll back to a specific migration
+dotnet ef database update PreviousMigrationName
+
+# Remove the last migration file
+dotnet ef migrations remove
+
+# List all migrations
+dotnet ef migrations list`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['migrations', 'rollback', 'database']
+      },
+      {
+        id: '6-73',
+        question: 'What is the difference between FirstOrDefaultAsync and SingleOrDefaultAsync?',
+        answer: 'FirstOrDefaultAsync returns the first match (no error on multiple). SingleOrDefaultAsync throws if more than one record matches.',
+        code: `// Returns first product with price > 10 (no error if many match)
+var first = await context.Products
+    .FirstOrDefaultAsync(p => p.Price > 10);
+
+// Returns exactly one, throws InvalidOperationException if > 1 match
+var single = await context.Products
+    .SingleOrDefaultAsync(p => p.Sku == "ABC-123");`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['firstordefault', 'singleordefault', 'queries']
+      },
+      {
+        id: '6-74',
+        question: 'How do you use DbContext.Database.ExecuteSqlRawAsync()?',
+        answer: 'ExecuteSqlRawAsync() runs non-query SQL (INSERT/UPDATE/DELETE) and returns affected row count.',
+        code: `int rows = await context.Database.ExecuteSqlRawAsync(
+    "UPDATE Products SET IsActive = 0 WHERE Price < {0}", 5.00m);
+
+Console.WriteLine($"{rows} rows updated");`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['executesqlrawasync', 'raw-sql', 'database']
+      },
+      {
+        id: '6-75',
+        question: 'How do you use DbContext pooling for performance?',
+        answer: 'AddDbContextPool<T>() reuses DbContext instances, reducing allocation overhead in high-throughput apps.',
+        code: `// Program.cs
+builder.Services.AddDbContextPool<AppDbContext>(options =>
+    options.UseSqlServer(connectionString),
+    poolSize: 128); // default is 1024
+
+// Note: Do not store state on the context when using pooling
+// The context is reset between uses`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'medium',
+        tags: ['dbcontext-pool', 'performance', 'dependency-injection']
+      },
+      {
+        id: '6-76',
+        question: 'What is a Global Query Filter in EF Core?',
+        answer: 'Global Query Filters add a WHERE condition to all queries for an entity type automatically.',
+        code: `protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    // Always filter out soft-deleted records
+    modelBuilder.Entity<Product>()
+        .HasQueryFilter(p => !p.IsDeleted);
+}
+
+// Normal query - IsDeleted = false is added automatically
+var products = await context.Products.ToListAsync();
+
+// Bypass the filter
+var all = await context.Products.IgnoreQueryFilters().ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['global-query-filter', 'soft-delete', 'advanced']
+      },
+      {
+        id: '6-77',
+        question: 'How do you implement soft delete with a global query filter?',
+        answer: 'Add IsDeleted flag, set it in an overridden SaveChangesAsync(), and add a global filter.',
+        code: `public class AppDbContext : DbContext
+{
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken ct = default)
+    {
+        foreach (var entry in ChangeTracker.Entries<ISoftDelete>()
+            .Where(e => e.State == EntityState.Deleted))
+        {
+            entry.State = EntityState.Modified;
+            entry.Entity.IsDeleted = true;
+        }
+        return base.SaveChangesAsync(ct);
+    }
+}`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['soft-delete', 'savechanges', 'global-filter']
+      },
+      {
+        id: '6-78',
+        question: 'What is TPH (Table Per Hierarchy) inheritance in EF Core?',
+        answer: 'TPH maps all types in an inheritance hierarchy to a single table with a discriminator column.',
+        code: `public class Animal  { public int Id { get; set; } public string Name { get; set; } }
+public class Dog : Animal { public string Breed { get; set; } }
+public class Cat : Animal { public bool IsIndoor { get; set; } }
+
+// EF Core default: single Animals table with Discriminator column
+// Query specific type
+var dogs = await context.Animals.OfType<Dog>().ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['tph', 'inheritance', 'table-mapping']
+      },
+      {
+        id: '6-79',
+        question: 'What is TPT (Table Per Type) inheritance in EF Core?',
+        answer: 'TPT maps each type in the hierarchy to its own table. Base properties in base table, derived in separate tables.',
+        code: `[Table("Animals")]
+public class Animal  { public int Id { get; set; } public string Name { get; set; } }
+
+[Table("Dogs")]
+public class Dog : Animal { public string Breed { get; set; } }
+
+[Table("Cats")]
+public class Cat : Animal { public bool IsIndoor { get; set; } }
+
+// Or via Fluent API
+modelBuilder.Entity<Dog>().ToTable("Dogs");
+modelBuilder.Entity<Cat>().ToTable("Cats");`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['tpt', 'inheritance', 'table-mapping']
+      },
+      {
+        id: '6-80',
+        question: 'What is TPC (Table Per Concrete Type) in EF Core?',
+        answer: 'TPC maps each concrete class to its own table. All properties (including inherited) are stored in each table. No joins needed.',
+        code: `public abstract class Animal { public int Id { get; set; } public string Name { get; set; } }
+public class Dog : Animal { public string Breed { get; set; } }
+public class Cat : Animal { public bool IsIndoor { get; set; } }
+
+// Configure TPC
+modelBuilder.Entity<Dog>().UseTpcMappingStrategy();
+modelBuilder.Entity<Cat>().UseTpcMappingStrategy();
+
+// Dogs table: Id, Name, Breed
+// Cats table: Id, Name, IsIndoor
+// No shared Animals table`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['tpc', 'inheritance', 'table-mapping']
+      },
+      {
+        id: '6-81',
+        question: 'How do you implement optimistic concurrency with [Timestamp]?',
+        answer: 'Add a byte[] RowVersion property with [Timestamp]. EF Core checks it on every UPDATE.',
+        code: `public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    [Timestamp]
+    public byte[] RowVersion { get; set; }
+}
+
+// EF Core adds WHERE RowVersion = @originalValue to UPDATE
+// Throws DbUpdateConcurrencyException if another update happened
+try
+{
+    await context.SaveChangesAsync();
+}
+catch (DbUpdateConcurrencyException ex)
+{
+    // Handle conflict: reload and retry or notify user
+}`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['optimistic-concurrency', 'rowversion', 'timestamp']
+      },
+      {
+        id: '6-82',
+        question: 'How do you handle concurrency conflicts in EF Core?',
+        answer: 'Catch DbUpdateConcurrencyException and resolve by keeping client, database, or merged values.',
+        code: `try
+{
+    await context.SaveChangesAsync();
+}
+catch (DbUpdateConcurrencyException ex)
+{
+    var entry = ex.Entries.Single();
+    var dbValues = await entry.GetDatabaseValuesAsync();
+
+    if (dbValues == null)
+    {
+        // Entity deleted by another user
+        return;
+    }
+
+    // Overwrite with database values (database wins)
+    entry.OriginalValues.SetValues(dbValues);
+    await context.SaveChangesAsync();
+}`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['concurrency', 'conflict-resolution', 'savechanges']
+      },
+      {
+        id: '6-83',
+        question: 'What is table splitting in EF Core?',
+        answer: 'Table splitting maps multiple entity types to the same database table, sharing the primary key.',
+        code: `public class Order { public int Id { get; set; } public decimal Total { get; set; } }
+public class OrderDetails { public int Id { get; set; } public string ShippingAddress { get; set; } }
+
+modelBuilder.Entity<Order>().ToTable("Orders");
+modelBuilder.Entity<OrderDetails>().ToTable("Orders");
+
+modelBuilder.Entity<Order>()
+    .HasOne(o => o.Details)
+    .WithOne()
+    .HasForeignKey<OrderDetails>(d => d.Id);`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['table-splitting', 'fluent-api', 'advanced']
+      },
+      {
+        id: '6-84',
+        question: 'What is a compiled query in EF Core?',
+        answer: 'Compiled queries cache query compilation, eliminating repeated translation overhead for frequently used queries.',
+        code: `private static readonly Func<AppDbContext, int, Task<Product?>> GetByIdQuery =
+    EF.CompileAsyncQuery((AppDbContext db, int id) =>
+        db.Products.FirstOrDefault(p => p.Id == id));
+
+// Usage - no re-compilation on each call
+var product = await GetByIdQuery(context, 5);`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['compiled-query', 'performance', 'advanced']
+      },
+      {
+        id: '6-85',
+        question: 'What is the difference between IQueryable<T> and IEnumerable<T> in EF Core?',
+        answer: 'IQueryable builds the query in the database (SQL). IEnumerable loads all data into memory first, then filters in C#.',
+        code: `// IQueryable - filtering happens in SQL
+IQueryable<Product> query = context.Products;
+var cheap = await query.Where(p => p.Price < 50).ToListAsync(); // One SQL query
+
+// IEnumerable - ALL products loaded first, THEN filtered in memory
+IEnumerable<Product> allInMemory = await context.Products.ToListAsync();
+var cheapInMemory = allInMemory.Where(p => p.Price < 50); // Inefficient!`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['iqueryable', 'ienumerable', 'performance']
+      },
+      {
+        id: '6-86',
+        question: 'What is the N+1 query problem in EF Core and how do you fix it?',
+        answer: 'N+1 occurs when you execute 1 query then N queries in a loop. Fix with Include() (eager loading).',
+        code: `// BAD - N+1: 1 query for customers + N queries for orders
+var customers = await context.Customers.ToListAsync();
+foreach (var c in customers)
+    Console.WriteLine(c.Orders.Count); // Triggers separate SQL per customer!
+
+// GOOD - 1 query with JOIN
+var customers = await context.Customers
+    .Include(c => c.Orders)
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['n-plus-1', 'performance', 'include']
+      },
+      {
+        id: '6-87',
+        question: 'How do you map an entity to a database view?',
+        answer: 'Use ToView() in Fluent API. Views are read-only by default.',
+        code: `public class ProductSummary
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public int OrderCount { get; set; }
+}
+
+modelBuilder.Entity<ProductSummary>()
+    .HasNoKey()
+    .ToView("vw_ProductSummary");
+
+// Query the view
+var summaries = await context.Set<ProductSummary>().ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['views', 'toview', 'read-only']
+      },
+      {
+        id: '6-88',
+        question: 'How do you implement audit trails (CreatedAt/UpdatedAt) in EF Core?',
+        answer: 'Override SaveChangesAsync() and set timestamps for Added/Modified entities.',
+        code: `public interface IAuditable
+{
+    DateTime CreatedAt { get; set; }
+    DateTime UpdatedAt { get; set; }
+}
+
+public override Task<int> SaveChangesAsync(CancellationToken ct = default)
+{
+    var now = DateTime.UtcNow;
+    foreach (var entry in ChangeTracker.Entries<IAuditable>())
+    {
+        if (entry.State == EntityState.Added)
+            entry.Entity.CreatedAt = now;
+        if (entry.State is EntityState.Added or EntityState.Modified)
+            entry.Entity.UpdatedAt = now;
+    }
+    return base.SaveChangesAsync(ct);
+}`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['audit', 'savechanges', 'timestamps']
+      },
+      {
+        id: '6-89',
+        question: 'What is query splitting for collection includes?',
+        answer: 'AsSplitQuery() splits a query with multiple collection includes into separate SQL queries, avoiding cartesian explosion.',
+        code: `// Single query (cartesian explosion risk with many includes)
+var orders = await context.Orders
+    .Include(o => o.Items)
+    .Include(o => o.Tags)
+    .ToListAsync();
+
+// Split queries (separate SQL per include, better for large collections)
+var orders = await context.Orders
+    .Include(o => o.Items)
+    .Include(o => o.Tags)
+    .AsSplitQuery()
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['split-query', 'performance', 'include']
+      },
+      {
+        id: '6-90',
+        question: 'How do you use EF Core with savepoints in transactions?',
+        answer: 'Savepoints let you roll back to a point within a transaction without aborting the whole transaction.',
+        code: `await using var transaction = await context.Database.BeginTransactionAsync();
+
+context.Products.Add(new Product { Name = "A" });
+await context.SaveChangesAsync();
+await transaction.CreateSavepointAsync("AfterA");
+
+try
+{
+    context.Products.Add(new Product { Name = "B", Price = -1 }); // bad
+    await context.SaveChangesAsync();
+}
+catch
+{
+    await transaction.RollbackToSavepointAsync("AfterA");
+}
+
+await transaction.CommitAsync(); // Only "A" is saved`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['transactions', 'savepoints', 'advanced']
+      },
+      {
+        id: '6-91',
+        question: 'What is an EF Core interceptor?',
+        answer: 'Interceptors hook into EF Core operations (commands, connections, SaveChanges) to add cross-cutting logic.',
+        code: `public class QueryLoggingInterceptor : DbCommandInterceptor
+{
+    public override ValueTask<DbDataReader> ReaderExecutedAsync(
+        DbCommand command,
+        CommandExecutedEventData eventData,
+        DbDataReader result,
+        CancellationToken cancellationToken = default)
+    {
+        Console.WriteLine($"Query took {eventData.Duration.TotalMs}ms");
+        return new ValueTask<DbDataReader>(result);
+    }
+}
+
+// Register
+builder.Services.AddDbContext<AppDbContext>(o => o
+    .UseSqlServer(connStr)
+    .AddInterceptors(new QueryLoggingInterceptor()));`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['interceptors', 'advanced', 'logging']
+      },
+      {
+        id: '6-92',
+        question: 'How do you configure a many-to-many relationship with a payload (extra columns)?',
+        answer: 'Create an explicit join entity with the extra columns and configure it with HasMany/WithMany via the join entity.',
+        code: `public class Student   { public int Id { get; set; } public ICollection<Enrollment> Enrollments { get; set; } }
+public class Course    { public int Id { get; set; } public ICollection<Enrollment> Enrollments { get; set; } }
+public class Enrollment
+{
+    public int StudentId { get; set; } public Student Student { get; set; }
+    public int CourseId  { get; set; } public Course  Course  { get; set; }
+    public DateTime EnrolledAt { get; set; } // payload
+    public decimal Grade { get; set; }        // payload
+}
+
+modelBuilder.Entity<Enrollment>().HasKey(e => new { e.StudentId, e.CourseId });`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['many-to-many', 'join-entity', 'payload']
+      },
+      {
+        id: '6-93',
+        question: 'What is the IDbContextFactory<T> and when should you use it?',
+        answer: 'IDbContextFactory<T> creates DbContext instances on demand. Use in background services or Blazor where DI-scoped contexts are unsafe.',
+        code: `// Register
+builder.Services.AddDbContextFactory<AppDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
+// Usage in background service
+public class ReportService
+{
+    private readonly IDbContextFactory<AppDbContext> _factory;
+    public ReportService(IDbContextFactory<AppDbContext> factory)
+        => _factory = factory;
+
+    public async Task RunAsync()
+    {
+        await using var context = await _factory.CreateDbContextAsync();
+        var report = await context.Orders.SumAsync(o => o.Total);
+    }
+}`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['dbcontextfactory', 'background-services', 'advanced']
+      },
+      {
+        id: '6-94',
+        question: 'How do you use EF Core with database functions (UDFs)?',
+        answer: 'Map user-defined functions with [DbFunction] or HasDbFunction() in Fluent API.',
+        code: `public static class DbFunctions
+{
+    [DbFunction("CalculateDiscount", "dbo")]
+    public static decimal CalculateDiscount(decimal price, int qty) =>
+        throw new NotSupportedException(); // Translated to SQL, never runs in C#
+}
+
+// In OnModelCreating
+modelBuilder.HasDbFunction(
+    typeof(DbFunctions).GetMethod(nameof(DbFunctions.CalculateDiscount))!);
+
+// Use in LINQ
+var result = await context.Products
+    .Select(p => new { p.Name, Discount = DbFunctions.CalculateDiscount(p.Price, 5) })
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['database-functions', 'udf', 'linq']
+      },
+      {
+        id: '6-95',
+        question: 'What is the ModelSnapshot in EF Core migrations?',
+        answer: 'ModelSnapshot is an auto-generated C# file that represents the current state of the model. EF Core uses it to compute migration diffs.',
+        code: `// AppDbContextModelSnapshot.cs (auto-generated, do not edit manually)
+[DbContext(typeof(AppDbContext))]
+partial class AppDbContextModelSnapshot : ModelSnapshot
+{
+    protected override void BuildModel(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity("Product", b =>
+        {
+            b.Property<int>("Id").ValueGeneratedOnAdd();
+            b.Property<string>("Name").HasMaxLength(100);
+            b.HasKey("Id");
+            b.ToTable("Products");
+        });
+    }
+}`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['model-snapshot', 'migrations', 'advanced']
+      },
+      {
+        id: '6-96',
+        question: 'How do you configure value objects as owned entities?',
+        answer: 'Use OwnsOne() to embed a value object (e.g., Address) as owned columns in the owning entity table.',
+        code: `public class Order
+{
+    public int Id { get; set; }
+    public Address ShippingAddress { get; set; }
+}
+public class Address
+{
+    public string Street { get; set; }
+    public string City { get; set; }
+    public string PostalCode { get; set; }
+}
+
+modelBuilder.Entity<Order>().OwnsOne(o => o.ShippingAddress, sa =>
+{
+    sa.Property(a => a.Street).HasColumnName("ShipStreet").HasMaxLength(200);
+    sa.Property(a => a.City).HasColumnName("ShipCity").HasMaxLength(100);
+});`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['owned-entities', 'value-objects', 'fluent-api']
+      },
+      {
+        id: '6-97',
+        question: 'How do you use FromSqlInterpolated() safely in EF Core?',
+        answer: 'FromSqlInterpolated() uses parameterized SQL automatically, preventing SQL injection from interpolated values.',
+        code: `string category = userInput; // potentially unsafe input
+decimal minPrice = 10m;
+
+// SAFE - values are parameterized automatically
+var products = await context.Products
+    .FromSqlInterpolated(
+        $"SELECT * FROM Products WHERE Category = {category} AND Price > {minPrice}")
+    .ToListAsync();
+
+// Equivalent to:
+// SELECT * FROM Products WHERE Category = @p0 AND Price > @p1`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['fromsqlinterpolated', 'sql-injection', 'security']
+      },
+      {
+        id: '6-98',
+        question: 'How do you use EF Core with JSON columns?',
+        answer: 'EF Core 7+ supports mapping JSON columns to C# types using ToJson() in Fluent API.',
+        code: `public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public ProductMetadata Metadata { get; set; } // stored as JSON
+}
+public class ProductMetadata
+{
+    public string[] Tags { get; set; }
+    public Dictionary<string, string> Attributes { get; set; }
+}
+
+modelBuilder.Entity<Product>().OwnsOne(p => p.Metadata, m => m.ToJson());
+
+// Query JSON properties in LINQ
+var tagged = await context.Products
+    .Where(p => p.Metadata.Tags.Contains("sale"))
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['json-columns', 'ef-core-7', 'advanced']
+      },
+      {
+        id: '6-99',
+        question: 'How do you use ExecuteUpdate() for bulk updates without loading entities?',
+        answer: 'ExecuteUpdate() (EF Core 7+) runs a SET query directly without loading entities into memory.',
+        code: `// Update all products in a category without loading them
+int updated = await context.Products
+    .Where(p => p.Category == "Electronics")
+    .ExecuteUpdateAsync(setters => setters
+        .SetProperty(p => p.IsActive, false)
+        .SetProperty(p => p.UpdatedAt, DateTime.UtcNow));
+
+Console.WriteLine($"{updated} products deactivated");`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['executeupdate', 'bulk', 'ef-core-7']
+      },
+      {
+        id: '6-100',
+        question: 'How do you implement a generic repository with EF Core?',
+        answer: 'Create a generic repository class with common CRUD methods backed by DbSet<T>.',
+        code: `public class Repository<T> where T : class
+{
+    protected readonly AppDbContext _db;
+    protected readonly DbSet<T> _set;
+
+    public Repository(AppDbContext db) { _db = db; _set = db.Set<T>(); }
+
+    public async Task<T?> GetByIdAsync(int id) => await _set.FindAsync(id);
+    public async Task<List<T>> GetAllAsync() => await _set.ToListAsync();
+    public async Task AddAsync(T entity) => await _set.AddAsync(entity);
+    public void Delete(T entity) => _set.Remove(entity);
+    public async Task SaveAsync() => await _db.SaveChangesAsync();
+}`,
+        language: 'csharp',
+        category: 'EF Core',
+        difficulty: 'hard',
+        tags: ['generic-repository', 'patterns', 'design']
       }
     ]
   },
@@ -5354,6 +7446,1349 @@ public IActionResult Get(int id)
         category: 'Web API',
         difficulty: 'hard',
         tags: ['middleware', 'validation', 'requests']
+      },
+      {
+        id: '8-51',
+        question: 'What is JWT authentication and how do you implement it in Web API?',
+        answer: 'JWT (JSON Web Token) is a compact token format for securely transmitting claims. Configure bearer authentication in Program.cs.',
+        code: `// Program.cs
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(config["Jwt:Key"]!)),
+            ValidateIssuer = true,
+            ValidIssuer = config["Jwt:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = config["Jwt:Audience"]
+        };
+    });
+
+app.UseAuthentication();
+app.UseAuthorization();`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['jwt', 'authentication', 'security']
+      },
+      {
+        id: '8-52',
+        question: 'How do you generate a JWT token in C#?',
+        answer: 'Use JwtSecurityTokenHandler to create and sign a token with claims.',
+        code: `public string GenerateToken(string userId, string email)
+{
+    var claims = new[]
+    {
+        new Claim(ClaimTypes.NameIdentifier, userId),
+        new Claim(ClaimTypes.Email, email)
+    };
+
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+    var token = new JwtSecurityToken(
+        issuer: _config["Jwt:Issuer"],
+        audience: _config["Jwt:Audience"],
+        claims: claims,
+        expires: DateTime.UtcNow.AddHours(1),
+        signingCredentials: creds);
+
+    return new JwtSecurityTokenHandler().WriteToken(token);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['jwt', 'token', 'authentication']
+      },
+      {
+        id: '8-53',
+        question: 'How do you protect endpoints with [Authorize] in Web API?',
+        answer: 'Add [Authorize] to controllers or actions to require authentication. Use [AllowAnonymous] to override.',
+        code: `[ApiController]
+[Route("api/[controller]")]
+[Authorize] // All actions require auth
+public class OrdersController : ControllerBase
+{
+    [HttpGet]
+    public IActionResult GetAll() => Ok(orders);
+
+    [HttpGet("public")]
+    [AllowAnonymous] // This one is open
+    public IActionResult GetPublic() => Ok("Public data");
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['authorize', 'security', 'authentication']
+      },
+      {
+        id: '8-54',
+        question: 'How do you send a JWT token with fetch?',
+        answer: 'Store the token and include it in the Authorization header as Bearer.',
+        code: `async function fetchProtected(url) {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(url, {
+    headers: {
+      "Authorization": \`Bearer \${token}\`,
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (response.status === 401) {
+    // Token expired, redirect to login
+    window.location.href = "/login";
+    return;
+  }
+
+  return await response.json();
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['jwt', 'fetch', 'authorization']
+      },
+      {
+        id: '8-55',
+        question: 'What is the Repository pattern in Web API?',
+        answer: 'The Repository pattern abstracts data access logic behind an interface, decoupling the controller from the data layer.',
+        code: `public interface IProductRepository
+{
+    Task<IEnumerable<Product>> GetAllAsync();
+    Task<Product?> GetByIdAsync(int id);
+    Task AddAsync(Product product);
+    Task DeleteAsync(int id);
+}
+
+public class ProductRepository : IProductRepository
+{
+    private readonly AppDbContext _db;
+    public ProductRepository(AppDbContext db) => _db = db;
+
+    public async Task<IEnumerable<Product>> GetAllAsync() =>
+        await _db.Products.ToListAsync();
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['repository-pattern', 'design-patterns', 'data-access']
+      },
+      {
+        id: '8-56',
+        question: 'How do you use Entity Framework Core with Web API?',
+        answer: 'Install EF Core, create a DbContext, register it in Program.cs, and use it in repositories or controllers.',
+        code: `public class AppDbContext : DbContext
+{
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options) { }
+
+    public DbSet<Product> Products => Set<Product>();
+}
+
+// In Program.cs
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+// In controller
+[HttpGet]
+public async Task<IActionResult> GetAll()
+{
+    var products = await _context.Products.ToListAsync();
+    return Ok(products);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['entity-framework', 'database', 'ef-core']
+      },
+      {
+        id: '8-57',
+        question: 'What is a DTO (Data Transfer Object)?',
+        answer: 'A DTO is a plain object used to transfer data between layers, hiding internal model details.',
+        code: `// Domain model
+public class User
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string PasswordHash { get; set; } // Don't expose!
+}
+
+// DTO - safe to return to client
+public class UserDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
+
+[HttpGet("{id}")]
+public ActionResult<UserDto> GetUser(int id)
+{
+    var user = _repo.GetById(id);
+    return new UserDto { Id = user.Id, Name = user.Name };
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['dto', 'models', 'api-design']
+      },
+      {
+        id: '8-58',
+        question: 'How do you use AutoMapper in Web API?',
+        answer: 'AutoMapper maps between models and DTOs automatically based on matching property names.',
+        code: `// Profile
+public class MappingProfile : Profile
+{
+    public MappingProfile()
+    {
+        CreateMap<Product, ProductDto>();
+        CreateMap<CreateProductDto, Product>();
+    }
+}
+
+// In Program.cs
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// In controller
+[HttpGet("{id}")]
+public ActionResult<ProductDto> Get(int id)
+{
+    var product = _repo.GetById(id);
+    return _mapper.Map<ProductDto>(product);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['automapper', 'dto', 'mapping']
+      },
+      {
+        id: '8-59',
+        question: 'How do you use async/await in C# Web API controllers?',
+        answer: 'Mark action methods as async Task<IActionResult> and await async operations.',
+        code: `[HttpGet]
+public async Task<IActionResult> GetAll()
+{
+    var products = await _productService.GetAllAsync();
+    return Ok(products);
+}
+
+[HttpPost]
+public async Task<IActionResult> Create([FromBody] CreateProductDto dto)
+{
+    var product = await _productService.CreateAsync(dto);
+    return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['async-await', 'controllers', 'performance']
+      },
+      {
+        id: '8-60',
+        question: 'How do you implement global exception handling in Web API?',
+        answer: 'Use UseExceptionHandler middleware or a custom exception filter to catch unhandled exceptions.',
+        code: `// Program.cs - minimal approach
+app.UseExceptionHandler(appError =>
+{
+    appError.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+
+        var feature = context.Features.Get<IExceptionHandlerFeature>();
+        if (feature != null)
+        {
+            await context.Response.WriteAsJsonAsync(new
+            {
+                StatusCode = 500,
+                Message = "Internal Server Error",
+                Detail = feature.Error.Message
+            });
+        }
+    });
+});`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['exception-handling', 'middleware', 'errors']
+      },
+      {
+        id: '8-61',
+        question: 'What is Swagger/OpenAPI and how do you enable it?',
+        answer: 'Swagger generates interactive API documentation. Use Swashbuckle to enable it in ASP.NET Core.',
+        code: `// Program.cs
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "My API",
+        Version = "v1"
+    });
+});
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['swagger', 'openapi', 'documentation']
+      },
+      {
+        id: '8-62',
+        question: 'How do you read configuration values in Web API?',
+        answer: 'Inject IConfiguration or use the Options pattern to read from appsettings.json.',
+        code: `// appsettings.json
+{
+  "AppSettings": {
+    "MaxPageSize": 50,
+    "ApiKey": "secret"
+  }
+}
+
+// Using IConfiguration
+public class ProductsController : ControllerBase
+{
+    private readonly IConfiguration _config;
+    public ProductsController(IConfiguration config) => _config = config;
+
+    [HttpGet]
+    public IActionResult Get()
+    {
+        var maxSize = _config.GetValue<int>("AppSettings:MaxPageSize");
+        return Ok(maxSize);
+    }
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['configuration', 'appsettings', 'iconfig']
+      },
+      {
+        id: '8-63',
+        question: 'How do you use the Options pattern in Web API?',
+        answer: 'Create a settings class, bind it to configuration, and inject IOptions<T> into your services.',
+        code: `public class JwtSettings
+{
+    public string Key { get; set; } = "";
+    public string Issuer { get; set; } = "";
+}
+
+// Program.cs
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("JwtSettings"));
+
+// Service
+public class TokenService
+{
+    private readonly JwtSettings _settings;
+    public TokenService(IOptions<JwtSettings> options)
+        => _settings = options.Value;
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['options-pattern', 'configuration', 'services']
+      },
+      {
+        id: '8-64',
+        question: 'How do you intercept fetch requests globally (request interceptor)?',
+        answer: 'Wrap fetch in a custom function to add common headers or handle responses globally.',
+        code: `const originalFetch = window.fetch;
+
+window.fetch = async function(url, options = {}) {
+  const token = localStorage.getItem("token");
+
+  const mergedOptions = {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { "Authorization": \`Bearer \${token}\` } : {}),
+      ...options.headers
+    }
+  };
+
+  const response = await originalFetch(url, mergedOptions);
+
+  if (response.status === 401) {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }
+
+  return response;
+};`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['fetch', 'interceptor', 'authentication']
+      },
+      {
+        id: '8-65',
+        question: 'What is response streaming and how does fetch handle it?',
+        answer: 'fetch exposes the response body as a ReadableStream for processing large responses incrementally.',
+        code: `async function streamResponse(url) {
+  const response = await fetch(url);
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    console.log(decoder.decode(value));
+  }
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['streaming', 'fetch', 'readablestream']
+      },
+      {
+        id: '8-66',
+        question: 'How do you implement role-based authorization in Web API?',
+        answer: 'Add roles to JWT claims and use [Authorize(Roles = "...")] on controllers or actions.',
+        code: `// Add role claim when creating token
+claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+
+// Protect by role
+[HttpDelete("{id}")]
+[Authorize(Roles = "Admin")]
+public IActionResult Delete(int id)
+{
+    _productService.Delete(id);
+    return NoContent();
+}
+
+// Multiple roles
+[Authorize(Roles = "Admin,Manager")]
+public IActionResult Update(int id, Product p) { ... }`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['roles', 'authorization', 'security']
+      },
+      {
+        id: '8-67',
+        question: 'What is policy-based authorization in Web API?',
+        answer: 'Policies allow complex authorization rules beyond simple role checks.',
+        code: `// Program.cs
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("MinAge18", policy =>
+        policy.RequireClaim("age", "18", "19", "20"));
+
+    options.AddPolicy("AdminOrManager", policy =>
+        policy.RequireRole("Admin", "Manager"));
+});
+
+// Controller
+[HttpGet("restricted")]
+[Authorize(Policy = "MinAge18")]
+public IActionResult Restricted() => Ok("Allowed");`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['policy', 'authorization', 'claims']
+      },
+      {
+        id: '8-68',
+        question: 'How do you use IHttpClientFactory to call external APIs from Web API?',
+        answer: 'Register a named or typed HttpClient and inject it into services.',
+        code: `// Program.cs
+builder.Services.AddHttpClient("weather", client =>
+{
+    client.BaseAddress = new Uri("https://api.weather.com/");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
+// Service
+public class WeatherService
+{
+    private readonly HttpClient _client;
+
+    public WeatherService(IHttpClientFactory factory)
+        => _client = factory.CreateClient("weather");
+
+    public async Task<string> GetWeatherAsync(string city)
+    {
+        var response = await _client.GetAsync($"forecast?city={city}");
+        return await response.Content.ReadAsStringAsync();
+    }
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['httpclient', 'external-api', 'http']
+      },
+      {
+        id: '8-69',
+        question: 'How do you handle concurrent fetch requests with Promise.allSettled()?',
+        answer: 'Promise.allSettled() waits for all promises regardless of rejection, returning status for each.',
+        code: `async function fetchAll(urls) {
+  const results = await Promise.allSettled(
+    urls.map(url => fetch(url).then(r => r.json()))
+  );
+
+  results.forEach((result, i) => {
+    if (result.status === "fulfilled") {
+      console.log(\`URL \${i}: success\`, result.value);
+    } else {
+      console.error(\`URL \${i}: failed\`, result.reason);
+    }
+  });
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['fetch', 'promise-allsettled', 'error-handling']
+      },
+      {
+        id: '8-70',
+        question: 'What is a custom action filter in Web API?',
+        answer: 'Action filters run code before or after action methods execute, useful for logging, validation, or modifying results.',
+        code: `public class LogActionFilter : IActionFilter
+{
+    public void OnActionExecuting(ActionExecutingContext context)
+    {
+        Console.WriteLine($"Executing: {context.ActionDescriptor.DisplayName}");
+    }
+
+    public void OnActionExecuted(ActionExecutedContext context)
+    {
+        Console.WriteLine($"Executed: {context.ActionDescriptor.DisplayName}");
+    }
+}
+
+// Register globally
+builder.Services.AddControllers(options =>
+    options.Filters.Add<LogActionFilter>());`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['action-filters', 'middleware', 'logging']
+      },
+      {
+        id: '8-71',
+        question: 'How do you implement soft delete in Web API?',
+        answer: 'Add an IsDeleted flag to the model and filter it in queries instead of removing from the database.',
+        code: `public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public bool IsDeleted { get; set; } = false;
+}
+
+[HttpDelete("{id}")]
+public async Task<IActionResult> Delete(int id)
+{
+    var product = await _db.Products.FindAsync(id);
+    if (product == null) return NotFound();
+    product.IsDeleted = true;
+    await _db.SaveChangesAsync();
+    return NoContent();
+}
+
+// Query - always exclude deleted
+var active = await _db.Products
+    .Where(p => !p.IsDeleted)
+    .ToListAsync();`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['soft-delete', 'database', 'patterns']
+      },
+      {
+        id: '8-72',
+        question: 'How do you read a JSON response body only once with fetch?',
+        answer: 'Response bodies can only be consumed once. Use response.clone() if you need to read the body multiple times.',
+        code: `async function fetchAndLog(url) {
+  const response = await fetch(url);
+
+  // Clone before consuming
+  const clone = response.clone();
+
+  // Log raw text
+  const text = await clone.text();
+  console.log("Raw:", text);
+
+  // Parse original as JSON
+  const data = await response.json();
+  return data;
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['fetch', 'response-body', 'clone']
+      },
+      {
+        id: '8-73',
+        question: 'What is minimal API in ASP.NET Core?',
+        answer: 'Minimal APIs define routes and handlers directly in Program.cs without controllers.',
+        code: `var app = builder.Build();
+
+app.MapGet("/api/products", async (AppDbContext db) =>
+    await db.Products.ToListAsync());
+
+app.MapGet("/api/products/{id}", async (int id, AppDbContext db) =>
+    await db.Products.FindAsync(id) is Product p
+        ? Results.Ok(p)
+        : Results.NotFound());
+
+app.MapPost("/api/products", async (Product product, AppDbContext db) =>
+{
+    db.Products.Add(product);
+    await db.SaveChangesAsync();
+    return Results.Created($"/api/products/{product.Id}", product);
+});`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['minimal-api', 'aspnet', 'routing']
+      },
+      {
+        id: '8-74',
+        question: 'How do you implement cursor-based pagination?',
+        answer: 'Cursor pagination uses a pointer (last seen ID) instead of page numbers, improving performance on large datasets.',
+        code: `[HttpGet]
+public async Task<IActionResult> GetAll(
+    [FromQuery] int? lastId,
+    [FromQuery] int limit = 20)
+{
+    var query = _db.Products.OrderBy(p => p.Id);
+
+    if (lastId.HasValue)
+        query = (IOrderedQueryable<Product>)query
+            .Where(p => p.Id > lastId.Value);
+
+    var items = await query.Take(limit).ToListAsync();
+    var nextCursor = items.LastOrDefault()?.Id;
+
+    return Ok(new { items, nextCursor });
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['pagination', 'cursor', 'performance']
+      },
+      {
+        id: '8-75',
+        question: 'How do you send a PATCH request with fetch using JSON Patch?',
+        answer: 'Send an array of JSON Patch operations with Content-Type application/json-patch+json.',
+        code: `const patch = [
+  { op: "replace", path: "/name", value: "New Name" },
+  { op: "add",     path: "/tags/-", value: "new-tag" },
+  { op: "remove",  path: "/oldField" }
+];
+
+const response = await fetch('/api/products/5', {
+  method: 'PATCH',
+  headers: {
+    'Content-Type': 'application/json-patch+json'
+  },
+  body: JSON.stringify(patch)
+});
+
+const updated = await response.json();`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['patch', 'json-patch', 'fetch']
+      },
+      {
+        id: '8-76',
+        question: 'What is ILogger and how do you use it in Web API?',
+        answer: 'ILogger<T> is the built-in logging interface. Inject it into controllers or services.',
+        code: `public class ProductsController : ControllerBase
+{
+    private readonly ILogger<ProductsController> _logger;
+
+    public ProductsController(ILogger<ProductsController> logger)
+        => _logger = logger;
+
+    [HttpGet("{id}")]
+    public IActionResult Get(int id)
+    {
+        _logger.LogInformation("Getting product {Id}", id);
+        var product = _service.GetById(id);
+        if (product == null)
+        {
+            _logger.LogWarning("Product {Id} not found", id);
+            return NotFound();
+        }
+        return Ok(product);
+    }
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['logging', 'ilogger', 'debugging']
+      },
+      {
+        id: '8-77',
+        question: 'How do you use Server-Sent Events (SSE) with fetch?',
+        answer: 'Use EventSource for SSE, or fetch with a ReadableStream for custom streaming.',
+        code: `// Using EventSource (simpler)
+const eventSource = new EventSource('/api/events');
+eventSource.onmessage = (e) => console.log('Event:', e.data);
+eventSource.onerror = () => eventSource.close();
+
+// Using fetch for streaming
+const response = await fetch('/api/stream');
+const reader = response.body.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  console.log(decoder.decode(value));
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['sse', 'streaming', 'real-time']
+      },
+      {
+        id: '8-78',
+        question: 'What is output caching in ASP.NET Core Web API?',
+        answer: 'Output caching stores HTTP responses and serves them from cache for subsequent identical requests.',
+        code: `// Program.cs
+builder.Services.AddOutputCache(options =>
+{
+    options.AddBasePolicy(builder => builder.Cache());
+});
+app.UseOutputCache();
+
+// Controller
+[HttpGet]
+[OutputCache(Duration = 60)] // Cache for 60 seconds
+public async Task<IActionResult> GetAll()
+{
+    var products = await _db.Products.ToListAsync();
+    return Ok(products);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['caching', 'output-cache', 'performance']
+      },
+      {
+        id: '8-79',
+        question: 'How do you build a reusable fetch hook for React-style usage?',
+        answer: 'Wrap fetch in a function that manages loading/error/data state and returns them.',
+        code: `async function useFetch(url, options = {}) {
+  let data = null, error = null, loading = true;
+
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok)
+      throw new Error(\`HTTP \${response.status}: \${response.statusText}\`);
+    data = await response.json();
+  } catch (e) {
+    error = e;
+  } finally {
+    loading = false;
+  }
+
+  return { data, error, loading };
+}
+
+const { data, error } = await useFetch('/api/products');`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['fetch', 'reusable', 'patterns']
+      },
+      {
+        id: '8-80',
+        question: 'What is a background service in ASP.NET Core?',
+        answer: 'Background services run long-running tasks in the background using IHostedService or BackgroundService.',
+        code: `public class DataSyncService : BackgroundService
+{
+    private readonly ILogger<DataSyncService> _logger;
+
+    public DataSyncService(ILogger<DataSyncService> logger)
+        => _logger = logger;
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            _logger.LogInformation("Syncing data...");
+            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+        }
+    }
+}
+
+// Program.cs
+builder.Services.AddHostedService<DataSyncService>();`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['background-service', 'hosted-service', 'tasks']
+      },
+      {
+        id: '8-81',
+        question: 'How do you add XML support to a Web API response?',
+        answer: 'Call AddXmlSerializerFormatters() and the client sets Accept: application/xml.',
+        code: `// Program.cs
+builder.Services.AddControllers()
+    .AddXmlSerializerFormatters();
+
+// Client request
+fetch('/api/products', {
+  headers: { 'Accept': 'application/xml' }
+})
+.then(res => res.text())
+.then(xml => console.log(xml));`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'easy',
+        tags: ['xml', 'content-negotiation', 'formatters']
+      },
+      {
+        id: '8-82',
+        question: 'How do you implement a custom result type (IActionResult) in Web API?',
+        answer: 'Implement IActionResult and override ExecuteResultAsync to write a custom response.',
+        code: `public class CsvResult : IActionResult
+{
+    private readonly IEnumerable<string[]> _rows;
+    public CsvResult(IEnumerable<string[]> rows) => _rows = rows;
+
+    public async Task ExecuteResultAsync(ActionContext context)
+    {
+        context.HttpContext.Response.ContentType = "text/csv";
+        await using var writer = new StreamWriter(context.HttpContext.Response.Body);
+        foreach (var row in _rows)
+            await writer.WriteLineAsync(string.Join(",", row));
+    }
+}
+
+[HttpGet("export")]
+public IActionResult Export() =>
+    new CsvResult(new[] { new[] { "Id", "Name" }, new[] { "1", "Apple" } });`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['custom-result', 'iactionresult', 'responses']
+      },
+      {
+        id: '8-83',
+        question: 'How do you use fetch with cookies (credentials)?',
+        answer: 'Set credentials option to include, same-origin, or omit to control cookie sending.',
+        code: `// Include cookies in cross-origin requests
+fetch('https://api.example.com/user', {
+  credentials: 'include'
+});
+
+// Same-origin only (default in older browsers)
+fetch('/api/profile', {
+  credentials: 'same-origin'
+});
+
+// Never send cookies
+fetch('https://api.example.com/public', {
+  credentials: 'omit'
+});`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['fetch', 'credentials', 'cookies']
+      },
+      {
+        id: '8-84',
+        question: 'What is the difference between 401 Unauthorized and 403 Forbidden?',
+        answer: '401 means authentication is required or failed. 403 means the user is authenticated but lacks permission.',
+        code: `[HttpGet("admin-only")]
+public IActionResult AdminOnly()
+{
+    // 401 - if no token / invalid token (handled by middleware)
+    // 403 - if valid token but wrong role
+    if (!User.IsInRole("Admin"))
+        return Forbid(); // 403
+
+    return Ok("Admin data");
+}
+
+// 401 fetch handling
+if (response.status === 401) redirect("/login");
+if (response.status === 403) showError("Access denied");`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['status-codes', 'authentication', 'authorization']
+      },
+      {
+        id: '8-85',
+        question: 'How do you implement distributed caching with Redis in Web API?',
+        answer: 'Use IDistributedCache backed by Redis for caching shared across multiple server instances.',
+        code: `// Program.cs
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "localhost:6379";
+});
+
+// Service
+public async Task<Product?> GetProductAsync(int id)
+{
+    var key = $"product:{id}";
+    var cached = await _cache.GetStringAsync(key);
+    if (cached != null) return JsonSerializer.Deserialize<Product>(cached);
+
+    var product = await _db.Products.FindAsync(id);
+    if (product != null)
+        await _cache.SetStringAsync(key,
+            JsonSerializer.Serialize(product),
+            new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+            });
+    return product;
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['redis', 'caching', 'distributed']
+      },
+      {
+        id: '8-86',
+        question: 'How do you track upload progress with fetch?',
+        answer: 'fetch does not natively support upload progress. Use XMLHttpRequest for progress events.',
+        code: `function uploadWithProgress(url, file, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    xhr.upload.addEventListener("progress", (e) => {
+      if (e.lengthComputable) {
+        const percent = Math.round((e.loaded / e.total) * 100);
+        onProgress(percent);
+      }
+    });
+
+    xhr.addEventListener("load", () => resolve(xhr.response));
+    xhr.addEventListener("error", reject);
+
+    xhr.open("POST", url);
+    const formData = new FormData();
+    formData.append("file", file);
+    xhr.send(formData);
+  });
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['upload', 'progress', 'xhr']
+      },
+      {
+        id: '8-87',
+        question: 'What is SignalR and when would you use it over fetch?',
+        answer: 'SignalR provides real-time bidirectional communication over WebSockets. Use it for live notifications, chat, or dashboards instead of polling with fetch.',
+        code: `// Server (Hub)
+public class ChatHub : Hub
+{
+    public async Task SendMessage(string user, string message)
+    {
+        await Clients.All.SendAsync("ReceiveMessage", user, message);
+    }
+}
+
+// Client (JavaScript)
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/chatHub")
+    .build();
+
+connection.on("ReceiveMessage", (user, msg) =>
+    console.log(\`\${user}: \${msg}\`));
+
+await connection.start();
+await connection.invoke("SendMessage", "Alice", "Hello!");`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['signalr', 'websockets', 'real-time']
+      },
+      {
+        id: '8-88',
+        question: 'How do you implement HATEOAS in Web API?',
+        answer: 'HATEOAS includes hypermedia links in responses to guide clients to possible next actions.',
+        code: `[HttpGet("{id}")]
+public IActionResult GetById(int id)
+{
+    var product = _repo.GetById(id);
+    if (product == null) return NotFound();
+
+    var response = new
+    {
+        product.Id,
+        product.Name,
+        product.Price,
+        links = new[]
+        {
+            new { rel = "self",   href = $"/api/products/{id}", method = "GET"    },
+            new { rel = "update", href = $"/api/products/{id}", method = "PUT"    },
+            new { rel = "delete", href = $"/api/products/{id}", method = "DELETE" }
+        }
+    };
+
+    return Ok(response);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['hateoas', 'api-design', 'hypermedia']
+      },
+      {
+        id: '8-89',
+        question: 'How do you validate environment-specific configuration on startup?',
+        answer: 'Use IStartupFilter or validate IOptions<T> on startup to catch misconfigurations early.',
+        code: `public class DatabaseSettings
+{
+    [Required]
+    public string ConnectionString { get; set; } = "";
+    
+    [Range(1, 100)]
+    public int MaxPoolSize { get; set; } = 10;
+}
+
+// Program.cs - validate on startup
+builder.Services
+    .AddOptions<DatabaseSettings>()
+    .Bind(builder.Configuration.GetSection("Database"))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['configuration', 'validation', 'startup']
+      },
+      {
+        id: '8-90',
+        question: 'How do you implement optimistic concurrency in Web API?',
+        answer: 'Use ETags or a RowVersion column. The client sends the ETag back; if it changed, return 412 Precondition Failed.',
+        code: `[HttpPut("{id}")]
+public async Task<IActionResult> Update(
+    int id,
+    [FromBody] Product product,
+    [FromHeader(Name = "If-Match")] string? etag)
+{
+    var existing = await _db.Products.FindAsync(id);
+    if (existing == null) return NotFound();
+
+    var currentEtag = $"\"{existing.RowVersion}\"";
+    if (etag != null && etag != currentEtag)
+        return StatusCode(412, "Resource was modified");
+
+    existing.Name = product.Name;
+    await _db.SaveChangesAsync();
+    Response.Headers["ETag"] = $"\"{existing.RowVersion}\"";
+    return Ok(existing);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['concurrency', 'etag', 'optimistic-locking']
+      },
+      {
+        id: '8-91',
+        question: 'How do you batch multiple API requests into one with fetch?',
+        answer: 'Use Promise.all for parallel requests or call a batch endpoint that accepts multiple operations.',
+        code: `// Parallel fetch (client-side batching)
+async function batchFetch(ids) {
+  const requests = ids.map(id =>
+    fetch(\`/api/products/\${id}\`).then(r => r.json())
+  );
+  return await Promise.all(requests);
+}
+
+// Server-side batch endpoint
+// POST /api/products/batch
+// Body: { ids: [1, 2, 3] }
+[HttpPost("batch")]
+public async Task<IActionResult> Batch([FromBody] BatchRequest req)
+{
+    var products = await _db.Products
+        .Where(p => req.Ids.Contains(p.Id))
+        .ToListAsync();
+    return Ok(products);
+}`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['batch', 'fetch', 'performance']
+      },
+      {
+        id: '8-92',
+        question: 'What is the difference between IActionResult and ActionResult<T>?',
+        answer: 'IActionResult can return any result type. ActionResult<T> constrains the success type, enabling better Swagger docs and type inference.',
+        code: `// IActionResult - flexible but no type info
+[HttpGet("{id}")]
+public IActionResult GetFlexible(int id)
+{
+    var p = _repo.Get(id);
+    return p == null ? NotFound() : Ok(p);
+}
+
+// ActionResult<T> - type-safe success response
+[HttpGet("{id}")]
+public ActionResult<Product> GetTyped(int id)
+{
+    var p = _repo.Get(id);
+    if (p == null) return NotFound();
+    return p; // Implicit Ok(p)
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['action-result', 'return-types', 'swagger']
+      },
+      {
+        id: '8-93',
+        question: 'How do you implement API key authentication in Web API?',
+        answer: 'Create middleware or an attribute that checks a custom header for a valid API key.',
+        code: `public class ApiKeyMiddleware
+{
+    private readonly RequestDelegate _next;
+    private const string API_KEY_HEADER = "X-Api-Key";
+
+    public ApiKeyMiddleware(RequestDelegate next) => _next = next;
+
+    public async Task InvokeAsync(HttpContext context, IConfiguration config)
+    {
+        if (!context.Request.Headers.TryGetValue(API_KEY_HEADER, out var key) ||
+            key != config["ApiKey"])
+        {
+            context.Response.StatusCode = 401;
+            await context.Response.WriteAsync("Invalid API Key");
+            return;
+        }
+        await _next(context);
+    }
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['api-key', 'authentication', 'middleware']
+      },
+      {
+        id: '8-94',
+        question: 'How do you cancel a fetch request when a component unmounts?',
+        answer: 'Use AbortController and call abort() in a cleanup function.',
+        code: `function loadData(elementId) {
+  const controller = new AbortController();
+
+  fetch('/api/data', { signal: controller.signal })
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById(elementId).textContent = JSON.stringify(data);
+    })
+    .catch(err => {
+      if (err.name !== 'AbortError') console.error(err);
+    });
+
+  // Return cleanup function
+  return () => controller.abort();
+}
+
+const cleanup = loadData("output");
+// Later...
+cleanup(); // Cancels the request`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['fetch', 'abort', 'cleanup']
+      },
+      {
+        id: '8-95',
+        question: 'What is problem details (RFC 7807) and how do you return it?',
+        answer: 'Problem Details is a standardized error response format. ASP.NET Core returns it automatically with [ApiController].',
+        code: `// Auto-generated by [ApiController] for 400+ errors
+// {
+//   "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+//   "title": "One or more validation errors occurred.",
+//   "status": 400,
+//   "errors": { "Name": ["The Name field is required."] }
+// }
+
+// Custom problem details
+[HttpGet("{id}")]
+public IActionResult Get(int id)
+{
+    if (id <= 0)
+        return Problem(
+            title: "Invalid ID",
+            detail: "ID must be a positive integer",
+            statusCode: 400,
+            type: "https://example.com/errors/invalid-id");
+    return Ok(_repo.Get(id));
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'medium',
+        tags: ['problem-details', 'error-format', 'rfc7807']
+      },
+      {
+        id: '8-96',
+        question: 'How do you version a Web API using URL path versioning?',
+        answer: 'Include version in the route template and use [ApiVersion] attribute.',
+        code: `// Install: Microsoft.AspNetCore.Mvc.Versioning
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+});
+
+[ApiController]
+[Route("api/v{version:apiVersion}/products")]
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
+public class ProductsController : ControllerBase
+{
+    [HttpGet, MapToApiVersion("1.0")]
+    public IActionResult GetV1() => Ok("V1 response");
+
+    [HttpGet, MapToApiVersion("2.0")]
+    public IActionResult GetV2() => Ok(new { version = 2, data = "V2 response" });
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['versioning', 'routing', 'api-design']
+      },
+      {
+        id: '8-97',
+        question: 'How do you implement idempotent POST requests in Web API?',
+        answer: 'Use an idempotency key header to prevent duplicate processing of the same request.',
+        code: `[HttpPost]
+public async Task<IActionResult> CreateOrder(
+    [FromBody] CreateOrderDto dto,
+    [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
+{
+    if (idempotencyKey != null)
+    {
+        var existing = await _cache.GetAsync<Order>(idempotencyKey);
+        if (existing != null) return Ok(existing); // Return cached result
+    }
+
+    var order = await _orderService.CreateAsync(dto);
+
+    if (idempotencyKey != null)
+        await _cache.SetAsync(idempotencyKey, order,
+            TimeSpan.FromHours(24));
+
+    return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['idempotency', 'post', 'api-design']
+      },
+      {
+        id: '8-98',
+        question: 'How do you implement server-side request deduplication with fetch?',
+        answer: 'Cache in-flight promises by URL so duplicate concurrent requests share the same response.',
+        code: `const inFlight = new Map();
+
+async function deduplicatedFetch(url) {
+  if (inFlight.has(url)) {
+    return inFlight.get(url); // Return same promise
+  }
+
+  const promise = fetch(url)
+    .then(r => r.json())
+    .finally(() => inFlight.delete(url));
+
+  inFlight.set(url, promise);
+  return promise;
+}
+
+// Two calls at the same time — only one HTTP request made
+deduplicatedFetch('/api/products');
+deduplicatedFetch('/api/products');`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['deduplication', 'fetch', 'performance']
+      },
+      {
+        id: '8-99',
+        question: 'What is the Unit of Work pattern in Web API?',
+        answer: 'Unit of Work groups multiple database operations into a single transaction that succeeds or fails together.',
+        code: `public interface IUnitOfWork : IDisposable
+{
+    IProductRepository Products { get; }
+    IOrderRepository Orders { get; }
+    Task<int> SaveChangesAsync();
+}
+
+public class UnitOfWork : IUnitOfWork
+{
+    private readonly AppDbContext _db;
+    public IProductRepository Products { get; }
+    public IOrderRepository Orders { get; }
+
+    public UnitOfWork(AppDbContext db)
+    {
+        _db = db;
+        Products = new ProductRepository(db);
+        Orders   = new OrderRepository(db);
+    }
+
+    public Task<int> SaveChangesAsync() => _db.SaveChangesAsync();
+    public void Dispose() => _db.Dispose();
+}`,
+        language: 'csharp',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['unit-of-work', 'design-patterns', 'transactions']
+      },
+      {
+        id: '8-100',
+        question: 'How do you implement a circuit breaker for fetch requests?',
+        answer: 'A circuit breaker stops calling a failing service after a threshold, returning errors immediately until a recovery period passes.',
+        code: `class CircuitBreaker {
+  constructor(threshold = 3, timeout = 10000) {
+    this.failures = 0;
+    this.threshold = threshold;
+    this.timeout = timeout;
+    this.state = "closed"; // closed | open | half-open
+    this.nextAttempt = Date.now();
+  }
+
+  async call(fn) {
+    if (this.state === "open") {
+      if (Date.now() < this.nextAttempt)
+        throw new Error("Circuit is OPEN");
+      this.state = "half-open";
+    }
+
+    try {
+      const result = await fn();
+      this.failures = 0;
+      this.state = "closed";
+      return result;
+    } catch (e) {
+      this.failures++;
+      if (this.failures >= this.threshold) {
+        this.state = "open";
+        this.nextAttempt = Date.now() + this.timeout;
+      }
+      throw e;
+    }
+  }
+}
+
+const breaker = new CircuitBreaker();
+await breaker.call(() =>
+  fetch('/api/products').then(r => r.json())
+);`,
+        language: 'javascript',
+        category: 'Web API',
+        difficulty: 'hard',
+        tags: ['circuit-breaker', 'resilience', 'error-handling']
       }
     ]
   },
@@ -6073,6 +9508,909 @@ for (let i = 0; i < 5; i++) { } // Loop statement`,
         category: 'Fundamentals',
         difficulty: 'easy',
         tags: ['statements', 'syntax', 'basics']
+      },
+      {
+        id: '9-51',
+        question: 'What is the difference between pass by value and pass by reference?',
+        answer: 'Pass by value copies the value; changes inside the function do not affect the original. Pass by reference passes a reference; changes affect the original.',
+        code: `function addTen(n) { n += 10; } // pass by value
+let x = 5;
+addTen(x);
+console.log(x); // still 5
+
+function pushItem(arr) { arr.push(99); }
+let nums = [1, 2];
+pushItem(nums);
+console.log(nums); // [1, 2, 99]`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['pass-by-value', 'pass-by-reference', 'memory']
+      },
+      {
+        id: '9-52',
+        question: 'What is a higher-order function?',
+        answer: 'A higher-order function takes a function as an argument or returns a function.',
+        code: `function apply(fn, value) {
+    return fn(value);
+}
+
+const double = n => n * 2;
+console.log(apply(double, 5)); // 10`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['higher-order-functions', 'functional', 'functions']
+      },
+      {
+        id: '9-53',
+        question: 'What is the difference between a stack and a queue?',
+        answer: 'A stack is LIFO (Last In, First Out). A queue is FIFO (First In, First Out).',
+        code: `// Stack (LIFO)
+let stack = [];
+stack.push(1); stack.push(2);
+console.log(stack.pop()); // 2
+
+// Queue (FIFO)
+let queue = [];
+queue.push(1); queue.push(2);
+console.log(queue.shift()); // 1`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['stack', 'queue', 'data-structures']
+      },
+      {
+        id: '9-54',
+        question: 'What is type coercion?',
+        answer: 'Type coercion is the automatic or implicit conversion of values from one data type to another.',
+        code: `console.log("5" + 3);   // "53" (string concat)
+console.log("5" - 3);   // 2  (number subtraction)
+console.log(true + 1);  // 2
+console.log(false + "x"); // "falsex"`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['type-coercion', 'data-types', 'javascript']
+      },
+      {
+        id: '9-55',
+        question: 'What is the difference between synchronous and asynchronous code?',
+        answer: 'Synchronous code runs line by line, blocking execution. Asynchronous code allows other code to run while waiting for a task to complete.',
+        code: `// Synchronous
+console.log("A");
+console.log("B"); // Always after A
+
+// Asynchronous
+console.log("A");
+setTimeout(() => console.log("B"), 0);
+console.log("C"); // C prints before B`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['async', 'synchronous', 'event-loop']
+      },
+      {
+        id: '9-56',
+        question: 'What is a promise?',
+        answer: 'A Promise is an object representing the eventual completion or failure of an asynchronous operation.',
+        code: `const promise = new Promise((resolve, reject) => {
+    if (success) resolve("Done!");
+    else reject("Failed");
+});
+
+promise
+    .then(result => console.log(result))
+    .catch(err => console.error(err));`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['promises', 'async', 'javascript']
+      },
+      {
+        id: '9-57',
+        question: 'What is the difference between map() and forEach()?',
+        answer: 'map() returns a new array with transformed values. forEach() just iterates without returning anything.',
+        code: `const nums = [1, 2, 3];
+
+const doubled = nums.map(n => n * 2);
+console.log(doubled); // [2, 4, 6]
+
+nums.forEach(n => console.log(n)); // just logs, no return`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['map', 'forEach', 'arrays']
+      },
+      {
+        id: '9-58',
+        question: 'What is destructuring?',
+        answer: 'Destructuring extracts values from arrays or properties from objects into distinct variables.',
+        code: `const [a, b] = [1, 2];
+console.log(a); // 1
+
+const { name, age } = { name: "Alice", age: 25 };
+console.log(name); // "Alice"`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['destructuring', 'es6', 'syntax']
+      },
+      {
+        id: '9-59',
+        question: 'What is the spread operator?',
+        answer: 'The spread operator (...) expands an iterable (array/object) into individual elements.',
+        code: `const a = [1, 2, 3];
+const b = [...a, 4, 5]; // [1, 2, 3, 4, 5]
+
+const obj1 = { x: 1 };
+const obj2 = { ...obj1, y: 2 }; // { x:1, y:2 }`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['spread', 'es6', 'arrays']
+      },
+      {
+        id: '9-60',
+        question: 'What is closure?',
+        answer: 'A closure is a function that retains access to variables from its outer scope even after that scope has closed.',
+        code: `function makeCounter() {
+    let count = 0;
+    return function() {
+        count++;
+        return count;
+    };
+}
+
+const counter = makeCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['closures', 'scope', 'functions']
+      },
+      {
+        id: '9-61',
+        question: 'What is the difference between null and undefined?',
+        answer: 'undefined means a variable has not been assigned a value. null is an intentional assignment meaning "no value".',
+        code: `let a;
+console.log(a); // undefined
+
+let b = null;
+console.log(b); // null
+
+console.log(typeof undefined); // "undefined"
+console.log(typeof null);      // "object" (quirk)`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['null', 'undefined', 'data-types']
+      },
+      {
+        id: '9-62',
+        question: 'What is short-circuit evaluation?',
+        answer: 'Short-circuit evaluation stops evaluating a logical expression as soon as the result is determined.',
+        code: `// && stops at first falsy value
+false && console.log("never runs");
+
+// || stops at first truthy value
+const name = userInput || "Default";
+
+// ?? null coalescing - stops at first non-null/undefined
+const val = null ?? "fallback"; // "fallback"`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['operators', 'logic', 'short-circuit']
+      },
+      {
+        id: '9-63',
+        question: 'What is the ternary operator?',
+        answer: 'The ternary operator is a shorthand if-else using condition ? valueIfTrue : valueIfFalse.',
+        code: `const age = 20;
+const status = age >= 18 ? "adult" : "minor";
+console.log(status); // "adult"`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['ternary', 'operators', 'conditionals']
+      },
+      {
+        id: '9-64',
+        question: 'What is the difference between deep copy and shallow copy?',
+        answer: 'A shallow copy copies only top-level properties. A deep copy recursively copies all nested objects.',
+        code: `const original = { a: 1, b: { c: 2 } };
+
+// Shallow copy
+const shallow = { ...original };
+shallow.b.c = 99; // also changes original.b.c!
+
+// Deep copy
+const deep = JSON.parse(JSON.stringify(original));`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['copy', 'objects', 'reference']
+      },
+      {
+        id: '9-65',
+        question: 'What is Array.filter()?',
+        answer: 'filter() creates a new array with all elements that pass a test function.',
+        code: `const numbers = [1, 2, 3, 4, 5, 6];
+const evens = numbers.filter(n => n % 2 === 0);
+console.log(evens); // [2, 4, 6]`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['filter', 'arrays', 'functional']
+      },
+      {
+        id: '9-66',
+        question: 'What is Array.reduce()?',
+        answer: 'reduce() executes a reducer function on each element, accumulating a single result.',
+        code: `const nums = [1, 2, 3, 4];
+const sum = nums.reduce((acc, n) => acc + n, 0);
+console.log(sum); // 10`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['reduce', 'arrays', 'functional']
+      },
+      {
+        id: '9-67',
+        question: 'What is a template literal?',
+        answer: 'Template literals use backticks and ${} to embed expressions inside strings.',
+        code: `const name = "Alice";
+const age = 25;
+const msg = \`Hello, \${name}! You are \${age} years old.\`;
+console.log(msg);`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['template-literals', 'strings', 'es6']
+      },
+      {
+        id: '9-68',
+        question: 'What is the event loop?',
+        answer: 'The event loop is a mechanism that allows JavaScript to perform non-blocking operations by offloading tasks and processing them when the call stack is empty.',
+        code: `console.log("Start");
+
+setTimeout(() => {
+    console.log("Timeout"); // runs after call stack clears
+}, 0);
+
+console.log("End");
+// Output: Start, End, Timeout`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['event-loop', 'async', 'javascript']
+      },
+      {
+        id: '9-69',
+        question: 'What is mutable vs immutable data?',
+        answer: 'Mutable data can be changed after creation. Immutable data cannot be changed once created.',
+        code: `// Mutable
+let arr = [1, 2, 3];
+arr.push(4); // modifies original
+
+// Immutable approach
+const newArr = [...arr, 4]; // creates new array
+
+// Strings are immutable
+let str = "hello";
+str[0] = "H"; // No effect`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['immutability', 'data-types', 'state']
+      },
+      {
+        id: '9-70',
+        question: 'What is a switch statement?',
+        answer: 'A switch statement evaluates an expression and executes code matching a case.',
+        code: `const day = "Monday";
+
+switch(day) {
+    case "Monday":
+        console.log("Start of week");
+        break;
+    case "Friday":
+        console.log("End of week");
+        break;
+    default:
+        console.log("Midweek");
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['switch', 'control-flow', 'conditionals']
+      },
+      {
+        id: '9-71',
+        question: 'What is a try/catch block?',
+        answer: 'try/catch handles errors by running code in the try block and catching exceptions in the catch block.',
+        code: `try {
+    const data = JSON.parse("invalid json");
+} catch (error) {
+    console.error("Caught:", error.message);
+} finally {
+    console.log("Always runs");
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['error-handling', 'try-catch', 'exceptions']
+      },
+      {
+        id: '9-72',
+        question: 'What is inheritance in OOP?',
+        answer: 'Inheritance allows a class to derive properties and methods from a parent class.',
+        code: `class Animal {
+    constructor(name) { this.name = name; }
+    speak() { return this.name + " makes a sound"; }
+}
+
+class Dog extends Animal {
+    speak() { return this.name + " barks"; }
+}
+
+const d = new Dog("Rex");
+console.log(d.speak()); // "Rex barks"`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['inheritance', 'oop', 'classes']
+      },
+      {
+        id: '9-73',
+        question: 'What is encapsulation?',
+        answer: 'Encapsulation hides internal state and requires all interaction through methods, protecting data integrity.',
+        code: `class BankAccount {
+    #balance = 0; // private field
+
+    deposit(amount) {
+        if (amount > 0) this.#balance += amount;
+    }
+
+    getBalance() { return this.#balance; }
+}
+
+const acct = new BankAccount();
+acct.deposit(100);
+console.log(acct.getBalance()); // 100`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['encapsulation', 'oop', 'classes']
+      },
+      {
+        id: '9-74',
+        question: 'What is a default parameter?',
+        answer: 'Default parameters provide fallback values when a function argument is not passed.',
+        code: `function greet(name = "World") {
+    return \`Hello, \${name}!\`;
+}
+
+console.log(greet());        // "Hello, World!"
+console.log(greet("Alice")); // "Hello, Alice!"`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['default-parameters', 'functions', 'es6']
+      },
+      {
+        id: '9-75',
+        question: 'What is the difference between a compiled and interpreted language?',
+        answer: 'Compiled languages (C#, C++) translate all code to machine code before running. Interpreted languages (JavaScript, Python) execute code line by line at runtime.',
+        code: `// C# - compiled
+// csc Program.cs -> produces .exe
+
+// JavaScript - interpreted
+// node script.js -> runs directly
+
+// Modern JS uses JIT (Just-In-Time) compilation
+// which combines both approaches`,
+        language: 'plaintext',
+        category: 'Fundamentals',
+        difficulty: 'medium',
+        tags: ['compiled', 'interpreted', 'languages']
+      },
+      {
+        id: '9-76',
+        question: 'What is Big O notation?',
+        answer: 'Big O notation describes the worst-case time or space complexity of an algorithm as input size grows.',
+        code: `// O(1) - constant
+function getFirst(arr) { return arr[0]; }
+
+// O(n) - linear
+function findItem(arr, val) {
+    for (let i of arr) if (i === val) return i;
+}
+
+// O(n²) - quadratic
+function bubbleSort(arr) {
+    for (let i = 0; i < arr.length; i++)
+        for (let j = 0; j < arr.length - i; j++) { /* ... */ }
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['big-o', 'complexity', 'algorithms']
+      },
+      {
+        id: '9-77',
+        question: 'What is a linked list?',
+        answer: 'A linked list is a data structure where elements (nodes) contain a value and a pointer to the next node.',
+        code: `class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() { this.head = null; }
+
+    append(value) {
+        const node = new Node(value);
+        if (!this.head) { this.head = node; return; }
+        let curr = this.head;
+        while (curr.next) curr = curr.next;
+        curr.next = node;
+    }
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['linked-list', 'data-structures', 'pointers']
+      },
+      {
+        id: '9-78',
+        question: 'What is a binary search algorithm?',
+        answer: 'Binary search finds a target in a sorted array by repeatedly halving the search space. O(log n) time complexity.',
+        code: `function binarySearch(arr, target) {
+    let left = 0, right = arr.length - 1;
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        if (arr[mid] === target) return mid;
+        else if (arr[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['binary-search', 'algorithms', 'searching']
+      },
+      {
+        id: '9-79',
+        question: 'What is memoization?',
+        answer: 'Memoization caches function results so the same inputs return the cached output instead of recalculating.',
+        code: `function memoize(fn) {
+    const cache = {};
+    return function(...args) {
+        const key = JSON.stringify(args);
+        if (cache[key]) return cache[key];
+        return (cache[key] = fn(...args));
+    };
+}
+
+const slowFib = n => n <= 1 ? n : slowFib(n-1) + slowFib(n-2);
+const fastFib = memoize(slowFib);`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['memoization', 'optimization', 'functional']
+      },
+      {
+        id: '9-80',
+        question: 'What is polymorphism?',
+        answer: 'Polymorphism allows different classes to be treated through the same interface, with each implementing its own version of a method.',
+        code: `class Shape {
+    area() { return 0; }
+}
+class Circle extends Shape {
+    constructor(r) { super(); this.r = r; }
+    area() { return Math.PI * this.r ** 2; }
+}
+class Square extends Shape {
+    constructor(s) { super(); this.s = s; }
+    area() { return this.s ** 2; }
+}
+
+const shapes = [new Circle(5), new Square(4)];
+shapes.forEach(s => console.log(s.area()));`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['polymorphism', 'oop', 'inheritance']
+      },
+      {
+        id: '9-81',
+        question: 'What is event delegation?',
+        answer: 'Event delegation uses a single event listener on a parent element to handle events from child elements via bubbling.',
+        code: `document.getElementById("list").addEventListener("click", function(e) {
+    if (e.target.tagName === "LI") {
+        console.log("Clicked:", e.target.textContent);
+    }
+});
+// One listener handles all <li> clicks, including new ones`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['event-delegation', 'dom', 'events']
+      },
+      {
+        id: '9-82',
+        question: 'What is prototypal inheritance in JavaScript?',
+        answer: 'Objects in JavaScript inherit properties and methods from a prototype object via the prototype chain.',
+        code: `function Animal(name) { this.name = name; }
+Animal.prototype.speak = function() {
+    return this.name + " speaks";
+};
+
+const dog = new Animal("Rex");
+console.log(dog.speak()); // uses prototype method
+console.log(Object.getPrototypeOf(dog) === Animal.prototype); // true`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['prototype', 'inheritance', 'javascript']
+      },
+      {
+        id: '9-83',
+        question: 'What is a generator function?',
+        answer: 'A generator function uses function* and yield to produce a sequence of values lazily.',
+        code: `function* counter(start = 0) {
+    while (true) {
+        yield start++;
+    }
+}
+
+const gen = counter(1);
+console.log(gen.next().value); // 1
+console.log(gen.next().value); // 2
+console.log(gen.next().value); // 3`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['generators', 'iterators', 'es6']
+      },
+      {
+        id: '9-84',
+        question: 'What is the module pattern?',
+        answer: 'The module pattern uses closures to create private state and expose a public API.',
+        code: `const Counter = (function() {
+    let count = 0; // private
+
+    return {
+        increment() { count++; },
+        decrement() { count--; },
+        getCount() { return count; }
+    };
+})();
+
+Counter.increment();
+console.log(Counter.getCount()); // 1`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['module-pattern', 'closures', 'design-patterns']
+      },
+      {
+        id: '9-85',
+        question: 'What is the difference between composition and inheritance?',
+        answer: 'Inheritance is "is-a" relationship. Composition is "has-a" — combining small, focused behaviors instead of deep class hierarchies.',
+        code: `// Inheritance (is-a)
+class Employee extends Person { ... }
+
+// Composition (has-a)
+const canSwim = (state) => ({ swim: () => "swimming" });
+const canFly  = (state) => ({ fly:  () => "flying" });
+
+const createDuck = (name) => {
+    const state = { name };
+    return Object.assign({}, canSwim(state), canFly(state), { name });
+};`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['composition', 'inheritance', 'oop']
+      },
+      {
+        id: '9-86',
+        question: 'What is debouncing?',
+        answer: 'Debouncing delays function execution until after a specified wait period has elapsed since the last call.',
+        code: `function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+}
+
+const onSearch = debounce((query) => {
+    console.log("Searching:", query);
+}, 300);`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['debounce', 'performance', 'events']
+      },
+      {
+        id: '9-87',
+        question: 'What is throttling?',
+        answer: 'Throttling limits how often a function can be called, ensuring it executes at most once per interval.',
+        code: `function throttle(fn, limit) {
+    let lastCall = 0;
+    return function(...args) {
+        const now = Date.now();
+        if (now - lastCall >= limit) {
+            lastCall = now;
+            return fn.apply(this, args);
+        }
+    };
+}
+
+const onScroll = throttle(() => console.log("scroll"), 200);`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['throttle', 'performance', 'events']
+      },
+      {
+        id: '9-88',
+        question: 'What is the Observer design pattern?',
+        answer: 'The Observer pattern defines a one-to-many dependency so that when one object changes state, all dependents are notified.',
+        code: `class EventEmitter {
+    constructor() { this.events = {}; }
+    on(event, listener) {
+        (this.events[event] ||= []).push(listener);
+    }
+    emit(event, data) {
+        (this.events[event] || []).forEach(fn => fn(data));
+    }
+}
+
+const emitter = new EventEmitter();
+emitter.on("data", d => console.log("Got:", d));
+emitter.emit("data", 42); // Got: 42`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['observer', 'design-patterns', 'events']
+      },
+      {
+        id: '9-89',
+        question: 'What is currying?',
+        answer: 'Currying transforms a function with multiple arguments into a chain of functions each taking a single argument.',
+        code: `function curry(fn) {
+    return function curried(...args) {
+        if (args.length >= fn.length) return fn(...args);
+        return (...next) => curried(...args, ...next);
+    };
+}
+
+const add = curry((a, b, c) => a + b + c);
+console.log(add(1)(2)(3)); // 6
+console.log(add(1, 2)(3)); // 6`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['currying', 'functional', 'functions']
+      },
+      {
+        id: '9-90',
+        question: 'What are WeakMap and WeakSet?',
+        answer: 'WeakMap and WeakSet hold weak references to objects, allowing them to be garbage-collected when no other references exist.',
+        code: `let obj = { name: "Alice" };
+const wm = new WeakMap();
+wm.set(obj, "metadata");
+console.log(wm.get(obj)); // "metadata"
+
+obj = null; // obj can now be garbage-collected
+// wm entry is also removed automatically`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['weakmap', 'weakset', 'memory']
+      },
+      {
+        id: '9-91',
+        question: 'What is a Proxy object in JavaScript?',
+        answer: 'A Proxy wraps an object and intercepts operations like get, set, and delete via handler traps.',
+        code: `const handler = {
+    get(target, key) {
+        return key in target ? target[key] : \`\${key} not found\`;
+    }
+};
+
+const obj = new Proxy({ name: "Alice" }, handler);
+console.log(obj.name);  // "Alice"
+console.log(obj.age);   // "age not found"`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['proxy', 'es6', 'metaprogramming']
+      },
+      {
+        id: '9-92',
+        question: 'What is tail call optimization?',
+        answer: 'Tail call optimization (TCO) allows recursive calls in tail position to reuse the current stack frame, preventing stack overflow.',
+        code: `// Non-tail recursive (risks stack overflow)
+function factRec(n) { return n <= 1 ? 1 : n * factRec(n - 1); }
+
+// Tail recursive (TCO eligible)
+function factTail(n, acc = 1) {
+    return n <= 1 ? acc : factTail(n - 1, n * acc);
+}
+console.log(factTail(5)); // 120`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['tail-call', 'recursion', 'optimization']
+      },
+      {
+        id: '9-93',
+        question: 'What is the difference between a tree and a graph?',
+        answer: 'A tree is a hierarchical structure with a root and no cycles. A graph can have cycles, multiple parents, and disconnected nodes.',
+        code: `// Tree node
+class TreeNode {
+    constructor(val) {
+        this.val = val;
+        this.children = [];
+    }
+}
+
+// Graph (adjacency list)
+const graph = {
+    A: ["B", "C"],
+    B: ["A", "D"],
+    C: ["A"],
+    D: ["B"]
+};`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['tree', 'graph', 'data-structures']
+      },
+      {
+        id: '9-94',
+        question: 'What is dynamic programming?',
+        answer: 'Dynamic programming solves complex problems by breaking them into subproblems, solving each once, and storing results.',
+        code: `// Fibonacci with DP (bottom-up)
+function fib(n) {
+    const dp = [0, 1];
+    for (let i = 2; i <= n; i++) {
+        dp[i] = dp[i-1] + dp[i-2];
+    }
+    return dp[n];
+}
+console.log(fib(10)); // 55`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['dynamic-programming', 'algorithms', 'optimization']
+      },
+      {
+        id: '9-95',
+        question: 'What is the difference between breadth-first search (BFS) and depth-first search (DFS)?',
+        answer: 'BFS explores level by level using a queue. DFS explores as deep as possible along each branch using a stack or recursion.',
+        code: `// BFS
+function bfs(root) {
+    const queue = [root], result = [];
+    while (queue.length) {
+        const node = queue.shift();
+        result.push(node.val);
+        node.children.forEach(c => queue.push(c));
+    }
+    return result;
+}
+
+// DFS
+function dfs(node) {
+    if (!node) return;
+    console.log(node.val);
+    node.children.forEach(dfs);
+}`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['bfs', 'dfs', 'algorithms']
+      },
+      {
+        id: '9-96',
+        question: 'What is the SOLID principle?',
+        answer: 'SOLID is five OOP design principles: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion.',
+        code: `// Single Responsibility: one reason to change
+class UserValidator { validate(user) { ... } }
+class UserRepository { save(user) { ... } }
+
+// Open/Closed: open for extension, closed for modification
+class Shape { area() { return 0; } }
+class Circle extends Shape { area() { return Math.PI * r**2; } }`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['solid', 'design-principles', 'oop']
+      },
+      {
+        id: '9-97',
+        question: 'What is a hash map / hash table?',
+        answer: 'A hash map stores key-value pairs and uses a hash function to compute an index for O(1) average-time lookup.',
+        code: `// JavaScript objects and Map are hash maps
+const map = new Map();
+map.set("name", "Alice");
+map.set("age", 25);
+
+console.log(map.get("name")); // "Alice"
+console.log(map.size);        // 2
+console.log(map.has("age"));  // true`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['hash-map', 'data-structures', 'performance']
+      },
+      {
+        id: '9-98',
+        question: 'What is the difference between Object.freeze() and const?',
+        answer: 'const prevents rebinding the variable. Object.freeze() prevents mutation of the object\'s properties.',
+        code: `const obj = { x: 1 };
+obj.x = 99; // works — const doesn't freeze content
+console.log(obj.x); // 99
+
+const frozen = Object.freeze({ x: 1 });
+frozen.x = 99; // silently fails
+console.log(frozen.x); // still 1`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['freeze', 'const', 'immutability']
+      },
+      {
+        id: '9-99',
+        question: 'What is the Singleton design pattern?',
+        answer: 'Singleton ensures a class has only one instance and provides a global access point to it.',
+        code: `class Database {
+    static #instance = null;
+
+    static getInstance() {
+        if (!Database.#instance) {
+            Database.#instance = new Database();
+        }
+        return Database.#instance;
+    }
+
+    query(sql) { console.log("Running:", sql); }
+}
+
+const db1 = Database.getInstance();
+const db2 = Database.getInstance();
+console.log(db1 === db2); // true`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['singleton', 'design-patterns', 'oop']
+      },
+      {
+        id: '9-100',
+        question: 'What is function composition?',
+        answer: 'Function composition combines multiple functions so the output of one becomes the input of the next.',
+        code: `const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x);
+
+const add1  = x => x + 1;
+const double = x => x * 2;
+const square = x => x * x;
+
+const transform = compose(square, double, add1);
+console.log(transform(3)); // square(double(add1(3))) = square(8) = 64`,
+        language: 'javascript',
+        category: 'Fundamentals',
+        difficulty: 'hard',
+        tags: ['composition', 'functional', 'functions']
       }
     ]
   }
