@@ -172,7 +172,7 @@ export default function ConceptsLevelPage() {
                   <Button
                     key={concept.id}
                     variant={selectedConcept.id === concept.id ? 'secondary' : 'ghost'}
-                    className={`w-full justify-start text-left h-auto py-3 ${
+                    className={`w-full justify-start text-left h-auto py-3 whitespace-normal ${
                       selectedConcept.id === concept.id
                         ? 'bg-primary text-primary-foreground hover:bg-primary/90'
                         : 'hover:bg-accent'
