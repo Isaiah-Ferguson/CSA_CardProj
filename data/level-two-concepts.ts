@@ -47,6 +47,268 @@ export const levelTwo: Level = {
   description: 'API Development - dotNet, C#, and RESTful APIs',
   weeks: [
     {
+      id: 'level-2-week-0',
+      weekNumber: 0,
+      title: 'What is an API?',
+      description: 'Understanding what APIs are, how they work, and why they are central to modern software development',
+      concepts: [
+        {
+          id: 'what-is-an-api',
+          title: 'What is an API?',
+          description: 'An API (Application Programming Interface) is a contract that allows two pieces of software to communicate with each other',
+          keyPoints: [
+            'API stands for Application Programming Interface',
+            'An API defines what requests can be made, how to make them, and what responses to expect',
+            'APIs let different applications talk to each other without knowing each other\'s internals',
+            'A Web API communicates over HTTP — the same protocol browsers use to load web pages',
+            'APIs return structured data (usually JSON) rather than HTML pages'
+          ],
+          codeExamples: [
+            {
+              title: 'Making Your First API Request',
+              code: `// Using the browser's built-in fetch() to call a public API
+// This API returns a random joke as JSON
+fetch("https://official-joke-api.appspot.com/random_joke")
+  .then(response => response.json())
+  .then(data => {
+    console.log(data.setup);    // "Why don't scientists trust atoms?"
+    console.log(data.punchline); // "Because they make up everything!"
+  });
+
+// The API sends back JSON like this:
+// {
+//   "id": 1,
+//   "type": "general",
+//   "setup": "Why don't scientists trust atoms?",
+//   "punchline": "Because they make up everything!"
+// }`,
+              language: 'javascript',
+              explanation: 'fetch() sends an HTTP GET request to a URL. The API at that URL returns JSON data. response.json() parses the JSON text into a JavaScript object. No account or setup required for public APIs.'
+            },
+            {
+              title: 'The Restaurant Analogy',
+              code: `// Think of an API like a restaurant:
+//
+//  YOU (the client/app)
+//    ↓  place an order (make a request)
+//  WAITER (the API)
+//    ↓  takes the order to the kitchen
+//  KITCHEN (the server/database)
+//    ↓  prepares the food (processes the data)
+//  WAITER (the API)
+//    ↓  brings back your food (sends the response)
+//  YOU (receive the data)
+//
+// You never go into the kitchen.
+// You only interact through the waiter (API).
+// The kitchen can change its recipes — you don't care,
+// as long as the menu (API contract) stays the same.
+
+// Real example:
+// Your weather app doesn't store weather data.
+// It calls the OpenWeatherMap API to get it.
+fetch("https://api.openweathermap.org/data/2.5/weather?q=London&appid=YOUR_KEY")
+  .then(res => res.json())
+  .then(data => console.log(data.main.temp));  // temperature in Kelvin`,
+              language: 'javascript',
+              explanation: 'The restaurant analogy captures the key idea: the client never touches the server\'s internals. The API is the defined interface between them. This separation means the server can change its implementation without breaking the client.'
+            }
+          ],
+          comparison: {
+            title: 'API vs Website',
+            options: [
+              {
+                name: 'Website',
+                description: 'Returns HTML, CSS, and JavaScript — rendered visually by a browser',
+                whenToUse: 'When a human is looking at the result in a browser',
+                example: 'https://google.com returns a full HTML page'
+              },
+              {
+                name: 'Web API',
+                description: 'Returns structured data (JSON/XML) — consumed by code',
+                whenToUse: 'When an app or another server needs to read the data',
+                example: 'https://api.example.com/users returns [{id:1, name:"Alice"}]'
+              }
+            ]
+          }
+        },
+        {
+          id: 'http-and-rest',
+          title: 'HTTP & REST',
+          description: 'How APIs communicate using HTTP methods and REST conventions',
+          keyPoints: [
+            'HTTP is the protocol used to send requests and receive responses on the web',
+            'REST is a set of conventions for designing APIs using HTTP',
+            'The four main HTTP methods map to CRUD: GET, POST, PUT/PATCH, DELETE',
+            'Every API request goes to a URL called an endpoint',
+            'HTTP status codes tell you whether a request succeeded or failed'
+          ],
+          codeExamples: [
+            {
+              title: 'HTTP Methods (CRUD)',
+              code: `// GET - Read data (does not change anything)
+fetch("/api/users")           // get all users
+fetch("/api/users/42")        // get user with id 42
+
+// POST - Create new data
+fetch("/api/users", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name: "Alice", email: "alice@example.com" })
+});
+
+// PUT - Replace/update existing data
+fetch("/api/users/42", {
+  method: "PUT",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name: "Alice Smith", email: "alice@example.com" })
+});
+
+// PATCH - Partially update data
+fetch("/api/users/42", {
+  method: "PATCH",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name: "Alice Smith" })  // only update name
+});
+
+// DELETE - Remove data
+fetch("/api/users/42", { method: "DELETE" });`,
+              language: 'javascript',
+              explanation: 'GET retrieves data without side effects. POST creates a new resource. PUT replaces a resource entirely. PATCH updates only the fields you send. DELETE removes the resource. These map directly to Create, Read, Update, Delete (CRUD).'
+            },
+            {
+              title: 'HTTP Status Codes',
+              code: `// 2xx — Success
+// 200 OK           — request succeeded (GET, PUT, PATCH, DELETE)
+// 201 Created      — new resource was created (POST)
+// 204 No Content   — success but no body to return (DELETE)
+
+// 4xx — Client error (you made a mistake)
+// 400 Bad Request  — invalid data sent (e.g. missing required field)
+// 401 Unauthorized — you need to log in
+// 403 Forbidden    — you are logged in but not allowed
+// 404 Not Found    — resource doesn't exist
+// 422 Unprocessable Entity — data format is valid but fails validation
+
+// 5xx — Server error (the API made a mistake)
+// 500 Internal Server Error — something crashed on the server
+// 503 Service Unavailable   — server is down or overloaded
+
+// Checking status codes with fetch
+const response = await fetch("/api/users/999");
+if (response.status === 404) {
+  console.log("User not found");
+} else if (response.ok) {        // response.ok is true for 200–299
+  const user = await response.json();
+  console.log(user);
+}`,
+              language: 'javascript',
+              explanation: 'Status codes are a 3-digit number in every HTTP response. 2xx means success. 4xx means the client sent something wrong. 5xx means the server failed. Always check the status code before using the response data.'
+            }
+          ],
+          comparison: {
+            title: 'HTTP Methods at a Glance',
+            options: [
+              {
+                name: 'GET',
+                description: 'Read — fetch one or many resources',
+                whenToUse: 'Displaying data; safe to repeat with no side effects',
+                example: 'GET /api/products → returns list of products'
+              },
+              {
+                name: 'POST',
+                description: 'Create — add a new resource',
+                whenToUse: 'Submitting a form, creating a new record',
+                example: 'POST /api/products with JSON body → creates a product'
+              },
+              {
+                name: 'PUT / PATCH',
+                description: 'Update — replace or partially modify a resource',
+                whenToUse: 'PUT for full replacement, PATCH for partial update',
+                example: 'PATCH /api/products/5 → update only the price field'
+              },
+              {
+                name: 'DELETE',
+                description: 'Delete — remove a resource',
+                whenToUse: 'Removing a record permanently',
+                example: 'DELETE /api/products/5 → removes product with id 5'
+              }
+            ]
+          }
+        },
+        {
+          id: 'json-and-api-responses',
+          title: 'JSON & API Responses',
+          description: 'How APIs structure and send data using JSON',
+          keyPoints: [
+            'JSON (JavaScript Object Notation) is the standard data format for web APIs',
+            'JSON supports strings, numbers, booleans, arrays, objects, and null',
+            'Every API response includes a status code, headers, and an optional body',
+            'Always check the API documentation (docs) to know the expected request and response shape',
+            'API keys are used to authenticate requests to protected APIs'
+          ],
+          codeExamples: [
+            {
+              title: 'Reading a Real API Response',
+              code: `// Calling the GitHub API to get a user's profile
+const response = await fetch("https://api.github.com/users/octocat");
+const user = await response.json();
+
+// The JSON response looks like:
+// {
+//   "login": "octocat",
+//   "id": 583231,
+//   "name": "The Octocat",
+//   "company": "GitHub",
+//   "public_repos": 8,
+//   "followers": 14000,
+//   "created_at": "2011-01-25T18:44:36Z"
+// }
+
+console.log(user.login);        // "octocat"
+console.log(user.public_repos); // 8
+console.log(user.followers);    // 14000
+
+// Accessing nested data
+const reposResponse = await fetch(user.repos_url);
+const repos = await reposResponse.json();  // array of repo objects
+repos.forEach(repo => console.log(repo.name));`,
+              language: 'javascript',
+              explanation: 'API responses are JSON text that gets parsed into JavaScript objects. You access fields with dot notation just like any object. Always check the API docs (e.g. docs.github.com) to understand the response structure.'
+            },
+            {
+              title: 'Using an API Key',
+              code: `// Many APIs require an API key to identify your app
+// NEVER hard-code your key in source code — use environment variables
+
+// .env file (never commit this to git!)
+// WEATHER_API_KEY=abc123yourkeyhere
+
+// Reading the key from environment (Node.js)
+const apiKey = process.env.WEATHER_API_KEY;
+
+const url = \`https://api.openweathermap.org/data/2.5/weather?q=London&appid=\${apiKey}\`;
+const response = await fetch(url);
+const weather = await response.json();
+
+console.log(weather.main.temp);       // Temperature in Kelvin
+console.log(weather.weather[0].description);  // "light rain"
+
+// Some APIs use a header instead of a query parameter
+const response2 = await fetch("https://api.example.com/data", {
+  headers: {
+    "Authorization": \`Bearer \${apiKey}\`,
+    "Content-Type": "application/json"
+  }
+});`,
+              language: 'javascript',
+              explanation: 'API keys authenticate your requests. Store them in environment variables (.env), never in code. Some APIs pass the key as a query parameter (?appid=), others expect it in an Authorization header. Read the docs to know which.'
+            }
+          ]
+        }
+      ]
+    },
+    {
       id: 'level-2-week-1',
       weekNumber: 1,
       title: 'Introduction to Web APIs',

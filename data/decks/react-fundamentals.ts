@@ -651,7 +651,7 @@ store.getSnapshot
     {
       id: '2-51',
       question: 'What is Next.js?',
-      answer: 'Next.js is a React framework that adds file-based routing, server-side rendering, static generation, and API routes on top of React.',
+      answer: 'Next.js is framework built on top of the React library that adds file-based routing, server-side rendering, static generation, and API routes on top of React.',
       code: `// Next.js app/page.tsx
 export default function Page() {
   return <h1>Hello from Next.js</h1>;

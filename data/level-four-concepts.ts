@@ -66,7 +66,7 @@ export const levelFour: Level = {
           codeExamples: [
             {
               title: 'Clean Architecture Layers',
-              code: `// Clean Architecture has 4 main layers:
+              code: `// Clean Architecture has 5 main layers:
 
 // 1. Domain Layer (Core/Entities)
 //    - Business entities and domain logic
@@ -98,7 +98,7 @@ namespace MyApp.Domain.Entities
 
 // 2. Application Layer (Use Cases/Business Logic)
 //    - Application-specific business rules
-//    - Defines interfaces for infrastructure
+//    - Defines interfaces for infrastructure and persistence
 //    - Orchestrates domain objects
 
 namespace MyApp.Application.Interfaces
@@ -114,26 +114,46 @@ namespace MyApp.Application.Interfaces
 }
 
 // 3. Infrastructure Layer
-//    - External concerns (database, file system, APIs)
-//    - Implements interfaces defined in Application layer
-//    - EF Core DbContext lives here
+//    - External concerns (email, file storage, third-party APIs)
+//    - Implements non-database interfaces from Application layer
+//    - Does NOT contain the database — that belongs in Persistence
 
-namespace MyApp.Infrastructure.Data
+namespace MyApp.Infrastructure.Services
+{
+    public class EmailService : IEmailService
+    {
+        public async Task SendOrderConfirmationAsync(string to, int orderId)
+        {
+            // SendGrid, SMTP, or any email provider
+        }
+    }
+}
+
+// 4. Persistence Layer
+//    - Database only: EF Core DbContext, repositories, migrations
+//    - Implements repository interfaces defined in Application layer
+//    - Keeps EF Core completely out of Domain and Application
+
+namespace MyApp.Persistence.Context
 {
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
+            : base(options) { }
 
         public DbSet<Product> Products { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(
+                typeof(ApplicationDbContext).Assembly);
+        }
     }
 }
 
-// 4. Presentation Layer (API/Controllers)
+// 5. Presentation Layer (API/Controllers)
 //    - User interface / API endpoints
-//    - Depends on Application layer
+//    - Depends on Application layer only
 //    - Handles HTTP requests/responses
 
 namespace MyApp.API.Controllers
@@ -158,7 +178,7 @@ namespace MyApp.API.Controllers
     }
 }`,
               language: 'csharp',
-              explanation: 'Clean Architecture separates concerns into layers. Domain contains business entities with no dependencies. Application defines interfaces and use cases. Infrastructure implements data access. Presentation handles HTTP/UI. Dependencies flow inward toward domain.'
+              explanation: 'Clean Architecture separates concerns into 5 layers. Domain has no dependencies. Application defines interfaces and use cases. Infrastructure handles external services (email, storage). Persistence handles database access (EF Core, repositories, migrations). Presentation (API) handles HTTP. Dependencies flow inward toward Domain.'
             },
             {
               title: 'Project Structure',
@@ -188,16 +208,25 @@ MyApp/
 │   └── Validators/
 │       └── ProductValidator.cs
 │
-├── MyApp.Infrastructure/            // External dependencies
-│   ├── Data/
-│   │   ├── ApplicationDbContext.cs
-│   │   ├── Repositories/
-│   │   │   └── ProductRepository.cs
-│   │   └── Configurations/
-│   │       └── ProductConfiguration.cs
+├── MyApp.Infrastructure/            // External services (non-database)
 │   ├── Services/
-│   │   └── EmailService.cs
-│   └── Migrations/
+│   │   ├── EmailService.cs          // Implements IEmailService
+│   │   ├── BlobStorageService.cs    // Implements IFileStorageService
+│   │   └── PaymentService.cs        // Implements IPaymentService
+│   ├── Settings/
+│   │   └── EmailSettings.cs
+│   └── DependencyInjection.cs
+│
+├── MyApp.Persistence/               // Database only (EF Core)
+│   ├── Context/
+│   │   ├── ApplicationDbContext.cs
+│   │   └── ApplicationDbContextFactory.cs
+│   ├── Configurations/
+│   │   └── ProductConfiguration.cs
+│   ├── Repositories/
+│   │   └── ProductRepository.cs
+│   ├── Migrations/
+│   └── DependencyInjection.cs
 │
 └── MyApp.API/                       // Web API / Presentation
     ├── Controllers/
@@ -208,12 +237,13 @@ MyApp/
         └── ExceptionHandlingMiddleware.cs
 
 // Dependencies:
-// - Domain: No dependencies
-// - Application: References Domain only
-// - Infrastructure: References Application and Domain
-// - API: References Application and Infrastructure`,
+// - Domain:          No dependencies
+// - Application:     References Domain only
+// - Infrastructure:  References Application and Domain
+// - Persistence:     References Application and Domain
+// - API:             References all layers (for DI wiring only)`,
               language: 'csharp',
-              explanation: 'Organize code into separate projects by layer. Domain is independent. Application references Domain. Infrastructure implements Application interfaces. API references all layers for dependency injection setup. Each layer has clear responsibilities.'
+              explanation: 'Organize code into 5 separate projects by layer. Domain is independent. Application references Domain only. Infrastructure (email, storage) and Persistence (database) both implement Application interfaces and reference Domain. The API project references all layers solely to wire up DI in Program.cs. Each layer has a single clear responsibility.'
             },
             {
               title: 'Dependency Injection Setup',
@@ -296,6 +326,944 @@ app.Run();`,
                 description: 'All code in one project',
                 whenToUse: 'Small applications, prototypes',
                 example: 'Simple APIs, learning projects'
+              }
+            ]
+          }
+        },
+        {
+          id: 'domain-layer',
+          title: 'The Domain Layer',
+          description: 'The innermost layer — pure business entities and domain logic with zero external dependencies',
+          keyPoints: [
+            'The Domain layer is the heart of Clean Architecture — everything else depends on it, it depends on nothing',
+            'Contains entities: plain C# classes that model real-world business concepts',
+            'Contains value objects: immutable types defined by their value, not identity (e.g. Money, Address)',
+            'Domain exceptions express business rule violations in a meaningful way',
+            'No references to EF Core, ASP.NET, or any external library — pure C#'
+          ],
+          codeExamples: [
+            {
+              title: 'Entities',
+              code: `// MyApp.Domain/Entities/Product.cs
+// An entity has an identity (Id) and can change over time
+
+namespace MyApp.Domain.Entities
+{
+    public class Product
+    {
+        public int Id { get; private set; }
+        public string Name { get; private set; } = string.Empty;
+        public decimal Price { get; private set; }
+        public string Category { get; private set; } = string.Empty;
+        public bool IsActive { get; private set; } = true;
+        public DateTime CreatedAt { get; private set; }
+        public DateTime? UpdatedAt { get; private set; }
+
+        // Private constructor forces use of factory method
+        private Product() { }
+
+        // Factory method — enforces business rules on creation
+        public static Product Create(string name, decimal price, string category)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new DomainException("Product name cannot be empty.");
+
+            if (price <= 0)
+                throw new DomainException("Price must be greater than zero.");
+
+            return new Product
+            {
+                Name = name,
+                Price = price,
+                Category = category,
+                CreatedAt = DateTime.UtcNow
+            };
+        }
+
+        // Domain behaviour — business rules live on the entity
+        public void UpdatePrice(decimal newPrice)
+        {
+            if (newPrice <= 0)
+                throw new DomainException("Price must be greater than zero.");
+
+            Price = newPrice;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void Deactivate() => IsActive = false;
+        public void Activate()  => IsActive = true;
+    }
+}`,
+              language: 'csharp',
+              explanation: 'Entities have an Id and can change over time. Private setters and factory methods enforce business rules at construction. Domain behaviour (UpdatePrice, Deactivate) lives on the entity itself — not in a service. This keeps logic close to the data it governs.'
+            },
+            {
+              title: 'Value Objects & Domain Exceptions',
+              code: `// MyApp.Domain/ValueObjects/Money.cs
+// A value object has no identity — two Money(10, "USD") are equal
+
+namespace MyApp.Domain.ValueObjects
+{
+    public record Money(decimal Amount, string Currency)
+    {
+        public Money Add(Money other)
+        {
+            if (Currency != other.Currency)
+                throw new DomainException("Cannot add money with different currencies.");
+
+            return new Money(Amount + other.Amount, Currency);
+        }
+
+        public Money ApplyDiscount(decimal percent)
+        {
+            if (percent is < 0 or > 100)
+                throw new DomainException("Discount percent must be between 0 and 100.");
+
+            return new Money(Amount * (1 - percent / 100), Currency);
+        }
+
+        public override string ToString() => $"{Amount:F2} {Currency}";
+    }
+}
+
+// MyApp.Domain/Exceptions/DomainException.cs
+namespace MyApp.Domain.Exceptions
+{
+    public class DomainException : Exception
+    {
+        public DomainException(string message) : base(message) { }
+
+        public DomainException(string message, Exception inner)
+            : base(message, inner) { }
+    }
+}`,
+              language: 'csharp',
+              explanation: 'Value objects (record types in C# 9+) are compared by value — two Money(10, "USD") are equal. They are immutable: operations return new instances. DomainException makes business rule violations explicit and distinguishable from infrastructure errors.'
+            },
+            {
+              title: 'Domain Layer Project Structure',
+              code: `// MyApp.Domain/  — no NuGet dependencies, pure C#
+
+MyApp.Domain/
+├── Entities/
+│   ├── Product.cs          // Has Id, encapsulates business behaviour
+│   ├── Order.cs
+│   ├── OrderItem.cs
+│   └── Category.cs
+├── ValueObjects/
+│   ├── Money.cs            // Immutable, compared by value
+│   ├── Address.cs
+│   └── Email.cs
+├── Enums/
+│   ├── OrderStatus.cs      // Pending, Processing, Shipped, Delivered
+│   └── ProductCategory.cs
+├── Exceptions/
+│   └── DomainException.cs  // Business rule violation
+└── MyApp.Domain.csproj
+
+// MyApp.Domain.csproj — notice: NO dependencies at all
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  // No <ItemGroup> with PackageReferences — this is intentional
+</Project>`,
+              language: 'csharp',
+              explanation: 'The Domain .csproj has no PackageReference entries. It is pure .NET — no EF Core, no ASP.NET, no third-party libraries. This is the "dependency rule" of Clean Architecture in action. Any layer can reference Domain; Domain references nothing.'
+            }
+          ],
+          comparison: {
+            title: 'Entity vs Value Object',
+            options: [
+              {
+                name: 'Entity',
+                description: 'Has a unique identity (Id); two entities with the same data are still different',
+                whenToUse: 'Business objects that have a lifecycle and identity (User, Order, Product)',
+                example: 'Two User objects with Id=1 and Id=2 are different, even if all fields match'
+              },
+              {
+                name: 'Value Object',
+                description: 'No identity; two value objects with the same data are equal',
+                whenToUse: 'Concepts defined entirely by their attributes (Money, Address, Email)',
+                example: 'Money(10, "USD") == Money(10, "USD") — they are the same'
+              }
+            ]
+          }
+        },
+        {
+          id: 'application-layer',
+          title: 'The Application Layer',
+          description: 'Orchestrates use cases and defines the contracts (interfaces) that the outer layers must implement',
+          keyPoints: [
+            'The Application layer contains the application\'s use cases — what the system can do',
+            'It defines interfaces (contracts) for infrastructure and persistence, but never implements them',
+            'DTOs (Data Transfer Objects) carry data between layers without exposing domain entities directly',
+            'Application Services coordinate domain entities and call repository/infrastructure interfaces',
+            'References only the Domain layer — no EF Core, no ASP.NET, no infrastructure details'
+          ],
+          codeExamples: [
+            {
+              title: 'Interfaces — Contracts for Outer Layers',
+              code: `// MyApp.Application/Interfaces/
+// The Application layer declares WHAT it needs — outer layers provide HOW
+
+// Repository contract (implemented by Persistence layer)
+namespace MyApp.Application.Interfaces
+{
+    public interface IProductRepository
+    {
+        Task<Product?> GetByIdAsync(int id, CancellationToken ct = default);
+        Task<IEnumerable<Product>> GetAllAsync(CancellationToken ct = default);
+        Task<IEnumerable<Product>> GetByCategoryAsync(string category);
+        Task AddAsync(Product product);
+        Task UpdateAsync(Product product);
+        Task DeleteAsync(Product product);
+    }
+
+    // Unit of Work contract (implemented by Persistence layer)
+    public interface IUnitOfWork
+    {
+        Task<int> SaveChangesAsync(CancellationToken ct = default);
+    }
+
+    // Email contract (implemented by Infrastructure layer)
+    public interface IEmailService
+    {
+        Task SendOrderConfirmationAsync(string to, int orderId);
+        Task SendWelcomeEmailAsync(string to, string name);
+    }
+
+    // File storage contract (implemented by Infrastructure layer)
+    public interface IFileStorageService
+    {
+        Task<string> UploadAsync(Stream file, string fileName);
+        Task DeleteAsync(string fileUrl);
+    }
+}`,
+              language: 'csharp',
+              explanation: 'The Application layer declares interfaces for everything it needs but does not own — repositories, email, file storage. This is the Dependency Inversion Principle: high-level policy (Application) should not depend on low-level detail (Infrastructure). Outer layers implement the contracts.'
+            },
+            {
+              title: 'DTOs — Data Transfer Objects',
+              code: `// MyApp.Application/DTOs/
+// DTOs carry data across layer boundaries without exposing domain entities
+
+namespace MyApp.Application.DTOs
+{
+    // What the API returns to the client
+    public record ProductDto(
+        int Id,
+        string Name,
+        decimal Price,
+        string Category,
+        bool IsActive,
+        DateTime CreatedAt
+    );
+
+    // What the client sends when creating a product
+    public record CreateProductDto(
+        string Name,
+        decimal Price,
+        string Category
+    );
+
+    // What the client sends when updating a product
+    public record UpdateProductDto(
+        string Name,
+        decimal Price,
+        string Category
+    );
+
+    // Paginated list wrapper
+    public record PagedResult<T>(
+        IEnumerable<T> Items,
+        int TotalCount,
+        int Page,
+        int PageSize
+    )
+    {
+        public int TotalPages => (int)Math.Ceiling((double)TotalCount / PageSize);
+        public bool HasNextPage => Page < TotalPages;
+        public bool HasPreviousPage => Page > 1;
+    }
+}`,
+              language: 'csharp',
+              explanation: 'DTOs are simple data containers — no business logic. They prevent domain entities from leaking out of the API (which would couple clients to your internal model). C# records are ideal for DTOs: immutable, equality by value, and concise constructor syntax.'
+            },
+            {
+              title: 'Application Service',
+              code: `// MyApp.Application/Services/ProductService.cs
+// Orchestrates domain entities, repositories, and other services
+
+using MyApp.Application.DTOs;
+using MyApp.Application.Interfaces;
+using MyApp.Domain.Entities;
+using MyApp.Domain.Exceptions;
+
+namespace MyApp.Application.Services
+{
+    public class ProductService : IProductService
+    {
+        private readonly IProductRepository _products;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public ProductService(IProductRepository products, IUnitOfWork unitOfWork)
+        {
+            _products = products;
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task<ProductDto?> GetByIdAsync(int id)
+        {
+            var product = await _products.GetByIdAsync(id);
+            return product is null ? null : MapToDto(product);
+        }
+
+        public async Task<ProductDto> CreateAsync(CreateProductDto dto)
+        {
+            // Domain factory enforces business rules
+            var product = Product.Create(dto.Name, dto.Price, dto.Category);
+
+            await _products.AddAsync(product);
+            await _unitOfWork.SaveChangesAsync();
+
+            return MapToDto(product);
+        }
+
+        public async Task UpdatePriceAsync(int id, decimal newPrice)
+        {
+            var product = await _products.GetByIdAsync(id)
+                ?? throw new KeyNotFoundException($"Product {id} not found.");
+
+            product.UpdatePrice(newPrice);  // domain behaviour
+
+            await _products.UpdateAsync(product);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        private static ProductDto MapToDto(Product p) =>
+            new(p.Id, p.Name, p.Price, p.Category, p.IsActive, p.CreatedAt);
+    }
+}`,
+              language: 'csharp',
+              explanation: 'Application Services coordinate the flow: fetch from repository → call domain behaviour → persist changes. They map domain entities to DTOs. They do not contain business logic themselves — that belongs on the entity. They only orchestrate.'
+            }
+          ],
+          comparison: {
+            title: 'Application Layer Responsibilities',
+            options: [
+              {
+                name: 'Application Service',
+                description: 'Orchestrates use cases — fetch, call domain logic, persist, return DTO',
+                whenToUse: 'Any action the system performs (create order, update price, send email)',
+                example: 'ProductService.CreateAsync() — ties together domain + repository + email'
+              },
+              {
+                name: 'DTO',
+                description: 'Data container for crossing layer boundaries — no logic',
+                whenToUse: 'Anywhere data moves between layers (API → App, App → API)',
+                example: 'CreateProductDto, ProductDto, PagedResult<T>'
+              },
+              {
+                name: 'Interface',
+                description: 'Contract that outer layers must fulfil — no implementation',
+                whenToUse: 'Any external capability the Application layer needs',
+                example: 'IProductRepository, IEmailService, IFileStorageService'
+              }
+            ]
+          }
+        },
+        {
+          id: 'infrastructure-layer',
+          title: 'The Infrastructure Layer',
+          description: 'Implements all external-world concerns except the database — email, file storage, messaging, and third-party API integrations',
+          keyPoints: [
+            'Infrastructure implements the interfaces declared in the Application layer',
+            'It handles external concerns: email providers, blob storage, payment gateways, SMS, etc.',
+            'The database (EF Core, repositories) is handled by the separate Persistence layer',
+            'Infrastructure services are registered via a DI extension method — Program.cs stays clean',
+            'References Application and Domain; never referenced by them'
+          ],
+          codeExamples: [
+            {
+              title: 'Implementing Application Interfaces',
+              code: `// MyApp.Infrastructure/Services/EmailService.cs
+// Implements the IEmailService interface from the Application layer
+
+using Microsoft.Extensions.Options;
+using MyApp.Application.Interfaces;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+
+namespace MyApp.Infrastructure.Services
+{
+    public class EmailService : IEmailService
+    {
+        private readonly SendGridClient _client;
+        private readonly EmailSettings _settings;
+
+        public EmailService(IOptions<EmailSettings> settings)
+        {
+            _settings = settings.Value;
+            _client   = new SendGridClient(_settings.ApiKey);
+        }
+
+        public async Task SendOrderConfirmationAsync(string to, int orderId)
+        {
+            var msg = MailHelper.CreateSingleEmail(
+                from:    new EmailAddress(_settings.SenderEmail, _settings.SenderName),
+                to:      new EmailAddress(to),
+                subject: $"Order #{orderId} Confirmed",
+                plainTextContent: $"Your order #{orderId} has been confirmed.",
+                htmlContent: $"<strong>Your order #{orderId} has been confirmed.</strong>"
+            );
+
+            var response = await _client.SendEmailAsync(msg);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception($"Email failed: {response.StatusCode}");
+        }
+
+        public async Task SendWelcomeEmailAsync(string to, string name)
+        {
+            var msg = MailHelper.CreateSingleEmail(
+                from:    new EmailAddress(_settings.SenderEmail, _settings.SenderName),
+                to:      new EmailAddress(to),
+                subject: $"Welcome, {name}!",
+                plainTextContent: $"Welcome to our platform, {name}.",
+                htmlContent: $"<h1>Welcome, {name}!</h1>"
+            );
+
+            await _client.SendEmailAsync(msg);
+        }
+    }
+
+    public class EmailSettings
+    {
+        public string ApiKey      { get; set; } = string.Empty;
+        public string SenderEmail { get; set; } = string.Empty;
+        public string SenderName  { get; set; } = string.Empty;
+    }
+}`,
+              language: 'csharp',
+              explanation: 'Infrastructure implements the IEmailService contract. The Application layer never knows about SendGrid — it just calls IEmailService. Swapping SendGrid for another provider means changing only this file, not the Application layer. Settings are read from appsettings.json via IOptions<T>.'
+            },
+            {
+              title: 'Infrastructure Project Structure & DI',
+              code: `// MyApp.Infrastructure/
+
+MyApp.Infrastructure/
+├── Services/
+│   ├── EmailService.cs            // Implements IEmailService (SendGrid)
+│   ├── BlobStorageService.cs      // Implements IFileStorageService (Azure Blob)
+│   ├── SmsService.cs              // Implements ISmsService (Twilio)
+│   └── PaymentService.cs          // Implements IPaymentService (Stripe)
+├── Settings/
+│   ├── EmailSettings.cs           // Typed config for email
+│   ├── BlobStorageSettings.cs
+│   └── StripeSettings.cs
+└── DependencyInjection.cs         // Registers all infrastructure services
+
+// MyApp.Infrastructure/DependencyInjection.cs
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using MyApp.Application.Interfaces;
+using MyApp.Infrastructure.Services;
+
+namespace MyApp.Infrastructure
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddInfrastructure(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            // Bind settings from appsettings.json
+            services.Configure<EmailSettings>(
+                configuration.GetSection("Email"));
+            services.Configure<BlobStorageSettings>(
+                configuration.GetSection("BlobStorage"));
+
+            // Register implementations
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IFileStorageService, BlobStorageService>();
+            services.AddScoped<ISmsService, SmsService>();
+
+            return services;
+        }
+    }
+}
+
+// Program.cs — clean one-liner
+builder.Services.AddInfrastructure(builder.Configuration);`,
+              language: 'csharp',
+              explanation: 'Each infrastructure service is registered via a single AddInfrastructure() extension. Settings are bound from appsettings.json using Configure<T>. Program.cs just calls the extension — it has no knowledge of SendGrid, Twilio, or any provider details.'
+            }
+          ],
+          comparison: {
+            title: 'Infrastructure vs Persistence',
+            options: [
+              {
+                name: 'Infrastructure Layer',
+                description: 'External world (non-database): email, SMS, payments, file storage, background jobs',
+                whenToUse: 'Any outbound integration that is not the primary database',
+                example: 'EmailService (SendGrid), BlobStorageService (Azure), PaymentService (Stripe)'
+              },
+              {
+                name: 'Persistence Layer',
+                description: 'Database only: EF Core DbContext, repositories, migrations',
+                whenToUse: 'All reads and writes to the application\'s primary database',
+                example: 'ApplicationDbContext, ProductRepository, Migrations/'
+              }
+            ]
+          }
+        },
+        {
+          id: 'api-layer',
+          title: 'The API Layer (Presentation)',
+          description: 'The outermost layer — handles HTTP requests, maps them to application use cases, and returns HTTP responses',
+          keyPoints: [
+            'The API layer is the entry point for all HTTP traffic — it owns controllers, middleware, and routing',
+            'Controllers are thin: they validate input, call an Application Service, and return a response',
+            'Business logic must never live in a controller — delegate everything to the Application layer',
+            'Middleware handles cross-cutting concerns: error handling, authentication, logging, CORS',
+            'Program.cs wires all layers together via DI extension methods'
+          ],
+          codeExamples: [
+            {
+              title: 'Thin Controller',
+              code: `// MyApp.API/Controllers/ProductsController.cs
+// Controllers are thin — they only handle HTTP concerns
+
+using Microsoft.AspNetCore.Mvc;
+using MyApp.Application.DTOs;
+using MyApp.Application.Interfaces;
+
+namespace MyApp.API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ProductsController : ControllerBase
+    {
+        private readonly IProductService _productService;
+
+        public ProductsController(IProductService productService)
+        {
+            _productService = productService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll()
+        {
+            var products = await _productService.GetAllAsync();
+            return Ok(products);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ProductDto>> GetById(int id)
+        {
+            var product = await _productService.GetByIdAsync(id);
+            return product is null ? NotFound() : Ok(product);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ProductDto>> Create(CreateProductDto dto)
+        {
+            var created = await _productService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+
+        [HttpPatch("{id:int}/price")]
+        public async Task<IActionResult> UpdatePrice(int id, [FromBody] decimal newPrice)
+        {
+            await _productService.UpdatePriceAsync(id, newPrice);
+            return NoContent();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _productService.DeleteAsync(id);
+            return NoContent();
+        }
+    }
+}`,
+              language: 'csharp',
+              explanation: 'Each controller action does the minimum: parse the request, call the service, return the result. No business logic, no direct repository access, no EF Core. If the controller grows beyond a few lines per action, that logic belongs in the Application layer.'
+            },
+            {
+              title: 'Global Exception Handling Middleware',
+              code: `// MyApp.API/Middleware/ExceptionHandlingMiddleware.cs
+// Catches all unhandled exceptions and returns a consistent JSON error response
+
+using MyApp.Domain.Exceptions;
+using System.Net;
+using System.Text.Json;
+
+namespace MyApp.API.Middleware
+{
+    public class ExceptionHandlingMiddleware
+    {
+        private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+
+        public ExceptionHandlingMiddleware(
+            RequestDelegate next,
+            ILogger<ExceptionHandlingMiddleware> logger)
+        {
+            _next   = next;
+            _logger = logger;
+        }
+
+        public async Task InvokeAsync(HttpContext context)
+        {
+            try
+            {
+                await _next(context);
+            }
+            catch (DomainException ex)
+            {
+                // Business rule violations → 400 Bad Request
+                await WriteErrorAsync(context, HttpStatusCode.BadRequest, ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                // Not found → 404
+                await WriteErrorAsync(context, HttpStatusCode.NotFound, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Unexpected errors → 500
+                _logger.LogError(ex, "Unhandled exception");
+                await WriteErrorAsync(context, HttpStatusCode.InternalServerError,
+                    "An unexpected error occurred.");
+            }
+        }
+
+        private static Task WriteErrorAsync(
+            HttpContext context, HttpStatusCode status, string message)
+        {
+            context.Response.StatusCode  = (int)status;
+            context.Response.ContentType = "application/json";
+            var body = JsonSerializer.Serialize(new { error = message });
+            return context.Response.WriteAsync(body);
+        }
+    }
+}`,
+              language: 'csharp',
+              explanation: 'Middleware intercepts every request/response. The exception handler catches DomainExceptions (business rules → 400), KeyNotFoundException (not found → 404), and anything else (→ 500). Controllers no longer need try/catch blocks — they throw and the middleware handles it.'
+            },
+            {
+              title: 'Program.cs — Wiring All Layers',
+              code: `// MyApp.API/Program.cs
+// The single entry point — wires all layers together
+
+using MyApp.Application;       // AddApplication() extension
+using MyApp.Infrastructure;    // AddInfrastructure() extension
+using MyApp.Persistence;       // AddPersistence() extension
+using MyApp.API.Middleware;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// --- Register services from each layer ---
+builder.Services.AddApplication();                              // use cases, services
+builder.Services.AddInfrastructure(builder.Configuration);     // email, storage, etc.
+builder.Services.AddPersistence(builder.Configuration);        // EF Core, repositories
+
+// --- API layer services ---
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+    options.AddPolicy("AllowAll", p =>
+        p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
+var app = builder.Build();
+
+// --- Middleware pipeline ---
+app.UseMiddleware<ExceptionHandlingMiddleware>();  // global error handler first
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseCors("AllowAll");
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+app.Run();`,
+              language: 'csharp',
+              explanation: 'Program.cs is intentionally thin — it just calls the DI extension methods each layer provides. The order matters: middleware is registered before the app runs, and UseAuthentication() must come before UseAuthorization(). Each layer\'s internal wiring stays private to that layer.'
+            }
+          ],
+          comparison: {
+            title: 'API Layer Responsibilities',
+            options: [
+              {
+                name: 'Controller',
+                description: 'Handles HTTP — parse request, call service, return response',
+                whenToUse: 'Every HTTP endpoint; keep actions under ~10 lines',
+                example: 'ProductsController.Create() calls IProductService.CreateAsync()'
+              },
+              {
+                name: 'Middleware',
+                description: 'Cross-cutting pipeline logic applied to every request',
+                whenToUse: 'Exception handling, authentication, logging, rate limiting',
+                example: 'ExceptionHandlingMiddleware catches DomainException → 400'
+              },
+              {
+                name: 'Program.cs',
+                description: 'Bootstrap file — DI registration and middleware pipeline',
+                whenToUse: 'One-time app startup; should be under ~30 lines using extension methods',
+                example: 'builder.Services.AddPersistence(builder.Configuration)'
+              }
+            ]
+          }
+        },
+        {
+          id: 'persistence-layer',
+          title: 'The Persistence Layer',
+          description: 'The dedicated layer responsible for all data storage and retrieval — bridging domain entities and the database using EF Core',
+          keyPoints: [
+            'The Persistence layer is a sub-layer of Infrastructure focused solely on data access',
+            'Many Clean Architecture projects split Persistence into its own project separate from other infrastructure concerns',
+            'It owns the DbContext, repository implementations, migrations, and entity configurations',
+            'Domain entities are kept "database-ignorant" — EF Core mapping lives only in Persistence',
+            'A DI extension method registers all persistence services cleanly in Program.cs'
+          ],
+          codeExamples: [
+            {
+              title: 'Persistence Project Structure',
+              code: `// In many real projects, Persistence is its own project
+// separate from other infrastructure (email, file storage, etc.)
+
+MyApp.Persistence/
+├── Context/
+│   ├── ApplicationDbContext.cs        // EF Core DbContext
+│   └── ApplicationDbContextFactory.cs // For design-time migrations
+├── Configurations/
+│   ├── ProductConfiguration.cs        // Fluent API entity mapping
+│   ├── CategoryConfiguration.cs
+│   └── OrderConfiguration.cs
+├── Repositories/
+│   ├── Repository.cs                  // Generic base repository
+│   ├── ProductRepository.cs           // Product-specific queries
+│   └── OrderRepository.cs
+├── Migrations/
+│   ├── 20240101_InitialCreate.cs
+│   └── ApplicationDbContextModelSnapshot.cs
+└── DependencyInjection.cs             // Registers all persistence services
+
+// Dependencies:
+// MyApp.Persistence references MyApp.Application + MyApp.Domain
+// MyApp.Application references MyApp.Domain only
+// MyApp.Domain has NO references (pure C#)`,
+              language: 'csharp',
+              explanation: 'Isolating Persistence into its own project enforces the rule that your domain and application layers have zero knowledge of EF Core. Migrations, DbContext, and Fluent API configs all live here — the rest of the app only sees the interfaces defined in Application.'
+            },
+            {
+              title: 'IApplicationDbContext — Keeping Domain Clean',
+              code: `// MyApp.Application/Interfaces/IApplicationDbContext.cs
+// The Application layer defines an interface for the DbContext
+// so it never has to reference EF Core directly
+
+using Microsoft.EntityFrameworkCore;
+using MyApp.Domain.Entities;
+
+namespace MyApp.Application.Interfaces
+{
+    public interface IApplicationDbContext
+    {
+        DbSet<Product> Products { get; }
+        DbSet<Category> Categories { get; }
+        DbSet<Order> Orders { get; }
+        DbSet<OrderItem> OrderItems { get; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    }
+}
+
+// MyApp.Persistence/Context/ApplicationDbContext.cs
+// Persistence implements the interface — EF Core stays in Persistence only
+
+using Microsoft.EntityFrameworkCore;
+using MyApp.Application.Interfaces;
+using MyApp.Domain.Entities;
+using MyApp.Persistence.Configurations;
+
+namespace MyApp.Persistence.Context
+{
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options) { }
+
+        public DbSet<Product> Products => Set<Product>();
+        public DbSet<Category> Categories => Set<Category>();
+        public DbSet<Order> Orders => Set<Order>();
+        public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(
+                typeof(ApplicationDbContext).Assembly);
+        }
+    }
+}`,
+              language: 'csharp',
+              explanation: 'The Application layer defines IApplicationDbContext — an interface with only DbSet properties and SaveChangesAsync. The Persistence layer\'s ApplicationDbContext implements it. Application services can interact with the database through the interface without ever referencing EF Core.'
+            },
+            {
+              title: 'Design-Time DbContext Factory',
+              code: `// ApplicationDbContextFactory.cs
+// Required so EF Core CLI (dotnet ef migrations add) can create
+// a DbContext at design time, without running the full app
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
+
+namespace MyApp.Persistence.Context
+{
+    public class ApplicationDbContextFactory
+        : IDesignTimeDbContextFactory<ApplicationDbContext>
+    {
+        public ApplicationDbContext CreateDbContext(string[] args)
+        {
+            // Read connection string from appsettings.json at design time
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.Development.json", optional: true)
+                .Build();
+
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            optionsBuilder.UseSqlServer(
+                configuration.GetConnectionString("DefaultConnection"));
+
+            return new ApplicationDbContext(optionsBuilder.Build());
+        }
+    }
+}`,
+              language: 'csharp',
+              explanation: 'IDesignTimeDbContextFactory<T> is needed when your DbContext is in a separate project from the startup project. Without it, dotnet ef migrations commands cannot find the DbContext. It reads the connection string from appsettings.json at design time — not from DI.'
+            },
+            {
+              title: 'Persistence DI Extension Method',
+              code: `// MyApp.Persistence/DependencyInjection.cs
+// A single extension method registers everything the Persistence
+// layer provides. Program.cs stays clean.
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using MyApp.Application.Interfaces;
+using MyApp.Persistence.Context;
+using MyApp.Persistence.Repositories;
+
+namespace MyApp.Persistence
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddPersistence(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            // Register DbContext
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly(
+                        typeof(ApplicationDbContext).Assembly.FullName)));
+
+            // Register IApplicationDbContext → ApplicationDbContext
+            services.AddScoped<IApplicationDbContext>(provider =>
+                provider.GetRequiredService<ApplicationDbContext>());
+
+            // Register repositories
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+
+            // Register Unit of Work
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            return services;
+        }
+    }
+}
+
+// Program.cs — now just one clean call
+using MyApp.Persistence;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddPersistence(builder.Configuration);  // one line
+
+var app = builder.Build();
+app.MapControllers();
+app.Run();`,
+              language: 'csharp',
+              explanation: 'The DI extension method pattern keeps Program.cs clean. Each layer (Persistence, Application, Infrastructure) provides its own AddXxx() extension. Program.cs calls them in order. All the wiring stays inside the layer that owns those services — not scattered in Program.cs.'
+            },
+            {
+              title: 'Applying Migrations on Startup',
+              code: `// Program.cs — automatically migrate the database on startup
+// Useful for development and staging; evaluate carefully for production
+
+using Microsoft.EntityFrameworkCore;
+using MyApp.Persistence.Context;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddPersistence(builder.Configuration);
+
+var app = builder.Build();
+
+// Auto-apply pending migrations on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider
+                  .GetRequiredService<ApplicationDbContext>();
+
+    if (db.Database.GetPendingMigrations().Any())
+    {
+        db.Database.Migrate();  // applies all pending migrations
+    }
+}
+
+app.MapControllers();
+app.Run();`,
+              language: 'csharp',
+              explanation: 'db.Database.Migrate() applies any outstanding migrations when the app starts. This is convenient for development and Docker environments so you never have to run dotnet ef database update manually. In production, prefer running migrations as a separate pipeline step for safety.'
+            }
+          ],
+          comparison: {
+            title: 'Persistence vs Infrastructure Layer',
+            options: [
+              {
+                name: 'Persistence Layer',
+                description: 'Data access only — DbContext, repositories, migrations, EF Core config',
+                whenToUse: 'Any code that reads from or writes to the database',
+                example: 'ApplicationDbContext, ProductRepository, Migrations/'
+              },
+              {
+                name: 'Infrastructure Layer',
+                description: 'All other external concerns — email, file storage, SMS, third-party APIs',
+                whenToUse: 'Anything that talks to the outside world but is not the database',
+                example: 'EmailService, BlobStorageService, StripePaymentService'
+              },
+              {
+                name: 'Single Infrastructure Project',
+                description: 'Persistence and infrastructure merged into one project',
+                whenToUse: 'Smaller apps where the split adds more overhead than value',
+                example: 'MyApp.Infrastructure/ containing both Repositories/ and Services/'
               }
             ]
           }

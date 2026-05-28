@@ -47,6 +47,354 @@ export const levelOne: Level = {
   description: 'Foundation web development concepts - HTML, CSS, JavaScript',
   weeks: [
     {
+      id: 'level-1-week-0',
+      weekNumber: 0,
+      title: 'How the Web Works',
+      description: 'What HTML, CSS, and JavaScript are, and how the three languages work together to build every website you\'ve ever visited',
+      concepts: [
+        {
+          id: 'what-is-html',
+          title: 'What is HTML?',
+          description: 'HTML (HyperText Markup Language) is the language that gives a web page its structure and content',
+          keyPoints: [
+            'HTML stands for HyperText Markup Language',
+            'It describes the structure of a web page using elements called tags',
+            'HyperText means pages can link to each other — the foundation of the World Wide Web',
+            'HTML is not a programming language; it is a markup language — it labels content',
+            'Every visible thing on a web page (headings, paragraphs, images, links) starts as HTML'
+          ],
+          codeExamples: [
+            {
+              title: 'HTML is the Skeleton',
+              code: `<!-- HTML gives the page its raw structure and content -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>My First Web Page</title>
+</head>
+<body>
+
+  <h1>Welcome to My Site</h1>
+  <p>This is a paragraph of text.</p>
+
+  <img src="cat.jpg" alt="A cute cat">
+
+  <!-- A hyperlink — the "HT" in HTML -->
+  <a href="https://google.com">Go to Google</a>
+
+  <ul>
+    <li>Item one</li>
+    <li>Item two</li>
+  </ul>
+
+</body>
+</html>`,
+              language: 'html',
+              explanation: 'HTML uses opening and closing tags like <h1></h1> to wrap content. The browser reads this file top-to-bottom and builds a visual page. Without CSS it has no colour or layout; without JavaScript it has no interactivity — just structure.'
+            },
+            {
+              title: 'What "HyperText" Means',
+              code: `<!-- Before the web, documents were isolated files.
+     HyperText lets any document link to any other document,
+     anywhere in the world. -->
+
+<!-- This single tag is what makes the World Wide Web a "web" -->
+<a href="https://en.wikipedia.org/wiki/World_Wide_Web">
+  Learn about the World Wide Web
+</a>
+
+<!-- Links can go to other pages on the same site -->
+<a href="/about.html">About Us</a>
+
+<!-- Or to a specific section of a page -->
+<a href="#contact">Jump to Contact</a>
+
+<!-- Tim Berners-Lee invented HTML and the World Wide Web in 1989
+     so scientists could share documents and link between them.
+     That simple idea grew into the internet we use today. -->`,
+              language: 'html',
+              explanation: 'The <a> tag (anchor) is how HTML pages link to each other. This ability to hyperlink documents is what makes the internet a "web" rather than a collection of isolated files. Tim Berners-Lee invented HTML in 1989 for this exact purpose.'
+            }
+          ],
+          comparison: {
+            title: 'HTML\'s Role on the Page',
+            options: [
+              {
+                name: 'HTML',
+                description: 'Structure and content — the skeleton of the page',
+                whenToUse: 'Defining what is on the page: headings, text, images, links, forms',
+                example: '<h1>Hello</h1> <p>Welcome to my site.</p>'
+              },
+              {
+                name: 'Without HTML',
+                description: 'There is no page — the browser has nothing to display',
+                whenToUse: 'N/A — HTML is the minimum required for any web page',
+                example: 'A blank white screen in the browser'
+              }
+            ]
+          }
+        },
+        {
+          id: 'what-is-css',
+          title: 'What is CSS?',
+          description: 'CSS (Cascading Style Sheets) is the language that controls the visual appearance of a web page',
+          keyPoints: [
+            'CSS stands for Cascading Style Sheets',
+            'It controls colours, fonts, spacing, layout, sizes, and animations',
+            'CSS rules target HTML elements using selectors',
+            'Without CSS every web page looks like a plain text document',
+            '"Cascading" means styles can be inherited and overridden in a predictable order'
+          ],
+          codeExamples: [
+            {
+              title: 'CSS is the Style',
+              code: `/* CSS selects an HTML element and applies visual rules */
+
+/* Target all <h1> elements */
+h1 {
+  color: #2c3e50;        /* text colour */
+  font-size: 48px;
+  font-family: Arial, sans-serif;
+}
+
+/* Target all <p> elements */
+p {
+  color: #555;
+  line-height: 1.6;      /* space between lines */
+  max-width: 600px;
+}
+
+/* Target elements with a specific class */
+.highlight {
+  background-color: yellow;
+  font-weight: bold;
+}
+
+/* Target an element with a specific id */
+#hero {
+  background-color: #3498db;
+  padding: 80px 40px;
+  text-align: center;
+  color: white;
+}`,
+              language: 'css',
+              explanation: 'A CSS rule has a selector (what to target) and declarations (what to change). class selectors start with a dot, id selectors start with #. The same HTML can look completely different with different CSS.'
+            },
+            {
+              title: 'CSS Controls Layout',
+              code: `/* CSS positions and arranges elements on the page */
+
+/* Flexbox — arrange items in a row or column */
+.navbar {
+  display: flex;
+  justify-content: space-between;   /* spread items apart */
+  align-items: center;
+  padding: 16px 32px;
+  background-color: #1a1a2e;
+}
+
+/* Grid — two-dimensional layout */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* 3 equal columns */
+  gap: 24px;
+}
+
+/* Responsive design — adapt to screen size */
+@media (max-width: 768px) {
+  .card-grid {
+    grid-template-columns: 1fr;  /* stack to 1 column on phones */
+  }
+}`,
+              language: 'css',
+              explanation: 'CSS handles more than colours — it controls how elements are positioned, sized, and arranged. Flexbox and Grid are the two modern layout systems. Media queries make pages adapt to different screen sizes (responsive design).'
+            }
+          ],
+          comparison: {
+            title: 'CSS\'s Role on the Page',
+            options: [
+              {
+                name: 'CSS',
+                description: 'Appearance — colours, fonts, spacing, layout',
+                whenToUse: 'Making the page look good and work on any screen size',
+                example: 'h1 { color: blue; font-size: 32px; }'
+              },
+              {
+                name: 'Without CSS',
+                description: 'The HTML still shows, but it looks like a plain 1990s text document',
+                whenToUse: 'N/A — every real site uses CSS',
+                example: 'Black text on a white background, default browser font, no layout'
+              }
+            ]
+          }
+        },
+        {
+          id: 'what-is-javascript',
+          title: 'What is JavaScript?',
+          description: 'JavaScript is the programming language of the web — it makes pages interactive and dynamic',
+          keyPoints: [
+            'JavaScript is the only programming language that runs natively in every web browser',
+            'It can respond to user actions: clicks, key presses, form submissions, scrolling',
+            'JavaScript can update the page without reloading it (dynamic content)',
+            'It can communicate with servers to fetch or send data (APIs)',
+            'JavaScript now also runs on servers (Node.js) and is used everywhere in modern development'
+          ],
+          codeExamples: [
+            {
+              title: 'JavaScript is the Behaviour',
+              code: `// JavaScript makes the page respond to the user
+
+// React to a button click
+const button = document.querySelector("#myButton");
+
+button.addEventListener("click", function() {
+  alert("You clicked the button!");
+});
+
+// Change content on the page without reloading
+const heading = document.querySelector("h1");
+heading.textContent = "The title just changed!";
+heading.style.color = "red";
+
+// Show or hide an element
+const menu = document.querySelector(".dropdown-menu");
+button.addEventListener("click", function() {
+  menu.classList.toggle("hidden");  // add/remove CSS class
+});`,
+              language: 'javascript',
+              explanation: 'JavaScript listens for events (clicks, key presses, etc.) and responds. document.querySelector() finds an HTML element. You can then read or change its content, styles, and attributes — all without refreshing the page.'
+            },
+            {
+              title: 'JavaScript Fetches Data',
+              code: `// JavaScript can talk to servers to load new data
+// without the user ever leaving the page
+
+// Fetch a list of users from an API
+async function loadUsers() {
+  const response = await fetch("https://jsonplaceholder.typicode.com/users");
+  const users = await response.json();
+
+  const list = document.querySelector("#user-list");
+
+  users.forEach(user => {
+    const item = document.createElement("li");
+    item.textContent = user.name;
+    list.appendChild(item);  // add to the page
+  });
+}
+
+loadUsers();
+
+// This is how Gmail, Twitter, and every modern
+// web app shows you new content without reloading.`,
+              language: 'javascript',
+              explanation: 'fetch() lets JavaScript request data from a server in the background. When the data arrives, JavaScript creates new HTML elements and adds them to the page. This pattern — loading data without a page reload — is called AJAX and is how all modern web apps work.'
+            }
+          ],
+          comparison: {
+            title: 'JavaScript\'s Role on the Page',
+            options: [
+              {
+                name: 'JavaScript',
+                description: 'Behaviour — interactivity, logic, dynamic content, API calls',
+                whenToUse: 'Responding to user actions, fetching data, updating the page',
+                example: 'button.addEventListener("click", () => alert("Hello!"))'
+              },
+              {
+                name: 'Without JavaScript',
+                description: 'The page is static — it cannot respond to the user or load new data',
+                whenToUse: 'Simple informational pages that never change',
+                example: 'A form that can be filled out but cannot be submitted without a full page reload'
+              }
+            ]
+          }
+        },
+        {
+          id: 'html-css-js-together',
+          title: 'HTML, CSS & JavaScript Together',
+          description: 'How the three languages divide responsibilities and combine to build every website on the web',
+          keyPoints: [
+            'HTML = Structure (what is on the page)',
+            'CSS = Style (what the page looks like)',
+            'JavaScript = Behaviour (what the page does)',
+            'Every website uses all three; they work in layers, each with a clear job',
+            'The browser downloads all three files and combines them into the page you see'
+          ],
+          codeExamples: [
+            {
+              title: 'All Three Working Together',
+              code: `<!-- index.html — Structure -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="styles.css">  <!-- load CSS -->
+</head>
+<body>
+  <button id="colorBtn">Change Color</button>
+  <p id="message">Click the button!</p>
+
+  <script src="app.js"></script>  <!-- load JavaScript -->
+</body>
+</html>`,
+              language: 'html',
+              explanation: 'The HTML file is loaded first. It links to a CSS file (which styles the page) and a JavaScript file (which adds behaviour). The browser downloads all three and combines them.'
+            },
+            {
+              title: 'CSS and JS Files',
+              code: `/* styles.css — Appearance */
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+}
+
+button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#message {
+  font-size: 24px;
+  margin-top: 20px;
+}`,
+              language: 'css',
+              explanation: 'The CSS file is kept separate from HTML. It targets elements by their tag name or id and applies visual rules. Keeping styles in a separate file means the same CSS can style multiple HTML pages.'
+            }
+          ],
+          comparison: {
+            title: 'The Three Layers of Every Web Page',
+            options: [
+              {
+                name: 'HTML — Structure',
+                description: 'The skeleton: headings, paragraphs, images, links, forms',
+                whenToUse: 'Defining what content exists on the page',
+                example: '<h1>Title</h1> <img src="photo.jpg"> <a href="/about">About</a>'
+              },
+              {
+                name: 'CSS — Style',
+                description: 'The skin: colours, fonts, spacing, layout, animations',
+                whenToUse: 'Controlling how every element looks and is positioned',
+                example: 'h1 { color: navy; font-size: 2rem; text-align: center; }'
+              },
+              {
+                name: 'JavaScript — Behaviour',
+                description: 'The muscles: events, logic, data fetching, DOM updates',
+                whenToUse: 'Making the page respond to users and communicate with servers',
+                example: 'btn.addEventListener("click", () => modal.classList.add("open"))'
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
       id: 'level-1-week-1',
       weekNumber: 1,
       title: 'HTML, CSS & Flexbox',
@@ -4762,6 +5110,370 @@ await fetch("/api/users", {
               }
             ]
           }
+        }
+      ]
+    },
+    {
+      id: 'level-1-week-8',
+      weekNumber: 8,
+      title: 'Intro to TypeScript',
+      description: 'Introduction to TypeScript: static typing, type annotations, interfaces, and typed functions',
+      concepts: [
+        {
+          id: 'what-is-typescript',
+          title: 'What is TypeScript?',
+          description: 'TypeScript is a statically typed superset of JavaScript that compiles to plain JavaScript',
+          keyPoints: [
+            'TypeScript adds static types to JavaScript',
+            'TypeScript code compiles (transpiles) to regular JavaScript',
+            'Types are checked at compile time, not runtime',
+            'Any valid JavaScript is also valid TypeScript',
+            'TypeScript helps catch errors before your code runs'
+          ],
+          codeExamples: [
+            {
+              title: 'JavaScript vs TypeScript',
+              code: `// JavaScript - no type safety
+function greet(name) {
+    return "Hello, " + name.toUpperCase();
+}
+
+greet("Alice");   // "Hello, ALICE"
+greet(42);        // Runtime Error: name.toUpperCase is not a function
+
+// TypeScript - catches the error at compile time
+function greet(name: string): string {
+    return "Hello, " + name.toUpperCase();
+}
+
+greet("Alice");   // OK
+greet(42);        // Error: Argument of type 'number' is not assignable to parameter of type 'string'`,
+              language: 'typescript',
+              explanation: 'TypeScript adds type annotations (name: string) that are checked before your code runs. Errors are caught during development, not in production.'
+            },
+            {
+              title: 'Compiling TypeScript',
+              code: `// Install TypeScript globally
+// npm install -g typescript
+
+// Create a file: hello.ts
+const message: string = "Hello, TypeScript!";
+console.log(message);
+
+// Compile to JavaScript
+// tsc hello.ts
+
+// Output: hello.js (plain JavaScript)
+// const message = "Hello, TypeScript!";
+// console.log(message);
+
+// tsconfig.json - project configuration
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "strict": true,
+        "outDir": "./dist"
+    },
+    "include": ["src/**/*"]
+}`,
+              language: 'typescript',
+              explanation: 'TypeScript files use the .ts extension. The tsc compiler converts TypeScript to JavaScript. tsconfig.json configures compiler options for your project.'
+            }
+          ],
+          comparison: {
+            title: 'JavaScript vs TypeScript',
+            options: [
+              {
+                name: 'JavaScript',
+                description: 'Dynamically typed — types are resolved at runtime',
+                whenToUse: 'Small scripts, quick prototypes, browser-only snippets',
+                example: 'let x = 5; x = "hello"; // No error until runtime'
+              },
+              {
+                name: 'TypeScript',
+                description: 'Statically typed — types are checked at compile time',
+                whenToUse: 'Large codebases, team projects, React/Node apps',
+                example: 'let x: number = 5; x = "hello"; // Error immediately'
+              }
+            ]
+          }
+        },
+        {
+          id: 'type-annotations',
+          title: 'Type Annotations',
+          description: 'Explicitly declaring the types of variables, parameters, and return values',
+          keyPoints: [
+            'Primitive types: string, number, boolean',
+            'TypeScript can infer types from assigned values',
+            'Use explicit annotations when the type is not obvious',
+            'The any type opts out of type checking — avoid it',
+            'Use union types (string | number) to allow multiple types'
+          ],
+          codeExamples: [
+            {
+              title: 'Primitive Type Annotations',
+              code: `// Explicit type annotations
+let username: string = "Alice";
+let age: number = 25;
+let isLoggedIn: boolean = true;
+
+// Type inference (TypeScript figures it out)
+let city = "New York";   // inferred: string
+let score = 100;          // inferred: number
+let isActive = false;     // inferred: boolean
+
+// Reassigning to a wrong type causes an error
+username = "Bob";  // OK
+username = 42;     // Error: Type 'number' is not assignable to type 'string'
+
+// Union types - allow multiple types
+let id: string | number;
+id = "abc123";  // OK
+id = 42;        // OK
+id = true;      // Error: Type 'boolean' is not assignable to type 'string | number'
+
+// Literal types - only specific values allowed
+let direction: "north" | "south" | "east" | "west";
+direction = "north";  // OK
+direction = "up";     // Error`,
+              language: 'typescript',
+              explanation: 'Add a colon and type after a variable name to annotate it. TypeScript often infers types automatically. Union types (A | B) allow a variable to hold more than one type.'
+            },
+            {
+              title: 'Arrays and Special Types',
+              code: `// Typed arrays
+let names: string[] = ["Alice", "Bob", "Charlie"];
+let scores: number[] = [95, 87, 92];
+
+names.push("Diana");  // OK
+names.push(42);       // Error: Argument of type 'number' not assignable to 'string'
+
+// Tuple - fixed-length array with specific types at each position
+let person: [string, number] = ["Alice", 25];
+let coords: [number, number] = [40.7128, -74.0060];
+
+// any - opts out of type checking (avoid!)
+let anything: any = "hello";
+anything = 42;    // OK - no type safety
+anything = true;  // OK - no type safety
+
+// unknown - safer alternative to any
+let input: unknown = getUserInput();
+if (typeof input === "string") {
+    console.log(input.toUpperCase());  // Only allowed after type check
+}
+
+// void - function that returns nothing
+function logMessage(msg: string): void {
+    console.log(msg);
+}`,
+              language: 'typescript',
+              explanation: 'Use Type[] for typed arrays. Tuples have a fixed structure. Avoid any as it disables type checking. unknown is safer — you must narrow the type before using it.'
+            }
+          ]
+        },
+        {
+          id: 'interfaces-type-aliases',
+          title: 'Interfaces & Type Aliases',
+          description: 'Defining the shape of objects using interfaces and type aliases',
+          keyPoints: [
+            'Interfaces define the structure (shape) of an object',
+            'Type aliases create a named type for any type expression',
+            'Optional properties are marked with ? after the property name',
+            'Readonly properties cannot be changed after creation',
+            'Interfaces can extend other interfaces'
+          ],
+          codeExamples: [
+            {
+              title: 'Defining and Using Interfaces',
+              code: `// Define an interface
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    age?: number;              // Optional property
+    readonly createdAt: Date;  // Cannot be reassigned
+}
+
+// Use the interface
+const user: User = {
+    id: 1,
+    name: "Alice",
+    email: "alice@example.com",
+    createdAt: new Date()
+};
+
+user.name = "Bob";            // OK
+user.createdAt = new Date();  // Error: Cannot assign to 'createdAt' (readonly)
+
+// Function using an interface as a parameter type
+function displayUser(user: User): string {
+    return \`\${user.name} (\${user.email})\`;
+}
+
+// Extending interfaces
+interface AdminUser extends User {
+    role: "admin" | "superadmin";
+    permissions: string[];
+}
+
+const admin: AdminUser = {
+    id: 2,
+    name: "Charlie",
+    email: "charlie@example.com",
+    createdAt: new Date(),
+    role: "admin",
+    permissions: ["read", "write", "delete"]
+};`,
+              language: 'typescript',
+              explanation: 'Interfaces define the required shape of an object. Mark optional properties with ?. readonly prevents reassignment after creation. Use extends to build on an existing interface.'
+            },
+            {
+              title: 'Type Aliases',
+              code: `// Type alias for a primitive union
+type ID = string | number;
+type Status = "active" | "inactive" | "pending";
+
+let userId: ID = 42;
+userId = "abc123";   // OK
+
+let status: Status = "active";
+status = "deleted";  // Error: not in the union
+
+// Type alias for an object shape
+type Point = {
+    x: number;
+    y: number;
+};
+
+const origin: Point = { x: 0, y: 0 };
+
+// Type alias for a function signature
+type Callback = (error: string | null, result: string) => void;
+
+function fetchData(url: string, callback: Callback): void {
+    // ... fetch logic
+}
+
+// Interface vs Type Alias - both work for object shapes
+interface IProduct {
+    id: number;
+    name: string;
+    price: number;
+}
+
+type TProduct = {
+    id: number;
+    name: string;
+    price: number;
+};`,
+              language: 'typescript',
+              explanation: 'Type aliases use the type keyword. Use them for unions, primitives, and function signatures. For object shapes, both interface and type work — prefer interface when you may need to extend it.'
+            }
+          ],
+          comparison: {
+            title: 'Interface vs Type Alias',
+            options: [
+              {
+                name: 'Interface',
+                description: 'Defines the shape of an object; can be extended and declaration-merged',
+                whenToUse: 'Object shapes, class contracts, when you need extends',
+                example: 'interface User { name: string; age: number; }'
+              },
+              {
+                name: 'Type Alias',
+                description: 'Names any type expression, including unions and primitives',
+                whenToUse: 'Union types, primitives, function signatures, tuples',
+                example: 'type ID = string | number;'
+              }
+            ]
+          }
+        },
+        {
+          id: 'typed-functions',
+          title: 'Typed Functions',
+          description: 'Adding type annotations to function parameters and return values',
+          keyPoints: [
+            'Annotate each parameter with its expected type',
+            'Annotate the return type after the closing parenthesis',
+            'Optional parameters use ? and must come after required ones',
+            'Default parameters work the same as in JavaScript',
+            'TypeScript infers return types, but being explicit is clearer'
+          ],
+          codeExamples: [
+            {
+              title: 'Parameter and Return Types',
+              code: `// Basic typed function
+function add(a: number, b: number): number {
+    return a + b;
+}
+
+add(5, 10);    // OK: 15
+add("5", 10);  // Error: string not assignable to number
+
+// Optional parameters
+function greet(name: string, greeting?: string): string {
+    return \`\${greeting ?? "Hello"}, \${name}!\`;
+}
+
+greet("Alice");            // "Hello, Alice!"
+greet("Bob", "Welcome");   // "Welcome, Bob!"
+
+// Default parameters
+function createUser(name: string, role: string = "user"): object {
+    return { name, role };
+}
+
+createUser("Alice");            // { name: "Alice", role: "user" }
+createUser("Charlie", "admin"); // { name: "Charlie", role: "admin" }
+
+// Arrow functions with types
+const multiply = (a: number, b: number): number => a * b;
+
+// Function with no return value
+function logError(message: string): void {
+    console.error("Error:", message);
+}`,
+              language: 'typescript',
+              explanation: 'Type each parameter after its name with a colon. Specify the return type after the closing parenthesis. Optional params use ?, default params use =. void means the function returns nothing.'
+            },
+            {
+              title: 'Functions with Interfaces',
+              code: `interface Product {
+    id: number;
+    name: string;
+    price: number;
+    inStock: boolean;
+}
+
+// Function that accepts and returns a typed object
+function applyDiscount(product: Product, percent: number): Product {
+    return {
+        ...product,
+        price: product.price * (1 - percent / 100)
+    };
+}
+
+const shirt: Product = { id: 1, name: "Shirt", price: 29.99, inStock: true };
+const saleShirt = applyDiscount(shirt, 20);
+console.log(saleShirt.price);  // 23.992
+
+// Typing arrays of objects
+function getInStockItems(products: Product[]): Product[] {
+    return products.filter(p => p.inStock);
+}
+
+// Function types inside an interface
+interface Cart {
+    items: Product[];
+    total: number;
+    addItem: (product: Product) => void;
+    removeItem: (id: number) => void;
+}`,
+              language: 'typescript',
+              explanation: 'Pass interfaces as parameter types and return types to ensure objects have the correct shape. Spread (...product) works identically to JavaScript. Function signatures inside interfaces describe methods on objects.'
+            }
+          ]
         }
       ]
     }

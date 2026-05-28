@@ -47,6 +47,391 @@ export const levelThree: Level = {
   description: 'Advanced Javascript Frameworks - React, Next.js',
   weeks: [
     {
+      id: 'level-3-week-0',
+      weekNumber: 0,
+      title: 'Frameworks & Libraries',
+      description: 'What frameworks and libraries are, why they exist, and how React and Next.js fit into the modern web development landscape',
+      concepts: [
+        {
+          id: 'libraries-vs-frameworks',
+          title: 'Libraries vs Frameworks',
+          description: 'The difference between a library and a framework, and why the distinction matters',
+          keyPoints: [
+            'A library is a collection of reusable code you call from your own code',
+            'A framework is a structure that calls your code — it defines the rules of the application',
+            'The key difference is "Inversion of Control": with a framework, the framework is in charge',
+            'Libraries give you tools; frameworks give you an entire workflow and architecture',
+            'React is technically a library; Next.js is a framework built on top of React'
+          ],
+          codeExamples: [
+            {
+              title: 'Library vs Framework in Practice',
+              code: `// LIBRARY — you are in control, you call it when you want
+// Example: using the lodash utility library
+import _ from 'lodash';
+
+const numbers = [1, 2, 3, 4, 5];
+const doubled = _.map(numbers, n => n * 2);  // you decide when to call it
+console.log(doubled);  // [2, 4, 6, 8, 10]
+
+// You could also just write this without lodash — it's optional.
+// Libraries are helpers. You pick them up and put them down.
+
+// ---
+
+// FRAMEWORK — the framework is in control, it calls your code
+// Example: Next.js App Router
+// next.js calls this function when a user visits /about
+export default function AboutPage() {
+  return <h1>About Us</h1>;
+}
+// You don't call AboutPage() yourself — Next.js does,
+// when it decides the time is right (when the route is matched).
+// The framework defines the rules; you fill in the blanks.`,
+              language: 'typescript',
+              explanation: 'With a library you call the code. With a framework the framework calls your code — this is called Inversion of Control. Frameworks trade flexibility for structure and speed. Libraries trade structure for freedom.'
+            },
+            {
+              title: 'Why Use a Framework at All?',
+              code: `// Without a framework: you build everything from scratch
+// - How do you handle routing? (/home, /about, /users/42)
+// - How do you update the UI when data changes?
+// - How do you split code into reusable pieces?
+// - How do you optimise images, fonts, and loading speed?
+// - How do you handle server-side vs client-side rendering?
+
+// Vanilla JS solution (manual, repetitive):
+document.getElementById('app').innerHTML = \`
+  <h1>\${user.name}</h1>
+  <p>\${user.email}</p>
+\`;
+// Problem: re-renders the whole DOM, no reusability,
+// hard to manage as the app grows.
+
+// With React (framework approach):
+function UserCard({ user }) {
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
+    </div>
+  );
+}
+// Reusable, declarative, React handles the DOM updates efficiently.`,
+              language: 'typescript',
+              explanation: 'As applications grow, manually managing the DOM, routing, and data becomes unmanageable. Frameworks solve these recurring problems with tested, consistent patterns so you can focus on building features instead of infrastructure.'
+            }
+          ],
+          comparison: {
+            title: 'Library vs Framework',
+            options: [
+              {
+                name: 'Library',
+                description: 'A toolkit — you call it from your own code when you need it',
+                whenToUse: 'Adding specific functionality (utility functions, date formatting, HTTP requests)',
+                example: 'lodash, axios, date-fns — you import and call them yourself'
+              },
+              {
+                name: 'Framework',
+                description: 'A full structure — it calls your code and defines how the app is built',
+                whenToUse: 'Building a full application with routing, state, rendering, etc.',
+                example: 'Next.js calls your page components, defines your file structure'
+              }
+            ]
+          }
+        },
+        {
+          id: 'what-is-react',
+          title: 'What is React?',
+          description: 'React is a JavaScript library for building user interfaces out of reusable components',
+          keyPoints: [
+            'React was created by Facebook (Meta) and open-sourced in 2013',
+            'It lets you build UIs out of small, reusable pieces called components',
+            'React uses a declarative approach — you describe what the UI should look like, not how to update it',
+            'The Virtual DOM makes React fast — it calculates the minimum changes needed before touching the real DOM',
+            'React is the most widely used UI library in the world'
+          ],
+          codeExamples: [
+            {
+              title: 'Your First React Component',
+              code: `// A React component is just a function that returns JSX
+// JSX looks like HTML but it's actually JavaScript
+
+function Greeting({ name }) {
+  return (
+    <div>
+      <h1>Hello, {name}!</h1>
+      <p>Welcome to React.</p>
+    </div>
+  );
+}
+
+// Use it like an HTML tag
+function App() {
+  return (
+    <div>
+      <Greeting name="Alice" />
+      <Greeting name="Bob" />
+      <Greeting name="Charlie" />
+    </div>
+  );
+}
+
+// React renders these components into real DOM elements.
+// Each <Greeting /> is an independent, reusable piece of UI.`,
+              language: 'tsx',
+              explanation: 'A React component is a function that accepts props (inputs) and returns JSX (UI). You compose pages by nesting components inside each other — exactly like HTML tags, but you define them yourself. The same Greeting component is reused three times with different data.'
+            },
+            {
+              title: 'React State — Making UIs Interactive',
+              code: `'use client';
+import { useState } from 'react';
+
+// useState lets a component remember and update values
+function Counter() {
+  const [count, setCount] = useState(0);  // start at 0
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+
+// When setCount is called, React automatically re-renders
+// the component with the new value — you never touch the DOM directly.
+// This is what "declarative" means: you describe the desired state,
+// React figures out how to update the page.`,
+              language: 'tsx',
+              explanation: 'useState is the hook that makes React components interactive. When state changes, React re-renders only the components that need to update. You never manually update the DOM — React handles that entirely.'
+            }
+          ],
+          comparison: {
+            title: 'Vanilla JS vs React',
+            options: [
+              {
+                name: 'Vanilla JavaScript',
+                description: 'Imperative — you tell the DOM exactly what to do step by step',
+                whenToUse: 'Small scripts, simple pages with minimal interactivity',
+                example: 'document.getElementById("count").textContent = count + 1'
+              },
+              {
+                name: 'React',
+                description: 'Declarative — you describe what the UI should look like for a given state',
+                whenToUse: 'Any app with dynamic data, multiple views, or shared state',
+                example: '<p>Count: {count}</p> — React updates the DOM automatically'
+              }
+            ]
+          }
+        },
+        {
+          id: 'what-is-nextjs',
+          title: 'What is Next.js?',
+          description: 'Next.js is a React framework that adds routing, server-side rendering, and production optimisations on top of React',
+          keyPoints: [
+            'Next.js is built on top of React — everything you know about React still applies',
+            'It provides a file-based routing system — your folder structure becomes your URL structure',
+            'Next.js can render pages on the server (SSR), at build time (SSG), or in the browser (CSR)',
+            'It includes built-in optimisations for images, fonts, and code splitting',
+            'The App Router (introduced in Next.js 13) uses React Server Components by default'
+          ],
+          codeExamples: [
+            {
+              title: 'File-Based Routing',
+              code: `// Next.js App Router — your file structure IS your routes
+//
+// app/
+// ├── page.tsx              → renders at /
+// ├── about/
+// │   └── page.tsx          → renders at /about
+// ├── blog/
+// │   ├── page.tsx          → renders at /blog
+// │   └── [slug]/
+// │       └── page.tsx      → renders at /blog/any-post-title
+// └── dashboard/
+//     ├── layout.tsx        → shared layout for all dashboard pages
+//     └── page.tsx          → renders at /dashboard
+
+// app/about/page.tsx
+export default function AboutPage() {
+  return (
+    <main>
+      <h1>About Us</h1>
+      <p>We build great software.</p>
+    </main>
+  );
+}
+// No router config needed — creating the file is enough.`,
+              language: 'tsx',
+              explanation: 'In Next.js you don\'t configure routes in a separate file. You create a folder and add a page.tsx file — that\'s your route. Dynamic segments use [brackets]. layout.tsx wraps all pages in a directory with shared UI like navbars.'
+            },
+            {
+              title: 'Server vs Client Components',
+              code: `// SERVER COMPONENT (default in Next.js App Router)
+// Runs on the server — can fetch data directly, never sent to browser
+// app/products/page.tsx
+async function ProductsPage() {
+  // This fetch runs on the server — no API key exposed to the browser
+  const res = await fetch('https://api.example.com/products');
+  const products = await res.json();
+
+  return (
+    <ul>
+      {products.map(p => <li key={p.id}>{p.name}</li>)}
+    </ul>
+  );
+}
+
+export default ProductsPage;
+
+// ---
+
+// CLIENT COMPONENT — runs in the browser, can use hooks and events
+// Add 'use client' at the top to opt in
+'use client';
+import { useState } from 'react';
+
+function SearchBar() {
+  const [query, setQuery] = useState('');
+  return (
+    <input
+      value={query}
+      onChange={e => setQuery(e.target.value)}
+      placeholder="Search..."
+    />
+  );
+}`,
+              language: 'tsx',
+              explanation: 'Next.js App Router introduces Server Components — they run only on the server, so they can fetch data and access secrets without exposing them to users. Client Components (marked with "use client") run in the browser and handle interactivity. You mix both in the same app.'
+            }
+          ],
+          comparison: {
+            title: 'React vs Next.js',
+            options: [
+              {
+                name: 'React',
+                description: 'UI library — components, state, and rendering only',
+                whenToUse: 'When you want full control and will wire up routing/data yourself',
+                example: 'Create React App, Vite + React — client-side only by default'
+              },
+              {
+                name: 'Next.js',
+                description: 'Full framework — React + routing + SSR + optimisations + API routes',
+                whenToUse: 'Most production web apps — especially when SEO or performance matters',
+                example: 'File-based routes, Server Components, built-in Image optimisation'
+              }
+            ]
+          }
+        },
+        {
+          id: 'react-nextjs-ecosystem',
+          title: 'The React & Next.js Ecosystem',
+          description: 'The tools and libraries that surround React and Next.js in real-world projects',
+          keyPoints: [
+            'React and Next.js are at the centre of a rich ecosystem of supporting libraries',
+            'Styling: Tailwind CSS (utility classes), CSS Modules, styled-components',
+            'State management: useState for local state, Zustand or Redux for global state',
+            'Data fetching: fetch (built-in), React Query / TanStack Query for caching',
+            'UI components: shadcn/ui, Radix UI, Headless UI — unstyled, accessible building blocks'
+          ],
+          codeExamples: [
+            {
+              title: 'A Typical Next.js Project Stack',
+              code: `// package.json — what a real Next.js project looks like
+{
+  "dependencies": {
+    "next": "^14.0.0",          // the framework
+    "react": "^18.0.0",         // the UI library
+    "react-dom": "^18.0.0",     // React for the browser
+
+    // Styling
+    "tailwindcss": "^3.0.0",    // utility-first CSS
+
+    // UI components
+    "@radix-ui/react-dialog": "^1.0.0",  // accessible modal
+    "lucide-react": "^0.400.0",           // icons
+
+    // Data fetching
+    "@tanstack/react-query": "^5.0.0",   // server state management
+
+    // Forms
+    "react-hook-form": "^7.0.0",         // form state & validation
+    "zod": "^3.0.0"                       // schema validation
+  }
+}`,
+              language: 'json',
+              explanation: 'Most Next.js projects combine a small set of well-maintained libraries. Tailwind for styling, Radix/shadcn for components, TanStack Query for data fetching, and Zod for validation. React and Next.js form the core; everything else is optional.'
+            },
+            {
+              title: 'How It All Connects',
+              code: `// A Next.js page that uses the full stack together
+import { Suspense } from 'react';
+import ProductCard from '@/components/ProductCard';  // your React component
+import SearchBar from '@/components/SearchBar';       // client component
+
+// Server Component — fetches data on the server
+async function ProductsPage() {
+  const products = await fetch('/api/products').then(r => r.json());
+
+  return (
+    <main className="p-8">                    {/* Tailwind CSS */}
+      <h1 className="text-3xl font-bold mb-6">Products</h1>
+
+      <SearchBar />                            {/* Client component */}
+
+      <div className="grid grid-cols-3 gap-4">
+        {products.map(product => (
+          <ProductCard                         {/* Reusable React component */}
+            key={product.id}
+            product={product}
+          />
+        ))}
+      </div>
+    </main>
+  );
+}
+
+export default ProductsPage;`,
+              language: 'tsx',
+              explanation: 'This shows how all the pieces fit: Next.js handles routing and server rendering, React provides the component model, Tailwind provides styling via class names, and your own components handle reusable UI. Server and Client Components are mixed on the same page.'
+            }
+          ],
+          comparison: {
+            title: 'Popular Frontend Frameworks Compared',
+            options: [
+              {
+                name: 'Next.js (React)',
+                description: 'Most popular, huge ecosystem, excellent for full-stack apps and SSR',
+                whenToUse: 'Production web apps, e-commerce, dashboards, marketing sites',
+                example: 'Used by Vercel, Shopify storefronts, major SaaS products'
+              },
+              {
+                name: 'Remix (React)',
+                description: 'Full-stack React framework focused on web standards and fast data loading',
+                whenToUse: 'Data-heavy apps with complex nested routing',
+                example: 'Form handling and data mutation with built-in loaders/actions'
+              },
+              {
+                name: 'Vue / Nuxt',
+                description: 'Vue.js UI library with Nuxt as its framework equivalent to Next.js',
+                whenToUse: 'Teams that prefer Vue\'s template-based syntax over JSX',
+                example: '<template> blocks instead of JSX; similar concepts to React'
+              },
+              {
+                name: 'SvelteKit',
+                description: 'Compiles components to vanilla JS — no virtual DOM, very fast',
+                whenToUse: 'Performance-critical apps or developers who prefer less boilerplate',
+                example: 'Reactive assignments with $: instead of useState'
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
       id: 'level-3-week-1',
       weekNumber: 1,
       title: 'React Hooks & Next.js Routing',

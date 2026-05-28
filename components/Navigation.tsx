@@ -15,7 +15,7 @@ export default function Navigation() {
   const navLinks = [
     { href: '/', label: 'Home', icon: <Home className="h-4 w-4" /> },
     { href: '/decks', label: 'All Decks', icon: <Library className="h-4 w-4" /> },
-    { href: '/concepts', label: 'Weekly Concepts', icon: <Lightbulb className="h-4 w-4" /> },
+    { href: '/concepts', label: 'CSA Concepts', icon: <Lightbulb className="h-4 w-4" /> },
   ];
 
   return (

@@ -53,6 +53,259 @@ export const learningLevels: Level[] = [
     description: 'Master the fundamentals of C# programming - variables, control flow, data structures, and object-oriented basics',
     weeks: [
       {
+        id: 'Combine-week-0',
+        weekNumber: 0,
+        title: 'What is C#?',
+        description: 'An introduction to C#, the .NET ecosystem, and what you can build with the language',
+        concepts: [
+          {
+            id: 'csharp-overview',
+            title: 'What is C#?',
+            description: 'C# is a modern, object-oriented programming language developed by Microsoft as part of the .NET platform',
+            keyPoints: [
+              'C# was created by Anders Hejlsberg at Microsoft and released in 2000',
+              'It is a statically typed, compiled language — types are checked before the program runs',
+              'C# runs on the .NET runtime (CLR), which handles memory and execution',
+              'The language is strongly influenced by Java and C++, but with modern additions',
+              'C# is continuously updated — as of 2024 it is on version 13'
+            ],
+            codeExamples: [
+              {
+                title: 'Hello, World!',
+                code: `// The classic first program in C#
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Hello, World!");
+    }
+}
+
+// With top-level statements (C# 9+, no class/Main boilerplate needed)
+Console.WriteLine("Hello, World!");`,
+                language: 'csharp',
+                explanation: 'Every C# program starts execution in Main(). The using System; directive imports the System namespace, which contains Console. C# 9 introduced top-level statements so you can skip the class/Main boilerplate for simple programs.'
+              },
+              {
+                title: 'How C# Code Runs',
+                code: `// 1. You write C# source code (.cs files)
+// 2. The C# compiler (Roslyn) compiles it to Intermediate Language (IL)
+// 3. The .NET CLR (Common Language Runtime) runs the IL
+
+// The .NET SDK gives you everything you need:
+// dotnet new console -n MyApp    <- create a new console project
+// dotnet run                      <- compile and run
+// dotnet build                    <- compile only
+
+// A minimal .csproj (project file)
+/*
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+</Project>
+*/`,
+                language: 'csharp',
+                explanation: 'C# source files (.cs) are compiled by the Roslyn compiler into Intermediate Language (IL), then executed by the CLR. The dotnet CLI handles creating, building, and running projects. The .csproj file configures your project.'
+              }
+            ],
+            comparison: {
+              title: 'C# vs Other Languages',
+              options: [
+                {
+                  name: 'C#',
+                  description: 'Statically typed, compiled to IL, runs on .NET CLR',
+                  whenToUse: 'Enterprise apps, games (Unity), Windows desktop, ASP.NET web APIs',
+                  example: 'int x = 5; // type declared at compile time'
+                },
+                {
+                  name: 'JavaScript',
+                  description: 'Dynamically typed, interpreted, runs in browser/Node.js',
+                  whenToUse: 'Web frontends, full-stack web with Node.js',
+                  example: 'let x = 5; // type inferred at runtime'
+                },
+                {
+                  name: 'Python',
+                  description: 'Dynamically typed, interpreted, concise syntax',
+                  whenToUse: 'Data science, scripting, machine learning',
+                  example: 'x = 5 # no type declaration needed'
+                },
+                {
+                  name: 'Java',
+                  description: 'Statically typed, compiled to bytecode, runs on JVM',
+                  whenToUse: 'Android development, enterprise backend services',
+                  example: 'int x = 5; // nearly identical to C#'
+                }
+              ]
+            }
+          },
+          {
+            id: 'csharp-use-cases',
+            title: 'What is C# Used For?',
+            description: 'The major domains and industries where C# is the language of choice',
+            keyPoints: [
+              'Game development — C# is the scripting language for Unity, the world\'s most popular game engine',
+              'Web APIs and backend services — ASP.NET Core is a fast, cross-platform web framework',
+              'Windows desktop applications — WPF and WinForms for native Windows UIs',
+              'Cross-platform mobile apps — .NET MAUI targets iOS, Android, and Windows from one codebase',
+              'Enterprise software — widely used in banking, healthcare, and large-scale business systems'
+            ],
+            codeExamples: [
+              {
+                title: 'C# in Game Development (Unity)',
+                code: `// Unity MonoBehaviour script — C# is used for all game logic
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    public float speed = 5f;
+
+    void Update()
+    {
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(moveX, 0, moveZ) * speed * Time.deltaTime;
+        transform.Translate(movement);
+    }
+}`,
+                language: 'csharp',
+                explanation: 'In Unity, every game object behavior is written in C#. MonoBehaviour is the base class. Update() runs every frame. This script moves a player based on keyboard input.'
+              },
+              {
+                title: 'C# for Web APIs (ASP.NET Core)',
+                code: `// A minimal ASP.NET Core Web API
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// Define a GET endpoint
+app.MapGet("/hello", () => "Hello from C#!");
+
+// Return JSON data
+app.MapGet("/users/{id}", (int id) =>
+{
+    var user = new { Id = id, Name = "Alice", Email = "alice@example.com" };
+    return Results.Ok(user);
+});
+
+app.Run();`,
+                language: 'csharp',
+                explanation: 'ASP.NET Core lets you build fast web APIs with minimal setup. MapGet/MapPost define HTTP endpoints. The minimal API style (C# 10+) removes most boilerplate. This powers the backend of many production web applications.'
+              },
+              {
+                title: 'C# for Desktop Apps (WPF)',
+                code: `// WPF code-behind for a simple desktop window
+using System.Windows;
+
+namespace MyApp
+{
+    public partial class MainWindow : Window
+    {
+        private int _clickCount = 0;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _clickCount++;
+            MessageBox.Show($"Button clicked {_clickCount} time(s)!");
+        }
+    }
+}`,
+                language: 'csharp',
+                explanation: 'WPF (Windows Presentation Foundation) is used to build native Windows desktop applications. The UI is defined in XAML and the logic lives in a code-behind C# file. WinForms is an older, simpler alternative for desktop UIs.'
+              }
+            ]
+          },
+          {
+            id: 'dotnet-ecosystem',
+            title: 'The .NET Ecosystem',
+            description: 'Understanding the platform and tools that C# runs on',
+            keyPoints: [
+              '.NET is Microsoft\'s free, open-source, cross-platform runtime and framework',
+              'The CLR (Common Language Runtime) executes C# code and manages memory via garbage collection',
+              'NuGet is the package manager for .NET — like npm for JavaScript',
+              'The .NET BCL (Base Class Library) provides thousands of built-in classes',
+              'Visual Studio and VS Code (with C# Dev Kit) are the primary editors'
+            ],
+            codeExamples: [
+              {
+                title: 'Using NuGet Packages',
+                code: `// Add a package via the dotnet CLI
+// dotnet add package Newtonsoft.Json
+
+using Newtonsoft.Json;
+
+// Serialize an object to JSON
+var person = new { Name = "Alice", Age = 25 };
+string json = JsonConvert.SerializeObject(person);
+Console.WriteLine(json);  // {"Name":"Alice","Age":25}
+
+// Deserialize JSON back to an object
+string data = "{\"Name\":\"Bob\",\"Age\":30}";
+var result = JsonConvert.DeserializeObject<dynamic>(data);
+Console.WriteLine(result.Name);  // Bob`,
+                language: 'csharp',
+                explanation: 'NuGet is to C# what npm is to JavaScript. Use "dotnet add package <name>" to install a package. Packages are defined in the .csproj file and restored automatically when you build.'
+              },
+              {
+                title: 'Common .NET Namespaces',
+                code: `using System;                    // Core types: Console, Math, DateTime, Exception
+using System.Collections.Generic; // List<T>, Dictionary<K,V>, HashSet<T>
+using System.Linq;                 // LINQ query methods: Where, Select, OrderBy
+using System.IO;                   // File, Directory, Stream, StreamReader
+using System.Net.Http;             // HttpClient for HTTP requests
+using System.Text.Json;            // Built-in JSON serialization
+using System.Threading.Tasks;      // async/await, Task<T>
+
+// Example: reading a file with System.IO
+string content = File.ReadAllText("data.txt");
+Console.WriteLine(content);
+
+// Example: HTTP request with System.Net.Http
+var client = new HttpClient();
+string response = await client.GetStringAsync("https://api.example.com/data");
+Console.WriteLine(response);`,
+                language: 'csharp',
+                explanation: 'using directives bring namespaces into scope. The .NET BCL covers files, networking, collections, JSON, math, and much more — all without installing extra packages.'
+              }
+            ],
+            comparison: {
+              title: '.NET Versions',
+              options: [
+                {
+                  name: '.NET 8 (LTS)',
+                  description: 'Current long-term support release (2023–2026)',
+                  whenToUse: 'New projects — stable, supported, and widely used',
+                  example: '<TargetFramework>net8.0</TargetFramework>'
+                },
+                {
+                  name: '.NET Framework',
+                  description: 'The original Windows-only .NET (1.0–4.8)',
+                  whenToUse: 'Maintaining legacy Windows enterprise applications',
+                  example: '<TargetFramework>net48</TargetFramework>'
+                },
+                {
+                  name: '.NET MAUI',
+                  description: 'Cross-platform UI framework built on top of .NET',
+                  whenToUse: 'Building mobile/desktop apps from a single codebase',
+                  example: 'iOS, Android, macOS, Windows from one C# project'
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
         id: 'Combine-week-1',
         weekNumber: 1,
         title: 'C# Basics',
@@ -2294,14 +2547,217 @@ if ((health > 0 && ammo > 0) || hasShield)
                 }
               ]
             }
+          },
+          {
+            id: 'error-types',
+            title: 'Understanding Errors',
+            description: 'Different types of errors and how to identify and fix them',
+            keyPoints: [
+              'Syntax errors prevent code from compiling',
+              'Logic errors cause incorrect results',
+              'Runtime errors crash the program during execution',
+              'Loop errors cause infinite loops or wrong iterations',
+              'Read error messages carefully - they tell you what is wrong'
+            ],
+            codeExamples: [
+              {
+                title: 'Syntax Errors',
+                code: `// Missing semicolon
+int x = 5  // ERROR: ; expected
+
+// Misspelled keyword
+Int y = 10;  // ERROR: 'Int' not found (should be 'int')
+
+// Mismatched braces
+if (x > 0)
+{
+    Console.WriteLine("Positive");
+// ERROR: } expected
+
+// Wrong variable name
+int age = 25;
+Console.WriteLine(Age);  // ERROR: 'Age' not found (wrong case)
+
+// Missing closing quote
+string name = "Alice;  // ERROR: Newline in constant
+
+// These errors prevent compilation
+// Fix them before running the program`,
+                language: 'csharp',
+                explanation: 'Syntax errors are typos and grammar mistakes. The compiler catches these before running. Look at the error message and line number to find and fix them.'
+              },
+              {
+                title: 'Logic Errors',
+                code: `// Wrong operator (should be >=)
+int age = 18;
+if (age > 18)  // BUG: Excludes 18-year-olds
+{
+    Console.WriteLine("Can vote");
+}
+
+// Wrong calculation
+int total = 100;
+int discount = 20;
+int finalPrice = total + discount;  // BUG: Should be -
+
+// Off-by-one error
+int[] numbers = { 1, 2, 3, 4, 5 };
+for (int i = 0; i <= numbers.Length; i++)  // BUG: Should be <
+{
+    Console.WriteLine(numbers[i]);  // Crashes on last iteration
+}
+
+// Wrong variable
+int score1 = 85;
+int score2 = 92;
+int average = (score1 + score1) / 2;  // BUG: Used score1 twice
+
+// Logic errors compile and run
+// But produce wrong results`,
+                language: 'csharp',
+                explanation: 'Logic errors are mistakes in your thinking. The code runs but gives wrong results. Use debugging, print statements, and careful testing to find these.'
+              },
+              {
+                title: 'Runtime Errors',
+                code: `// Division by zero
+int x = 10;
+int y = 0;
+int result = x / y;  // CRASH: DivideByZeroException
+
+// Index out of bounds
+int[] numbers = { 1, 2, 3 };
+int value = numbers[5];  // CRASH: IndexOutOfRangeException
+
+// Null reference
+string name = null;
+int length = name.Length;  // CRASH: NullReferenceException
+
+// Invalid parse
+string input = "abc";
+int number = int.Parse(input);  // CRASH: FormatException
+
+// File not found
+string text = File.ReadAllText("missing.txt");  // CRASH: FileNotFoundException
+
+// Prevent with validation
+if (y != 0)
+    result = x / y;
+
+if (index < numbers.Length)
+    value = numbers[index];`,
+                language: 'csharp',
+                explanation: 'Runtime errors crash the program during execution. Prevent them with validation: check for zero before dividing, check array bounds, check for null, use TryParse.'
+              },
+              {
+                title: 'Loop Errors',
+                code: `// Infinite loop - condition never false
+int count = 0;
+while (count < 10)
+{
+    Console.WriteLine(count);
+    // BUG: Forgot to increment count
+}
+
+// Wrong increment
+for (int i = 0; i < 10; i--)  // BUG: Decrements instead of increments
+{
+    Console.WriteLine(i);  // Infinite loop
+}
+
+// Off-by-one error
+for (int i = 1; i <= 10; i++)  // BUG: Should start at 0
+{
+    Console.WriteLine(numbers[i]);  // Skips first element
+}
+
+// Wrong condition
+int[] scores = { 85, 92, 78 };
+for (int i = 0; i <= scores.Length; i++)  // BUG: Should be <
+{
+    Console.WriteLine(scores[i]);  // Crashes on last iteration
+}
+
+// Fix: Always check loop logic
+// - Does condition eventually become false?
+// - Are you incrementing/decrementing correctly?
+// - Are array indices within bounds?`,
+                language: 'csharp',
+                explanation: 'Loop errors cause infinite loops or wrong iterations. Always ensure: condition becomes false, increment/decrement is correct, array indices are valid.'
+              },
+              {
+                title: 'Debugging Techniques',
+                code: `// Use Console.WriteLine to check values
+int x = 5;
+int y = 10;
+Console.WriteLine(\`x = \${x}, y = \${y}\`);  // Check values
+
+// Check loop iterations
+for (int i = 0; i < 5; i++)
+{
+    Console.WriteLine(\`Iteration: \${i}\`);  // Track progress
+}
+
+// Validate assumptions
+if (numbers.Length > 0)
+{
+    Console.WriteLine("Array has elements");
+}
+else
+{
+    Console.WriteLine("Array is empty!");
+}
+
+// Test edge cases
+// - Empty arrays/lists
+// - Zero values
+// - Negative numbers
+// - Maximum/minimum values
+
+// Read error messages
+// - Line number tells you where
+// - Error type tells you what
+// - Message tells you why`,
+                language: 'csharp',
+                explanation: 'Debug by printing values, tracking loop iterations, and validating assumptions. Test edge cases. Read error messages carefully - they provide valuable information.'
+              }
+            ],
+            comparison: {
+              title: 'Error Types',
+              options: [
+                {
+                  name: 'Syntax Error',
+                  description: 'Typos and grammar mistakes',
+                  whenToUse: 'Caught by compiler before running',
+                  example: 'Missing semicolon, misspelled keyword, wrong case'
+                },
+                {
+                  name: 'Logic Error',
+                  description: 'Wrong algorithm or calculation',
+                  whenToUse: 'Code runs but gives wrong results',
+                  example: 'Wrong operator, off-by-one, wrong variable'
+                },
+                {
+                  name: 'Runtime Error',
+                  description: 'Crashes during execution',
+                  whenToUse: 'Invalid operation at runtime',
+                  example: 'Divide by zero, index out of bounds, null reference'
+                },
+                {
+                  name: 'Loop Error',
+                  description: 'Infinite loops or wrong iterations',
+                  whenToUse: 'Loop never ends or iterates incorrectly',
+                  example: 'Forgot to increment, wrong condition, wrong bounds'
+                }
+              ]
+            }
           }
         ]
       },
       {
         id: 'Combine-week-3',
         weekNumber: 3,
-        title: 'Arrays, Lists, Random & Errors',
-        description: 'Working with collections, generating random numbers, and understanding different types of errors',
+        title: 'Arrays, Lists & Random',
+        description: 'Working with collections and generating random numbers for games and simulations',
         concepts: [
           {
             id: 'arrays',
@@ -2627,204 +3083,432 @@ do
             ]
           },
           {
-            id: 'error-types',
-            title: 'Understanding Errors',
-            description: 'Different types of errors and how to identify and fix them',
+            id: 'unity-intro',
+            title: 'What is Unity?',
+            description: 'Unity is a cross-platform game engine that uses C# for scripting — everything you have learned applies directly here',
             keyPoints: [
-              'Syntax errors prevent code from compiling',
-              'Logic errors cause incorrect results',
-              'Runtime errors crash the program during execution',
-              'Loop errors cause infinite loops or wrong iterations',
-              'Read error messages carefully - they tell you what is wrong'
+              'Unity is the world\'s most popular game engine — used for 2D games, 3D games, AR, and VR',
+              'All game logic is written in C# scripts attached to GameObjects',
+              'Unity uses a component-based architecture — you build behaviour by attaching components',
+              'The Unity Editor lets you design scenes visually; scripts control everything at runtime',
+              'The Asset Store provides free and paid assets (models, sounds, tools) to speed up development'
             ],
             codeExamples: [
               {
-                title: 'Syntax Errors',
-                code: `// Missing semicolon
-int x = 5  // ERROR: ; expected
+                title: 'Your First Unity Script',
+                code: `// Every Unity script inherits from MonoBehaviour
+using UnityEngine;
 
-// Misspelled keyword
-Int y = 10;  // ERROR: 'Int' not found (should be 'int')
-
-// Mismatched braces
-if (x > 0)
+public class HelloUnity : MonoBehaviour
 {
-    Console.WriteLine("Positive");
-// ERROR: } expected
+    // Start() runs once when the GameObject is first enabled
+    void Start()
+    {
+        Debug.Log("Hello from Unity!");  // Prints to the Console window
+    }
 
-// Wrong variable name
-int age = 25;
-Console.WriteLine(Age);  // ERROR: 'Age' not found (wrong case)
+    // Update() runs every frame (~60 times per second)
+    void Update()
+    {
+        // Game logic that runs continuously goes here
+    }
+}
 
-// Missing closing quote
-string name = "Alice;  // ERROR: Newline in constant
-
-// These errors prevent compilation
-// Fix them before running the program`,
+// To use this script:
+// 1. Create it in the Project window: right-click → Create → C# Script
+// 2. Drag and drop it onto any GameObject in the scene
+// 3. Press Play — Start() fires once, Update() fires every frame`,
                 language: 'csharp',
-                explanation: 'Syntax errors are typos and grammar mistakes. The compiler catches these before running. Look at the error message and line number to find and fix them.'
+                explanation: 'Every Unity script inherits from MonoBehaviour and is attached to a GameObject. Start() is your setup code. Update() is your game loop. Debug.Log() is your Console.WriteLine() inside Unity.'
               },
               {
-                title: 'Logic Errors',
-                code: `// Wrong operator (should be >=)
-int age = 18;
-if (age > 18)  // BUG: Excludes 18-year-olds
-{
-    Console.WriteLine("Can vote");
-}
+                title: 'The Unity Editor Layout',
+                code: `// The 5 main Unity Editor windows:
 
-// Wrong calculation
-int total = 100;
-int discount = 20;
-int finalPrice = total + discount;  // BUG: Should be -
+// 1. Scene View
+//    - Visual editor where you place and arrange GameObjects
+//    - Like a 3D canvas for your level design
 
-// Off-by-one error
-int[] numbers = { 1, 2, 3, 4, 5 };
-for (int i = 0; i <= numbers.Length; i++)  // BUG: Should be <
-{
-    Console.WriteLine(numbers[i]);  // Crashes on last iteration
-}
+// 2. Game View
+//    - Preview of what the player sees through the Camera
+//    - Press Play to run the game here
 
-// Wrong variable
-int score1 = 85;
-int score2 = 92;
-int average = (score1 + score1) / 2;  // BUG: Used score1 twice
+// 3. Hierarchy Window
+//    - Lists all GameObjects in the current scene
+//    - Parent-child relationships shown as tree structure
 
-// Logic errors compile and run
-// But produce wrong results`,
+// 4. Inspector Window
+//    - Shows all components attached to selected GameObject
+//    - Edit values (position, speed, color) without changing code
+
+// 5. Project Window
+//    - Your file system: scripts, models, textures, sounds
+//    - Drag assets from here into the Scene or Inspector
+
+// Key shortcut: Press WASD + right-click in Scene View to fly around`,
                 language: 'csharp',
-                explanation: 'Logic errors are mistakes in your thinking. The code runs but gives wrong results. Use debugging, print statements, and careful testing to find these.'
-              },
-              {
-                title: 'Runtime Errors',
-                code: `// Division by zero
-int x = 10;
-int y = 0;
-int result = x / y;  // CRASH: DivideByZeroException
-
-// Index out of bounds
-int[] numbers = { 1, 2, 3 };
-int value = numbers[5];  // CRASH: IndexOutOfRangeException
-
-// Null reference
-string name = null;
-int length = name.Length;  // CRASH: NullReferenceException
-
-// Invalid parse
-string input = "abc";
-int number = int.Parse(input);  // CRASH: FormatException
-
-// File not found
-string text = File.ReadAllText("missing.txt");  // CRASH: FileNotFoundException
-
-// Prevent with validation
-if (y != 0)
-    result = x / y;
-
-if (index < numbers.Length)
-    value = numbers[index];`,
-                language: 'csharp',
-                explanation: 'Runtime errors crash the program during execution. Prevent them with validation: check for zero before dividing, check array bounds, check for null, use TryParse.'
-              },
-              {
-                title: 'Loop Errors',
-                code: `// Infinite loop - condition never false
-int count = 0;
-while (count < 10)
-{
-    Console.WriteLine(count);
-    // BUG: Forgot to increment count
-}
-
-// Wrong increment
-for (int i = 0; i < 10; i--)  // BUG: Decrements instead of increments
-{
-    Console.WriteLine(i);  // Infinite loop
-}
-
-// Off-by-one error
-for (int i = 1; i <= 10; i++)  // BUG: Should start at 0
-{
-    Console.WriteLine(numbers[i]);  // Skips first element
-}
-
-// Wrong condition
-int[] scores = { 85, 92, 78 };
-for (int i = 0; i <= scores.Length; i++)  // BUG: Should be <
-{
-    Console.WriteLine(scores[i]);  // Crashes on last iteration
-}
-
-// Fix: Always check loop logic
-// - Does condition eventually become false?
-// - Are you incrementing/decrementing correctly?
-// - Are array indices within bounds?`,
-                language: 'csharp',
-                explanation: 'Loop errors cause infinite loops or wrong iterations. Always ensure: condition becomes false, increment/decrement is correct, array indices are valid.'
-              },
-              {
-                title: 'Debugging Techniques',
-                code: `// Use Console.WriteLine to check values
-int x = 5;
-int y = 10;
-Console.WriteLine(\`x = \${x}, y = \${y}\`);  // Check values
-
-// Check loop iterations
-for (int i = 0; i < 5; i++)
-{
-    Console.WriteLine(\`Iteration: \${i}\`);  // Track progress
-}
-
-// Validate assumptions
-if (numbers.Length > 0)
-{
-    Console.WriteLine("Array has elements");
-}
-else
-{
-    Console.WriteLine("Array is empty!");
-}
-
-// Test edge cases
-// - Empty arrays/lists
-// - Zero values
-// - Negative numbers
-// - Maximum/minimum values
-
-// Read error messages
-// - Line number tells you where
-// - Error type tells you what
-// - Message tells you why`,
-                language: 'csharp',
-                explanation: 'Debug by printing values, tracking loop iterations, and validating assumptions. Test edge cases. Read error messages carefully - they provide valuable information.'
+                explanation: 'The Unity Editor has 5 main windows. The Hierarchy lists your GameObjects, Inspector shows their components, Scene View is your visual editor, Game View is the player\'s perspective, and Project is your asset library.'
               }
             ],
             comparison: {
-              title: 'Error Types',
+              title: 'Unity vs Console App',
               options: [
                 {
-                  name: 'Syntax Error',
-                  description: 'Typos and grammar mistakes',
-                  whenToUse: 'Caught by compiler before running',
-                  example: 'Missing semicolon, misspelled keyword, wrong case'
+                  name: 'Console App',
+                  description: 'Runs top to bottom, you control the loop with while/for',
+                  whenToUse: 'Learning C#, command-line tools, backend services',
+                  example: 'while(true) { GetInput(); UpdateGame(); DrawGame(); }'
                 },
                 {
-                  name: 'Logic Error',
-                  description: 'Wrong algorithm or calculation',
-                  whenToUse: 'Code runs but gives wrong results',
-                  example: 'Wrong operator, off-by-one, wrong variable'
+                  name: 'Unity',
+                  description: 'Unity runs the game loop — you just fill in Start() and Update()',
+                  whenToUse: '2D/3D games, simulations, interactive experiences',
+                  example: 'void Update() { // Unity calls this 60x per second }'
+                }
+              ]
+            }
+          },
+          {
+            id: 'unity-monobehaviour',
+            title: 'MonoBehaviour & Lifecycle Methods',
+            description: 'The key methods Unity calls automatically at different points in a GameObject\'s life',
+            keyPoints: [
+              'Awake() runs first — before Start() — even if the component is disabled',
+              'Start() runs once on the first frame the component is enabled — use it for setup',
+              'Update() runs every frame — use it for input, movement, and game logic',
+              'FixedUpdate() runs at a fixed timestep — always use this for physics calculations',
+              'OnDestroy() runs when the GameObject is destroyed — use it for cleanup'
+            ],
+            codeExamples: [
+              {
+                title: 'Lifecycle Method Order',
+                code: `using UnityEngine;
+
+public class LifecycleDemo : MonoBehaviour
+{
+    // 1. Called first — even before Start, even if disabled
+    void Awake()
+    {
+        Debug.Log("Awake — find references, initialise fields");
+        // Good for: GetComponent<>(), setting up references
+    }
+
+    // 2. Called on the first active frame
+    void Start()
+    {
+        Debug.Log("Start — everything is initialised, safe to use");
+        // Good for: setup that depends on other objects being ready
+    }
+
+    // 3. Called every frame
+    void Update()
+    {
+        Debug.Log("Update — runs ~60 times per second");
+        // Good for: reading input, moving non-physics objects, timers
+    }
+
+    // 4. Called at fixed intervals (default: 50 times/sec)
+    void FixedUpdate()
+    {
+        // Good for: Rigidbody physics — never put physics here in Update
+    }
+
+    // 5. Called after all Updates — good for cameras
+    void LateUpdate()
+    {
+        // Good for: camera follow (after player has moved)
+    }
+
+    // 6. Called when the object is destroyed
+    void OnDestroy()
+    {
+        Debug.Log("Cleaned up!");
+    }
+}`,
+                language: 'csharp',
+                explanation: 'Awake → Start → Update (every frame) → FixedUpdate (fixed step) → LateUpdate → OnDestroy. Use Start for setup, Update for input/movement, FixedUpdate for physics. LateUpdate is ideal for camera scripts that follow a player.'
+              },
+              {
+                title: 'Using Time.deltaTime',
+                code: `using UnityEngine;
+
+public class SmoothMovement : MonoBehaviour
+{
+    public float speed = 5f;
+
+    void Update()
+    {
+        // WRONG — moves faster on high frame-rate machines
+        transform.position += new Vector3(0.1f, 0, 0);
+
+        // CORRECT — multiply by Time.deltaTime to make frame-rate independent
+        // Time.deltaTime = time in seconds since the last frame
+        // At 60fps: deltaTime ≈ 0.016s  →  5 * 0.016 = 0.08 units/frame
+        // At 30fps: deltaTime ≈ 0.033s  →  5 * 0.033 = 0.16 units/frame
+        // Both travel the same distance per second!
+
+        float step = speed * Time.deltaTime;
+        transform.position += new Vector3(step, 0, 0);
+    }
+}`,
+                language: 'csharp',
+                explanation: 'Always multiply movement and animation speeds by Time.deltaTime in Update(). This makes your game run at the same speed regardless of frame rate. Without it, high-end machines move objects faster than low-end ones.'
+              }
+            ]
+          },
+          {
+            id: 'unity-gameobjects-components',
+            title: 'GameObjects & Components',
+            description: 'Everything in a Unity scene is a GameObject — components give it behaviour, appearance, and physics',
+            keyPoints: [
+              'A GameObject is a container — it does nothing by itself until you add components',
+              'Every GameObject has a Transform component — it defines position, rotation, and scale',
+              'Add components in the Inspector (Rigidbody, Collider, Camera, AudioSource, etc.)',
+              'Access components in code with GetComponent<T>()',
+              'You can parent GameObjects — children inherit the parent\'s transform movement'
+            ],
+            codeExamples: [
+              {
+                title: 'GetComponent — Accessing Other Components',
+                code: `using UnityEngine;
+
+public class PlayerScript : MonoBehaviour
+{
+    // Option 1: Cache the component in Start() (best practice — fast)
+    private Rigidbody rb;
+    private Renderer rend;
+
+    void Start()
+    {
+        // GetComponent finds a component on THIS GameObject
+        rb   = GetComponent<Rigidbody>();
+        rend = GetComponent<Renderer>();
+
+        // Change the object's colour
+        rend.material.color = Color.red;
+    }
+
+    void Update()
+    {
+        // Use the cached reference each frame — no performance cost
+        rb.AddForce(Vector3.up * 10f);
+    }
+}
+
+// Option 2: Assign in the Inspector (drag and drop)
+public class EnemyScript : MonoBehaviour
+{
+    // Drag the target GameObject onto this field in the Inspector
+    public Transform target;
+
+    void Update()
+    {
+        // Move toward the target every frame
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            target.position,
+            speed * Time.deltaTime
+        );
+    }
+}`,
+                language: 'csharp',
+                explanation: 'GetComponent<T>() finds a component on the same GameObject. Always cache it in Awake/Start — calling it every frame in Update is slow. Public fields show up in the Inspector so you can drag GameObjects/components directly without code.'
+              },
+              {
+                title: 'Creating and Destroying GameObjects',
+                code: `using UnityEngine;
+
+public class Spawner : MonoBehaviour
+{
+    // Drag a prefab into this field in the Inspector
+    public GameObject bulletPrefab;
+    public Transform spawnPoint;
+
+    void Update()
+    {
+        // Spawn a bullet when Space is pressed
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            // Instantiate creates a copy of the prefab in the scene
+            GameObject bullet = Instantiate(
+                bulletPrefab,
+                spawnPoint.position,
+                spawnPoint.rotation
+            );
+
+            // Destroy the bullet after 3 seconds
+            Destroy(bullet, 3f);
+        }
+
+        // Destroy this object immediately
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Destroy(gameObject);  // 'gameObject' = the GameObject this script is on
+        }
+    }
+}`,
+                language: 'csharp',
+                explanation: 'Instantiate() creates a copy of a Prefab (a reusable template) at a position and rotation. Destroy() removes a GameObject from the scene — pass a delay as the second argument to destroy after N seconds. Prefabs are the standard way to spawn enemies, bullets, and collectibles.'
+              }
+            ],
+            comparison: {
+              title: 'Common Unity Components',
+              options: [
+                {
+                  name: 'Transform',
+                  description: 'Position, rotation, and scale — every GameObject has one',
+                  whenToUse: 'Moving, rotating, or scaling objects',
+                  example: 'transform.position = new Vector3(0, 1, 0);'
                 },
                 {
-                  name: 'Runtime Error',
-                  description: 'Crashes during execution',
-                  whenToUse: 'Invalid operation at runtime',
-                  example: 'Divide by zero, index out of bounds, null reference'
+                  name: 'Rigidbody',
+                  description: 'Adds physics simulation (gravity, forces, velocity)',
+                  whenToUse: 'Any object that should be affected by physics',
+                  example: 'rb.AddForce(Vector3.up * jumpForce);'
                 },
                 {
-                  name: 'Loop Error',
-                  description: 'Infinite loops or wrong iterations',
-                  whenToUse: 'Loop never ends or iterates incorrectly',
-                  example: 'Forgot to increment, wrong condition, wrong bounds'
+                  name: 'Collider',
+                  description: 'Defines the physical shape for collision detection',
+                  whenToUse: 'Walls, floors, triggers, pickups — anything collideable',
+                  example: 'BoxCollider, SphereCollider, CapsuleCollider'
+                },
+                {
+                  name: 'AudioSource',
+                  description: 'Plays audio clips attached to a GameObject',
+                  whenToUse: 'Sound effects, background music, 3D spatial audio',
+                  example: 'audioSource.PlayOneShot(jumpSound);'
+                }
+              ]
+            }
+          },
+          {
+            id: 'unity-ui-debug',
+            title: 'UI Basics & Debugging in Unity',
+            description: 'Displaying scores and health with Unity UI, and using Debug tools to inspect your game',
+            keyPoints: [
+              'Unity UI uses Canvas, Text (TextMeshPro), Image, and Button components',
+              'TextMeshPro (TMP) is the modern text system — use it instead of the old UI Text',
+              'Debug.Log() prints to the Console; Debug.DrawLine() draws lines in the Scene view',
+              'You can expose variables to the Inspector with public or [SerializeField] to tweak without code changes',
+              'The Debugger in Visual Studio / Rider lets you pause and step through Unity scripts'
+            ],
+            codeExamples: [
+              {
+                title: 'Updating UI Text (TextMeshPro)',
+                code: `using UnityEngine;
+using TMPro;  // TextMeshPro namespace
+
+public class UIManager : MonoBehaviour
+{
+    // Drag the TMP Text objects here in the Inspector
+    public TMP_Text scoreText;
+    public TMP_Text healthText;
+    public TMP_Text gameOverText;
+
+    private int score = 0;
+    private int health = 100;
+
+    void Start()
+    {
+        UpdateUI();
+        gameOverText.gameObject.SetActive(false);  // Hide at start
+    }
+
+    public void AddScore(int points)
+    {
+        score += points;
+        UpdateUI();
+    }
+
+    public void TakeDamage(int amount)
+    {
+        health -= amount;
+        UpdateUI();
+
+        if (health <= 0)
+        {
+            gameOverText.gameObject.SetActive(true);
+            Time.timeScale = 0f;  // Pause the game
+        }
+    }
+
+    void UpdateUI()
+    {
+        scoreText.text  = $"Score: {score}";
+        healthText.text = $"Health: {health}";
+    }
+}`,
+                language: 'csharp',
+                explanation: 'Always use TextMeshPro (TMP_Text) for text in Unity — it looks better and has more features than legacy UI Text. Set .text to update what is displayed. SetActive(false) hides any GameObject including UI panels. Time.timeScale = 0 pauses all physics and animations.'
+              },
+              {
+                title: 'Debug Tools',
+                code: `using UnityEngine;
+
+public class DebuggingExamples : MonoBehaviour
+{
+    // [SerializeField] exposes a private field in the Inspector
+    // — change values at runtime without making them public
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private int health = 100;
+
+    // Header groups Inspector fields into sections
+    [Header("Movement Settings")]
+    public float jumpForce = 7f;
+
+    [Header("Combat Settings")]
+    public int damage = 10;
+
+    void Update()
+    {
+        // Debug.Log — general info (white text in Console)
+        Debug.Log($"Speed: {speed}, Health: {health}");
+
+        // Debug.LogWarning — caution (yellow text)
+        if (health < 20)
+            Debug.LogWarning("Health is critically low!");
+
+        // Debug.LogError — serious problem (red text)
+        if (health <= 0)
+            Debug.LogError("Player is dead — this should be handled!");
+
+        // Draw a ray in the Scene view (visible when object is selected)
+        Debug.DrawRay(transform.position, transform.forward * 2f, Color.red);
+
+        // Draw a line between two points
+        Debug.DrawLine(transform.position, Vector3.zero, Color.blue);
+    }
+}`,
+                language: 'csharp',
+                explanation: '[SerializeField] is preferred over public for Inspector-visible fields — it keeps the field private in code while still exposing it to the editor. [Header()] labels groups of fields. Debug.DrawRay/DrawLine draw visual helpers in the Scene view to understand direction and distance at a glance.'
+              }
+            ],
+            comparison: {
+              title: 'Debug Methods',
+              options: [
+                {
+                  name: 'Debug.Log()',
+                  description: 'Print a message to the Console — white text',
+                  whenToUse: 'Checking values, confirming code runs, tracing flow',
+                  example: 'Debug.Log($"Score: {score}");'
+                },
+                {
+                  name: 'Debug.LogWarning()',
+                  description: 'Yellow warning message in the Console',
+                  whenToUse: 'Non-fatal issues that need attention',
+                  example: 'Debug.LogWarning("Ammo is low!");'
+                },
+                {
+                  name: 'Debug.LogError()',
+                  description: 'Red error message in the Console',
+                  whenToUse: 'Serious problems that should never happen',
+                  example: 'Debug.LogError("Player reference is null!");'
+                },
+                {
+                  name: 'Debug.DrawRay()',
+                  description: 'Draws a ray/line in the Scene view',
+                  whenToUse: 'Visualising raycasts, movement direction, attack range',
+                  example: 'Debug.DrawRay(transform.position, transform.forward * 5f, Color.red);'
                 }
               ]
             }
