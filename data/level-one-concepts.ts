@@ -1815,6 +1815,344 @@ a:hover {
               }
             ]
           }
+        },
+        {
+          id: 'git-intro',
+          title: 'What is Git?',
+          description: 'Git is a version control system that tracks changes to your code so you can undo mistakes, collaborate with others, and manage project history',
+          keyPoints: [
+            'Git takes snapshots of your project called commits — each one is a save point you can return to',
+            'A repository (repo) is the folder Git is tracking — your entire project history lives inside it',
+            'Git is local — it works entirely on your machine without needing the internet',
+            'GitHub is a website that hosts your repos online so you can share and collaborate',
+            'Every developer on a team has their own copy of the repo — Git merges everyone\'s changes together'
+          ],
+          codeExamples: [
+            {
+              title: 'Setting Up Git for the First Time',
+              code: `# Tell Git who you are (do this once on a new machine)
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+
+# Check your settings
+git config --list
+
+# Create a new repo in the current folder
+git init
+
+# Check the status of your repo at any time
+git status
+
+# Git tracks three areas:
+# 1. Working Directory  — your files as they are on disk
+# 2. Staging Area       — files you've marked to include in the next commit
+# 3. Repository         — the saved history of all your commits`,
+              language: 'bash',
+              explanation: 'Run git config once when you first install Git. git init turns any folder into a Git repo. git status is the command you\'ll use most — it tells you what has changed and what is ready to commit.'
+            },
+            {
+              title: 'The Three Areas of Git',
+              code: `# --- Working Directory ---
+# You edit a file: index.html
+# Git sees it as "modified" but not tracked yet
+
+# --- Staging Area (Index) ---
+# Add a specific file to the staging area
+git add index.html
+
+# Add ALL changed files at once
+git add .
+
+# Remove a file from staging (undo git add)
+git restore --staged index.html
+
+# --- Repository ---
+# Commit everything in the staging area with a message
+git commit -m "Add navigation bar to index.html"
+
+# The commit message describes WHAT changed and WHY
+# Good:  "Fix login button not responding on mobile"
+# Bad:   "fix stuff" or "update"`,
+              language: 'bash',
+              explanation: 'You must add files to the staging area before committing. Think of staging as packing a box — you decide exactly what goes in before sealing it with a commit. git add . adds everything; git add filename adds one file.'
+            }
+          ],
+          comparison: {
+            title: 'Git vs GitHub',
+            options: [
+              {
+                name: 'Git',
+                description: 'Version control tool installed on your computer — tracks history locally',
+                whenToUse: 'Any project you want to track changes on, even without internet',
+                example: 'git init, git add, git commit — all run in your terminal'
+              },
+              {
+                name: 'GitHub',
+                description: 'Cloud platform that hosts Git repos — enables sharing and collaboration',
+                whenToUse: 'Sharing code, team projects, open source, portfolio',
+                example: 'github.com — push your local repo here to back it up online'
+              }
+            ]
+          }
+        },
+        {
+          id: 'git-core-commands',
+          title: 'Core Git Commands',
+          description: 'The essential commands you\'ll use every day — add, commit, log, diff, and undo',
+          keyPoints: [
+            'git status shows which files are changed, staged, or untracked',
+            'git add stages files for the next commit',
+            'git commit -m "message" saves a snapshot of everything staged',
+            'git log shows the full history of commits',
+            'git diff shows exactly what lines changed before you stage'
+          ],
+          codeExamples: [
+            {
+              title: 'Daily Git Workflow',
+              code: `# 1. Check what has changed
+git status
+
+# 2. See the exact line-by-line changes (before staging)
+git diff
+
+# 3. Stage your changes
+git add .
+
+# 4. See what is staged (after git add)
+git diff --staged
+
+# 5. Commit with a descriptive message
+git commit -m "Add hero section to homepage"
+
+# 6. View commit history
+git log
+
+# Shorter, one-line log view
+git log --oneline
+
+# Example output:
+# a3f92d1 Add hero section to homepage
+# 8b21c3e Fix navigation link colours
+# 4d09e7a Initial commit`,
+              language: 'bash',
+              explanation: 'The daily loop is: make changes → git status → git add → git commit. Use git log --oneline to see a clean history. Each commit has a unique hash (like a3f92d1) you can use to reference it.'
+            },
+            {
+              title: 'Undoing Mistakes',
+              code: `# --- Undo changes in working directory (not yet staged) ---
+# Discard all changes to a file since last commit
+git restore index.html
+
+# --- Undo a git add (unstage a file) ---
+git restore --staged index.html
+
+# --- Undo the last commit (keep the file changes) ---
+# This moves the commit back to staging — nothing is lost
+git reset --soft HEAD~1
+
+# --- Amend the last commit message ---
+git commit --amend -m "Corrected commit message"
+
+# --- See what a specific commit changed ---
+git show a3f92d1
+
+# --- Go back to a previous commit temporarily ---
+git checkout a3f92d1
+# Return to latest
+git checkout main`,
+              language: 'bash',
+              explanation: 'git restore undoes file changes before staging. git restore --staged unstages a file. git reset --soft HEAD~1 undoes the last commit but keeps your edits. Never use git reset --hard unless you are certain — it deletes changes permanently.'
+            }
+          ]
+        },
+        {
+          id: 'git-branches',
+          title: 'Branches',
+          description: 'Branches let you work on new features or fixes in isolation without affecting the main codebase',
+          keyPoints: [
+            'The default branch is called main (or master in older repos)',
+            'Creating a branch makes a copy of the current code you can experiment on safely',
+            'git switch -c branchname creates and switches to a new branch in one command',
+            'Merging combines the changes from one branch into another',
+            'Always create a new branch for each feature or bug fix — never work directly on main'
+          ],
+          codeExamples: [
+            {
+              title: 'Working with Branches',
+              code: `# See all branches (* marks the current one)
+git branch
+
+# Create a new branch AND switch to it
+git switch -c feature/navbar
+
+# Older syntax (also works)
+git checkout -b feature/navbar
+
+# Switch between existing branches
+git switch main
+git switch feature/navbar
+
+# --- Make changes and commit on the branch ---
+git add .
+git commit -m "Build responsive navbar"
+
+# --- Merge the branch back into main ---
+git switch main
+git merge feature/navbar
+
+# --- Delete the branch after merging (cleanup) ---
+git branch -d feature/navbar
+
+# See a visual log with branches
+git log --oneline --graph --all`,
+              language: 'bash',
+              explanation: 'Always branch before starting new work — git switch -c feature/name. When done, switch back to main and git merge. The branch name is just a label; delete it after merging to keep things tidy.'
+            },
+            {
+              title: 'Merge Conflicts',
+              code: `# A merge conflict happens when two branches changed the SAME line
+# Git cannot decide which version to keep — it asks YOU
+
+# After running git merge, if there is a conflict Git marks it:
+
+# <<<<<<< HEAD           ← your current branch (main)
+# <nav>Main Version</nav>
+# =======                ← divider
+# <nav>Feature Version</nav>
+# >>>>>>> feature/navbar ← the branch being merged
+
+# To fix:
+# 1. Open the file and decide which version to keep
+# 2. Delete the conflict markers (<<<, ===, >>>)
+# 3. Save the file
+# 4. Stage and commit the resolved file
+
+git add index.html
+git commit -m "Resolve merge conflict in navbar"
+
+# Tip: VS Code highlights conflicts with Accept buttons
+# — you don't have to edit the markers manually`,
+              language: 'bash',
+              explanation: 'Conflicts look scary but they are just Git asking you to manually pick a version. Delete the markers, keep the correct code, then add and commit. VS Code\'s merge editor makes this much easier with one-click "Accept" buttons.'
+            }
+          ],
+          comparison: {
+            title: 'Branch Strategies',
+            options: [
+              {
+                name: 'main / production',
+                description: 'The stable, deployable branch — only merge tested code here',
+                whenToUse: 'Always reflects what is live or ready to ship',
+                example: 'git switch main → git merge feature/login'
+              },
+              {
+                name: 'feature branch',
+                description: 'A branch for a single feature or task',
+                whenToUse: 'Every new feature, bug fix, or experiment',
+                example: 'git switch -c feature/user-auth'
+              },
+              {
+                name: 'develop / staging',
+                description: 'Integration branch where features are merged before going to main',
+                whenToUse: 'Larger teams that need a testing buffer before production',
+                example: 'Merge features → develop, then develop → main on release'
+              }
+            ]
+          }
+        },
+        {
+          id: 'git-github',
+          title: 'GitHub — Remote Repositories',
+          description: 'Pushing your local Git repo to GitHub to back it up online, share it, and collaborate with others',
+          keyPoints: [
+            'A remote is a version of your repo hosted online (e.g. on GitHub)',
+            'git push sends your local commits to the remote',
+            'git pull fetches and merges the latest changes from the remote into your local branch',
+            'git clone downloads a remote repo to your machine for the first time',
+            'Pull Requests (PRs) on GitHub are a way to propose merging a branch — teammates review before accepting'
+          ],
+          codeExamples: [
+            {
+              title: 'Connecting a Local Repo to GitHub',
+              code: `# --- First time: link your local repo to a GitHub repo ---
+
+# 1. Create a new repo on github.com (do NOT add README — keep it empty)
+
+# 2. Connect your local repo to the remote
+git remote add origin https://github.com/yourusername/my-project.git
+
+# 3. Rename default branch to main (if needed)
+git branch -M main
+
+# 4. Push your commits to GitHub for the first time
+git push -u origin main
+# -u sets the upstream so future pushes just need: git push
+
+# --- Check your remotes ---
+git remote -v
+# origin  https://github.com/yourusername/my-project.git (fetch)
+# origin  https://github.com/yourusername/my-project.git (push)`,
+              language: 'bash',
+              explanation: 'origin is just the conventional name for your GitHub remote. git remote add origin links the two repos. After the first git push -u origin main you can just type git push for all future pushes on that branch.'
+            },
+            {
+              title: 'Everyday GitHub Workflow',
+              code: `# --- Clone someone else's repo (first time) ---
+git clone https://github.com/username/project.git
+
+# --- Pull latest changes before you start work ---
+git pull
+
+# --- Your daily loop when working with a team ---
+git pull                          # 1. Get latest changes
+git switch -c feature/my-feature  # 2. Branch off main
+# ... make your changes ...
+git add .                         # 3. Stage
+git commit -m "Add login form"    # 4. Commit
+git push origin feature/my-feature # 5. Push branch to GitHub
+
+# --- Then on GitHub: ---
+# Open a Pull Request from feature/my-feature → main
+# Team reviews the code
+# Merge the PR on GitHub
+# Delete the remote branch
+
+# --- Back locally: sync up ---
+git switch main
+git pull`,
+              language: 'bash',
+              explanation: 'The golden rule: always git pull before starting work so you have the latest code. Push to a feature branch, open a Pull Request on GitHub, get it reviewed, then merge. Never force-push to main on a shared repo.'
+            }
+          ],
+          comparison: {
+            title: 'Git Remote Commands',
+            options: [
+              {
+                name: 'git clone',
+                description: 'Download a remote repo to your machine for the first time',
+                whenToUse: 'Starting work on an existing project you don\'t have locally',
+                example: 'git clone https://github.com/user/repo.git'
+              },
+              {
+                name: 'git push',
+                description: 'Send your local commits to the remote repo',
+                whenToUse: 'After committing locally — share your work',
+                example: 'git push origin feature/navbar'
+              },
+              {
+                name: 'git pull',
+                description: 'Fetch + merge remote changes into your local branch',
+                whenToUse: 'Before starting work and after team members push changes',
+                example: 'git pull (shorthand for git fetch + git merge)'
+              },
+              {
+                name: 'git fetch',
+                description: 'Download remote changes WITHOUT merging them yet',
+                whenToUse: 'Check what changed remotely before deciding to merge',
+                example: 'git fetch origin'
+              }
+            ]
+          }
         }
       ]
     },
@@ -3556,6 +3894,168 @@ async function autoRefresh(interval = 5000) {
                 description: 'Syntactic sugar over Promises (modern way)',
                 whenToUse: 'Modern code, cleaner syntax, easier error handling (recommended)',
                 example: 'const data = await fetch(url).then(r => r.json());'
+              }
+            ]
+          }
+        },
+        {
+          id: 'network-tab',
+          title: 'The Network Tab',
+          description: 'The Network tab in browser DevTools shows every request your page makes — it\'s the most important tool for understanding how the web actually works',
+          keyPoints: [
+            'Every image, stylesheet, script, font, and API call your page loads appears as a row in the Network tab',
+            'Open it with F12 (or Cmd+Option+I on Mac) → click the Network tab, then refresh the page',
+            'Each row shows the file name, request type (GET/POST), status code, size, and how long it took',
+            'Status codes tell you if a request succeeded: 200 OK, 304 Cached, 404 Not Found, 500 Server Error',
+            'The Waterfall column shows the timeline — use it to spot slow requests that are blocking page load'
+          ],
+          codeExamples: [
+            {
+              title: 'Reading the Network Tab Columns',
+              code: `// Open DevTools → Network tab → Refresh the page
+
+// Key columns explained:
+
+// Name
+//   The file or endpoint being requested
+//   e.g. index.html, style.css, api/users, logo.png
+
+// Method
+//   GET  — fetching data (loading a page, image, API response)
+//   POST — sending data (form submit, login, create record)
+
+// Status
+//   200 OK           — request succeeded
+//   201 Created      — resource was created (POST success)
+//   204 No Content   — success but nothing returned
+//   301/302          — redirect (moved permanently/temporarily)
+//   304 Not Modified — browser used its cached version (fast!)
+//   400 Bad Request  — something wrong with the request you sent
+//   401 Unauthorized — not logged in
+//   403 Forbidden    — logged in but no permission
+//   404 Not Found    — resource does not exist
+//   500 Server Error — something broke on the backend
+
+// Type
+//   document — the HTML page itself
+//   stylesheet — .css file
+//   script — .js file
+//   fetch / xhr — API calls made by JavaScript
+//   img — image files
+//   font — web fonts
+
+// Size
+//   The transferred size — smaller is faster
+//   "(memory cache)" means the browser used a cached copy
+
+// Time
+//   How long the request took in milliseconds
+//   Hover for a breakdown: DNS lookup, connection, TTFB, download`,
+              language: 'javascript',
+              explanation: 'Every row is one request. The Status column is the most important — anything 400+ means something went wrong. Fetch/XHR rows are your API calls. If a row is red, click it to see the full error details in the Preview or Response tabs.'
+            },
+            {
+              title: 'Inspecting a Request in Detail',
+              code: `// Click any row in the Network tab to open its detail panel
+
+// --- Headers tab ---
+// Request URL:   https://api.example.com/users
+// Request Method: GET
+// Status Code:   200 OK
+//
+// Request Headers (what your browser sent):
+//   Authorization: Bearer eyJhbGci...  ← auth token
+//   Content-Type: application/json
+//
+// Response Headers (what the server sent back):
+//   Content-Type: application/json
+//   Cache-Control: max-age=3600       ← cached for 1 hour
+
+// --- Preview tab ---
+// Shows a formatted version of the response
+// Great for reading JSON API responses at a glance:
+// {
+//   "id": 1,
+//   "name": "Isaiah",
+//   "email": "isaiah@example.com"
+// }
+
+// --- Response tab ---
+// Raw text of the response body (unformatted)
+
+// --- Timing tab ---
+// Queued:       0ms   — waiting before request starts
+// DNS Lookup:   12ms  — finding the server's IP address
+// Connecting:   45ms  — establishing the connection
+// TTFB:         180ms — time to first byte (server processing time)
+// Downloading:  23ms  — receiving the actual data
+//
+// High TTFB = slow server
+// High DNS = DNS issue
+// High Connecting = network latency`,
+              language: 'javascript',
+              explanation: 'Click any request row and use the Headers tab to see what was sent and received. The Preview tab shows formatted JSON. The Timing breakdown tells you exactly where the time was spent — TTFB (Time To First Byte) is the key metric for server performance.'
+            },
+            {
+              title: 'Filtering & Using the Network Tab Effectively',
+              code: `// --- Filter bar at the top ---
+// Type a filename or URL to search: "api/users"
+// Click type buttons to filter by category:
+//   All | Fetch/XHR | JS | CSS | Img | Media | Font | Doc | WS
+
+// --- Most useful filters ---
+// Fetch/XHR  — shows only API calls your JavaScript made
+// JS         — shows JavaScript files (check for large bundles)
+// Img        — shows all images (look for oversized files)
+
+// --- Preserve Log checkbox ---
+// Check this to keep requests across page navigations
+// Useful when debugging a form submit that redirects
+
+// --- Disable Cache checkbox ---
+// Forces the browser to re-download everything
+// Turn ON when testing — turn OFF in normal use
+
+// --- Throttle dropdown ---
+// Simulate slow connections: "Slow 3G", "Fast 3G", "Offline"
+// Use this to test how your page loads on mobile data
+
+// --- Common debugging scenarios ---
+// Red row = failed request → click it → check Status + Response
+// 401 Unauthorized → missing or expired auth token
+// 404 Not Found → wrong URL, typo in endpoint
+// CORS error → check the Console tab for the full error message
+// Slow page → sort by Time column, find the slowest requests`,
+              language: 'javascript',
+              explanation: 'Filter to Fetch/XHR to focus on just your API calls. Enable "Disable Cache" when testing so you always get fresh files. Use the Throttle dropdown to simulate a phone on mobile data — if your page takes 10 seconds on Slow 3G, it needs optimising.'
+            }
+          ],
+          comparison: {
+            title: 'Network Tab Detail Panels',
+            options: [
+              {
+                name: 'Headers',
+                description: 'URL, method, status code, request and response headers',
+                whenToUse: 'Debug auth issues, check what was sent, verify cache headers',
+                example: 'Authorization header missing → 401; wrong URL → 404'
+              },
+              {
+                name: 'Preview',
+                description: 'Formatted view of the response body (JSON, HTML, image)',
+                whenToUse: 'Quickly read API response data without scrolling raw text',
+                example: 'See the JSON returned by your backend in a tree view'
+              },
+              {
+                name: 'Response',
+                description: 'Raw response body as plain text',
+                whenToUse: 'Copy the raw response, check HTML or text responses',
+                example: 'View the raw HTML of a page or raw error message from the server'
+              },
+              {
+                name: 'Timing',
+                description: 'Breakdown of time spent at each stage of the request',
+                whenToUse: 'Performance debugging — find what is making requests slow',
+                example: 'High TTFB = slow server; high DNS = DNS problem'
               }
             ]
           }
