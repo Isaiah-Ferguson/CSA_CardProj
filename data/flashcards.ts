@@ -9,6 +9,8 @@ import { entityFrameworkCore } from './decks/entity-framework-core';
 import { sqlFundamentals } from './decks/sql-fundamentals';
 import { csharpWebApi } from './decks/csharp-web-api';
 import { programmingFundamentals } from './decks/programming-fundamentals';
+import { gitFundamentals } from './decks/git-fundamentals';
+import { agenticDevelopment } from './decks/agentic-development';
 
 export const decks: Deck[] = [
   javascriptFundamentals,
@@ -20,4 +22,6 @@ export const decks: Deck[] = [
   sqlFundamentals,
   csharpWebApi,
   programmingFundamentals,
+  gitFundamentals,
+  agenticDevelopment,
 ];
